@@ -1,0 +1,51 @@
+.order-item {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+
+  &__image {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  &__content {
+    flex: 1;
+  }
+
+  &__title {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  &__price,
+  &__controls,
+  &__count-input {
+    color: #797979;
+    font-weight: 600;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__count-input {
+    display: inline-block;
+    width: 42px;
+    padding: 2px 4px;
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+  }
+
+  &__delete-icon {
+
+    margin-left: auto;
+
+
+  }
+}

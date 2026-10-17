@@ -1,23 +1,20 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+#Зависимости и результат сборки
+node_modules/
+frontend/build/
+coverage/
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
+#Локальные секреты 
+.env
+.env.*
+!.env.example
 
-# testing
-/coverage
+# Локальные данные пользователей, заказы и резервные копии
+backend/userData.json
+backend/orders.json
+backend/*.bak
+backend/userData.json.corrupt-*
 
-# production
-/build
-
-# misc
+# Логи и системные файлы
+*.log
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+Thumbs.db

@@ -1,0 +1,893 @@
+[
+  {
+    "id": 1,
+    "title": "Стул серый",
+    "img": "chair-grey.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "chairs",
+    "price": 49.99,
+    "favoritesCount": 2
+  },
+  {
+    "id": 2,
+    "title": "Стол",
+    "img": "table.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "tables",
+    "price": 149,
+    "favoritesCount": 2
+  },
+  {
+    "id": 3,
+    "title": "Стул белый",
+    "img": "chair-white.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "chairs",
+    "price": 55,
+    "favoritesCount": 1
+  },
+  {
+    "id": 4,
+    "title": "Стул черный",
+    "img": "chair-black.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "chairs",
+    "price": 45,
+    "favoritesCount": 1
+  },
+  {
+    "id": 5,
+    "title": "Стул деревянный",
+    "img": "chair-wood.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "chairs",
+    "price": 65,
+    "favoritesCount": 1
+  },
+  {
+    "id": 6,
+    "title": "Кресло мягкое",
+    "img": "armchair-soft.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "chairs",
+    "price": 120,
+    "favoritesCount": 1
+  },
+  {
+    "id": 7,
+    "title": "Кресло офисное",
+    "img": "armchair-office.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "chairs",
+    "price": 180,
+    "favoritesCount": 1
+  },
+  {
+    "id": 8,
+    "title": "Стул барный",
+    "img": "chair-bar.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "chairs",
+    "price": 85,
+    "favoritesCount": 1
+  },
+  {
+    "id": 9,
+    "title": "Стул складной",
+    "img": "chair-folding.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "chairs",
+    "price": 30,
+    "favoritesCount": 0
+  },
+  {
+    "id": 10,
+    "title": "Стул обеденный",
+    "img": "chair-dining.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "chairs",
+    "price": 70,
+    "favoritesCount": 1
+  },
+  {
+    "id": 11,
+    "title": "Стол обеденный",
+    "img": "table-dining.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "tables",
+    "price": 220,
+    "favoritesCount": 1
+  },
+  {
+    "id": 12,
+    "title": "Стол журнальный",
+    "img": "table-coffee.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "tables",
+    "price": 89.99,
+    "favoritesCount": 1
+  },
+  {
+    "id": 13,
+    "title": "Стол письменный",
+    "img": "table-desk.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "tables",
+    "price": 175,
+    "favoritesCount": 1
+  },
+  {
+    "id": 14,
+    "title": "Стол компьютерный",
+    "img": "table-pc.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "tables",
+    "price": 199.99,
+    "favoritesCount": 0
+  },
+  {
+    "id": 15,
+    "title": "Стол стеклянный",
+    "img": "table-glass.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "tables",
+    "price": 160,
+    "favoritesCount": 1
+  },
+  {
+    "id": 16,
+    "title": "Стол круглый",
+    "img": "table-round.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "tables",
+    "price": 135,
+    "favoritesCount": 1
+  },
+  {
+    "id": 17,
+    "title": "Стол раздвижной",
+    "img": "table-expandable.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "tables",
+    "price": 290,
+    "favoritesCount": 1
+  },
+  {
+    "id": 18,
+    "title": "Столик прикроватный",
+    "img": "table-night.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "tables",
+    "price": 45,
+    "favoritesCount": 1
+  },
+  {
+    "id": 19,
+    "title": "Стол лофт",
+    "img": "table-loft.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "tables",
+    "price": 210,
+    "favoritesCount": 0
+  },
+  {
+    "id": 20,
+    "title": "Диван двухместный",
+    "img": "sofa-2seat.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "sofas",
+    "price": 450,
+    "favoritesCount": 1
+  },
+  {
+    "id": 21,
+    "title": "Диван трехместный",
+    "img": "sofa-3seat.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "sofas",
+    "price": 600,
+    "favoritesCount": 0
+  },
+  {
+    "id": 22,
+    "title": "Диван угловой",
+    "img": "sofa-corner.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "sofas",
+    "price": 850,
+    "favoritesCount": 0
+  },
+  {
+    "id": 23,
+    "title": "Диван кожаный",
+    "img": "sofa-leather.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "sofas",
+    "price": 1200,
+    "favoritesCount": 0
+  },
+  {
+    "id": 24,
+    "title": "Диван раскладной",
+    "img": "sofa-bed.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "sofas",
+    "price": 520,
+    "favoritesCount": 0
+  },
+  {
+    "id": 25,
+    "title": "Диван зеленый",
+    "img": "sofa-green.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "sofas",
+    "price": 480,
+    "favoritesCount": 0
+  },
+  {
+    "id": 26,
+    "title": "Диван синий",
+    "img": "sofa-blue.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "sofas",
+    "price": 490,
+    "favoritesCount": 0
+  },
+  {
+    "id": 27,
+    "title": "Кушетка",
+    "img": "sofa-daybed.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "sofas",
+    "price": 320,
+    "favoritesCount": 0
+  },
+  {
+    "id": 28,
+    "title": "Тахта",
+    "img": "sofa-ottoman.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "sofas",
+    "price": 280,
+    "favoritesCount": 0
+  },
+  {
+    "id": 29,
+    "title": "Лампа настольная",
+    "img": "lamp-desk.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "lights",
+    "price": 35,
+    "favoritesCount": 0
+  },
+  {
+    "id": 30,
+    "title": "Торшер напольный",
+    "img": "lamp-floor.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "lights",
+    "price": 85,
+    "favoritesCount": 0
+  },
+  {
+    "id": 31,
+    "title": "Люстра потолочная",
+    "img": "lamp-ceiling.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "lights",
+    "price": 150,
+    "favoritesCount": 0
+  },
+  {
+    "id": 32,
+    "title": "Бра настенное",
+    "img": "lamp-wall.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "lights",
+    "price": 40,
+    "favoritesCount": 0
+  },
+  {
+    "id": 33,
+    "title": "Светильник точечный",
+    "img": "lamp-spot.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "lights",
+    "price": 15,
+    "favoritesCount": 0
+  },
+  {
+    "id": 34,
+    "title": "Лампа лофт",
+    "img": "lamp-loft.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "lights",
+    "price": 65,
+    "favoritesCount": 0
+  },
+  {
+    "id": 35,
+    "title": "Лампа светодиодная",
+    "img": "lamp-led.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "lights",
+    "price": 25,
+    "favoritesCount": 0
+  },
+  {
+    "id": 36,
+    "title": "Ночник детский",
+    "img": "lamp-night.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "lights",
+    "price": 20,
+    "favoritesCount": 0
+  },
+  {
+    "id": 37,
+    "title": "Кровать двуспальная",
+    "img": "bed-double.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "beds",
+    "price": 500,
+    "favoritesCount": 0
+  },
+  {
+    "id": 38,
+    "title": "Кровать односпальная",
+    "img": "bed-single.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "beds",
+    "price": 300,
+    "favoritesCount": 0
+  },
+  {
+    "id": 39,
+    "title": "Кровать двухъярусная",
+    "img": "bed-bunk.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "beds",
+    "price": 450,
+    "favoritesCount": 0
+  },
+  {
+    "id": 40,
+    "title": "Кровать с подъемным механизмом",
+    "img": "bed-storage.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "beds",
+    "price": 650,
+    "favoritesCount": 0
+  },
+  {
+    "id": 41,
+    "title": "Кровать королевская",
+    "img": "bed-king.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "beds",
+    "price": 800,
+    "favoritesCount": 0
+  },
+  {
+    "id": 42,
+    "title": "Кровать детская",
+    "img": "bed-kids.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "beds",
+    "price": 250,
+    "favoritesCount": 0
+  },
+  {
+    "id": 43,
+    "title": "Шкаф двухдверный",
+    "img": "wardrobe-2door.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "decor",
+    "price": 350,
+    "favoritesCount": 0
+  },
+  {
+    "id": 44,
+    "title": "Шкаф-купе",
+    "img": "wardrobe-sliding.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "decor",
+    "price": 550,
+    "favoritesCount": 0
+  },
+  {
+    "id": 45,
+    "title": "Комод 4 ящика",
+    "img": "dresser-4drawer.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "decor",
+    "price": 180,
+    "favoritesCount": 0
+  },
+  {
+    "id": 46,
+    "title": "Тумба под ТВ",
+    "img": "tv-stand.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "decor",
+    "price": 130,
+    "favoritesCount": 0
+  },
+  {
+    "id": 47,
+    "title": "Стеллаж книжный",
+    "img": "bookshelf.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "decor",
+    "price": 110,
+    "favoritesCount": 0
+  },
+  {
+    "id": 48,
+    "title": "Зеркало напольное",
+    "img": "mirror-floor.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "decor",
+    "price": 75,
+    "favoritesCount": 0
+  },
+  {
+    "id": 49,
+    "title": "Зеркало настенное",
+    "img": "mirror-wall.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "decor",
+    "price": 45,
+    "favoritesCount": 0
+  },
+  {
+    "id": 50,
+    "title": "Вешалка напольная",
+    "img": "coat-rack.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "decor",
+    "price": 35,
+    "favoritesCount": 0
+  },
+  {
+    "id": 51,
+    "title": "Стул пластиковый",
+    "img": "chair-plastic.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "chairs",
+    "price": 25,
+    "favoritesCount": 0
+  },
+  {
+    "id": 52,
+    "title": "Стул кухонный",
+    "img": "chair-kitchen.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "chairs",
+    "price": 40,
+    "favoritesCount": 0
+  },
+  {
+    "id": 53,
+    "title": "Кресло качалка",
+    "img": "armchair-rocking.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "chairs",
+    "price": 160,
+    "favoritesCount": 0
+  },
+  {
+    "id": 54,
+    "title": "Кресло-мешок",
+    "img": "beanbag.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "chairs",
+    "price": 50,
+    "favoritesCount": 0
+  },
+  {
+    "id": 55,
+    "title": "Стул геймерский",
+    "img": "chair-gaming.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "chairs",
+    "price": 210,
+    "favoritesCount": 0
+  },
+  {
+    "id": 56,
+    "title": "Пуф мягкий",
+    "img": "pouf-soft.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "chairs",
+    "price": 35,
+    "favoritesCount": 0
+  },
+  {
+    "id": 57,
+    "title": "Пуф с ящиком",
+    "img": "pouf-storage.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "chairs",
+    "price": 45,
+    "favoritesCount": 0
+  },
+  {
+    "id": 58,
+    "title": "Стол садовый",
+    "img": "table-garden.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "tables",
+    "price": 110,
+    "favoritesCount": 0
+  },
+  {
+    "id": 59,
+    "title": "Стол консольный",
+    "img": "table-console.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "tables",
+    "price": 125,
+    "favoritesCount": 0
+  },
+  {
+    "id": 60,
+    "title": "Стол сервировочный",
+    "img": "table-serving.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "tables",
+    "price": 95,
+    "favoritesCount": 0
+  },
+  {
+    "id": 61,
+    "title": "Стол складной",
+    "img": "table-folding.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "tables",
+    "price": 60,
+    "favoritesCount": 0
+  },
+  {
+    "id": 62,
+    "title": "Стол туалетный",
+    "img": "table-vanity.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "tables",
+    "price": 190,
+    "favoritesCount": 0
+  },
+  {
+    "id": 63,
+    "title": "Диван модульный",
+    "img": "sofa-modular.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "sofas",
+    "price": 990,
+    "favoritesCount": 0
+  },
+  {
+    "id": 64,
+    "title": "Диван велюровый",
+    "img": "sofa-velvet.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "sofas",
+    "price": 580,
+    "favoritesCount": 0
+  },
+  {
+    "id": 65,
+    "title": "Диван прямой",
+    "img": "sofa-straight.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "sofas",
+    "price": 410,
+    "favoritesCount": 0
+  },
+  {
+    "id": 66,
+    "title": "Диван офисный",
+    "img": "sofa-office.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "sofas",
+    "price": 370,
+    "favoritesCount": 0
+  },
+  {
+    "id": 67,
+    "title": "Лампа подвесная",
+    "img": "lamp-pendant.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "lights",
+    "price": 75,
+    "favoritesCount": 0
+  },
+  {
+    "id": 68,
+    "title": "Лампа хрустальная",
+    "img": "lamp-crystal.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "lights",
+    "price": 230,
+    "favoritesCount": 0
+  },
+  {
+    "id": 69,
+    "title": "Лампа умная",
+    "img": "lamp-smart.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "lights",
+    "price": 55,
+    "favoritesCount": 0
+  },
+  {
+    "id": 70,
+    "title": "Лампа на прищепке",
+    "img": "lamp-clip.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "lights",
+    "price": 18,
+    "favoritesCount": 0
+  },
+  {
+    "id": 71,
+    "title": "Кровать с мягким изголовьем",
+    "img": "bed-padded.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "beds",
+    "price": 620,
+    "favoritesCount": 0
+  },
+  {
+    "id": 72,
+    "title": "Кровать металлическая",
+    "img": "bed-metal.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "beds",
+    "price": 280,
+    "favoritesCount": 0
+  },
+  {
+    "id": 73,
+    "title": "Кровать-подиум",
+    "img": "bed-podium.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "beds",
+    "price": 490,
+    "favoritesCount": 0
+  },
+  {
+    "id": 74,
+    "title": "Кровать трансформер",
+    "img": "bed-transform.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "beds",
+    "price": 750,
+    "favoritesCount": 0
+  },
+  {
+    "id": 75,
+    "title": "Шкаф угловой",
+    "img": "wardrobe-corner.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "decor",
+    "price": 420,
+    "favoritesCount": 0
+  },
+  {
+    "id": 76,
+    "title": "Шкаф книжный со стеклом",
+    "img": "bookcase-glass.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "decor",
+    "price": 260,
+    "favoritesCount": 0
+  },
+  {
+    "id": 77,
+    "title": "Полка настенная",
+    "img": "shelf-wall.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "decor",
+    "price": 25,
+    "favoritesCount": 0
+  },
+  {
+    "id": 78,
+    "title": "Полка угловая",
+    "img": "shelf-corner.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "decor",
+    "price": 30,
+    "favoritesCount": 0
+  },
+  {
+    "id": 79,
+    "title": "Обувница",
+    "img": "shoe-rack.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "decor",
+    "price": 65,
+    "favoritesCount": 0
+  },
+  {
+    "id": 80,
+    "title": "Банкетка",
+    "img": "bench.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "chairs",
+    "price": 70,
+    "favoritesCount": 0
+  },
+  {
+    "id": 81,
+    "title": "Стул мягкий",
+    "img": "chair-upholstered.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "chairs",
+    "price": 75,
+    "favoritesCount": 0
+  },
+  {
+    "id": 82,
+    "title": "Стул металлический",
+    "img": "chair-metal.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "chairs",
+    "price": 48,
+    "favoritesCount": 0
+  },
+  {
+    "id": 83,
+    "title": "Стол из массива",
+    "img": "table-solidwood.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "tables",
+    "price": 340,
+    "favoritesCount": 0
+  },
+  {
+    "id": 84,
+    "title": "Стол трансформер",
+    "img": "table-transform.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "tables",
+    "price": 230,
+    "favoritesCount": 0
+  },
+  {
+    "id": 85,
+    "title": "Диван компактный",
+    "img": "sofa-compact.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "sofas",
+    "price": 330,
+    "favoritesCount": 0
+  },
+  {
+    "id": 86,
+    "title": "Диван-клик-кляк",
+    "img": "sofa-clickclack.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "sofas",
+    "price": 390,
+    "favoritesCount": 0
+  },
+  {
+    "id": 87,
+    "title": "Лампа декоративная",
+    "img": "lamp-decor.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "lights",
+    "price": 45,
+    "favoritesCount": 0
+  },
+  {
+    "id": 88,
+    "title": "Лампа трековая",
+    "img": "lamp-track.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "lights",
+    "price": 90,
+    "favoritesCount": 0
+  },
+  {
+    "id": 89,
+    "title": "Кровать полутораспальная",
+    "img": "bed-1.5.webp",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+    "category": "beds",
+    "price": 380,
+    "favoritesCount": 0
+  },
+  {
+    "id": 90,
+    "title": "Светильник потолочный LED",
+    "img": "lamp-led.webp",
+    "desc": "Современный потолочный светильник с мягким и равномерным освещением.",
+    "category": "lights",
+    "price": 1250,
+    "favoritesCount": 0
+  },
+  {
+    "id": 91,
+    "title": "Светильник настенный Loft",
+    "img": "lamp-wall-loft.webp",
+    "desc": "Стильный настенный светильник в стиле лофт для уютного интерьера.",
+    "category": "lights",
+    "price": 890,
+    "favoritesCount": 0
+  },
+  {
+    "id": 92,
+    "title": "Светильник подвесной Modern",
+    "img": "lamp-pendant-modern.webp",
+    "desc": "Элегантный подвесной светильник для гостиной или столовой.",
+    "category": "lights",
+    "price": 1790,
+    "favoritesCount": 0
+  },
+  {
+    "id": 93,
+    "title": "Настольный светильник Classic",
+    "img": "lamp-table-classic.webp",
+    "desc": "Компактный настольный светильник для рабочего стола или спальни.",
+    "category": "lights",
+    "price": 650,
+    "favoritesCount": 0
+  },
+  {
+    "id": 94,
+    "title": "Торшер напольный Elegance",
+    "img": "lamp-floor-elegance.webp",
+    "desc": "Высокий напольный светильник с классическим дизайном.",
+    "category": "lights",
+    "price": 2150,
+    "favoritesCount": 0
+  },
+  {
+    "id": 95,
+    "title": "Светильник точечный LED",
+    "img": "lamp-spot-led.webp",
+    "desc": "Практичный точечный светильник для направленного освещения.",
+    "category": "lights",
+    "price": 420,
+    "favoritesCount": 0
+  },
+  {
+    "id": 96,
+    "title": "Светильник подвесной Loft",
+    "img": "lamp-pendant-loft.webp",
+    "desc": "Оригинальный подвесной светильник с металлическим плафоном.",
+    "category": "lights",
+    "price": 1450,
+    "favoritesCount": 0
+  },
+  {
+    "id": 97,
+    "title": "Ночник настольный LED",
+    "img": "lamp-night-led.webp",
+    "desc": "Небольшой LED-светильник с приятным мягким освещением.",
+    "category": "lights",
+    "price": 540,
+    "favoritesCount": 0
+  },
+  {
+    "id": 98,
+    "title": "Светильник бра настенный",
+    "img": "lamp-bra.webp",
+    "desc": "Настенный светильник для дополнительного освещения комнаты.",
+    "category": "lights",
+    "price": 980,
+    "favoritesCount": 0
+  },
+  {
+    "id": 99,
+    "title": "Светильник потолочный Smart LED",
+    "img": "lamp-smart-led.webp",
+    "desc": "Современный потолочный светильник с энергоэффективной LED-подсветкой.",
+    "category": "lights",
+    "price": 2390,
+    "favoritesCount": 0
+  }
+]
