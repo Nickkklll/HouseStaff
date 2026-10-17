@@ -37,14 +37,7 @@ export default function Cabinet(props) {
           <div className="profile-columns">
             <div className="menu-options">
               <ul className='nav-options'>
-              {user.role==='seller'?(
-                <>
-                  <h3>Seller</h3>
-                  <NavLink to='sellerOverview' className={({isActive})=>isActive?"active":" "}><li  ><LuChartColumnBig />Обзор</li></NavLink>
-                  <NavLink to='myProduct' className={({isActive})=>isActive?"active":" "}><li><AiOutlineProduct />Мои товары</li></NavLink>
-                  <NavLink to='myProduct' className={({isActive})=>isActive?"active":" "}><li><MdOutlineRateReview />Отзывы</li></NavLink>
-                </>
-                ):null }
+
                 <NavLink to='overview' className={({isActive})=>isActive?"active":" "}><li  ><IoHomeOutline />Обзор</li></NavLink>
                 <NavLink to='orders' className={({isActive})=>isActive?"active":" "}><li ><LuClipboardList />Мои заказы</li></NavLink>
                 <NavLink to='location' className={({isActive})=>isActive?"active":" "}><li ><IoLocationOutline />Адреса</li></NavLink>
