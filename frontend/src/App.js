@@ -2,9 +2,8 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Items from "./components/Items";
 import Categories from "./components/Categories";
-import ShowFullItem from "./components/ShowFullItem";
 
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import Presentation from "./components/Presentation";
 import { AppContext } from './context';
 
@@ -27,30 +26,22 @@ export function App() {
   const [catalogItems, setCatalogItems] = useState([]);
   // Отфильтрованный/текущий список товаров, который отображается на главной странице.
   const [visibleItems, setVisibleItems] = useState([]);
-  // Открыт ли модальный просмотр карточки товара.
-  const [isFullItemModalOpen, setIsFullItemModalOpen] = useState(false);
-  // Выбранный товар, который открывается в полном просмотре.
-  const [selectedItem, setSelectedItem] = useState({});
   const {cartItems, onChangeCount, createOrder, onAddToOrder, onDeleteOrder } = useContext(AppContext);
 
-  useEffect(() => {
-    async function load() {
+  const loadCatalog = useCallback(async()=>{
       const loadedItems = await itemsData();
       setCatalogItems(loadedItems);
       setVisibleItems(loadedItems);
-    }
+  },[])
+  useEffect(() => {
+   
 
-    load();
-  }, []);
+    loadCatalog();
+  }, [loadCatalog]);
 
 
 
   
-
-  function onShowItem(item) {
-    setSelectedItem(item);
-    setIsFullItemModalOpen(previousValue => !previousValue);
-  }
 
   function chooseCategory(category) {
     if (category === 'all') {
@@ -66,8 +57,7 @@ export function App() {
       <Header orders={cartItems} onDelete={onDeleteOrder} onChangeCount={onChangeCount} createOrder={createOrder}/>
       <Presentation/>
       <Categories chooseCategory={chooseCategory}/>
-      <Items onShowItem={onShowItem} items={visibleItems} onAdd={onAddToOrder}/>
-      {isFullItemModalOpen && <ShowFullItem item={selectedItem} onAdd={onAddToOrder} onShowItem={onShowItem}/>} 
+      <Items  loadCatalog ={loadCatalog } items={visibleItems} onAdd={onAddToOrder}/>
       <Footer />
     </div>
   );

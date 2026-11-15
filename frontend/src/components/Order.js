@@ -10,7 +10,7 @@ export class Order extends Component {
 
     return (
       <div className='order-item'>
-        <img className='order-item__image' src={`/img/${item.img}`} alt={item.title} />
+        <img className='order-item__image' src={item.img} alt={item.title} />
 
         <div className='order-item__content'>
           <h2 className='order-item__title'>{item.title}</h2>

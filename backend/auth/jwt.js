@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'change-this-secret-in-production';
-
+const TOKEN_TTL_SECONDS= 30*24*60*60;
 function secondsUntilMidnight() {
     const now = new Date();
     const midnight = new Date(now);
@@ -19,7 +19,7 @@ function generateToken(user) {
         JWT_SECRET,
         {
             subject: user.id,
-            expiresIn: secondsUntilMidnight()
+            expiresIn: TOKEN_TTL_SECONDS
         }
     );
 }
@@ -28,4 +28,4 @@ function verifyToken(token) {
     return jwt.verify(token, JWT_SECRET);
 }
 
-module.exports = { generateToken, verifyToken, secondsUntilMidnight };
+module.exports = { generateToken, verifyToken, secondsUntilMidnight , TOKEN_TTL_SECONDS};

@@ -31,7 +31,7 @@ export default function Favorites() {
   return (
     <>
       <h2> Мои избраные</h2>
-    <div className="cabinet-block favorites-block">
+    <div className="cabinet-block favorites-block product-grid">
       {favoritesList.map((el)=>(
         <Item  key={el.id} item={el} onAdd={onAddToOrder} reloadList={()=>delInFavState(el.id)} isFav={favoritesList.some(element=>element.id===el.id)}/>
         

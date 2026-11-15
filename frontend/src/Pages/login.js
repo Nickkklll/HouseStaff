@@ -35,8 +35,9 @@ function Login() {
       alert("Вы вошли на сайт!")
       console.log(data)
       setUser(data.user);
-      navigate('/cabinet');
-
+      navigate(data.user.role === 'seller'
+        ? '/cabinet/sellerOverview'
+        : '/cabinet/overview');
       
     } else{
       alert(`Ошибка входа: ${data.message}`);

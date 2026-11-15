@@ -24,6 +24,14 @@ export class Categories extends Component {
                 {
                     key:'lights',
                     name:'Свет'
+                },
+                {
+                    key:'beds',
+                    name:"Кровати"
+                },
+                {
+                    key:'decor',
+                    name:'Декор'
                 }
             ]
         }

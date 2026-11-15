@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import App from '../App';
 import Login from '../Pages/login';
 import Registration from '../Pages/Registration'
@@ -10,8 +10,37 @@ import Favorites from "./profile/Favorites";
 import Settings from "./profile/Settings";
 import MyProduct from "./profile/seller/MyProducts";
 import Reviews from "./profile/seller/Reviews";
-import SellerOrders from "./profile/seller/Orders";
+import SellerOrders from "./profile/seller/SellerOrders";
 import SellerOveriew from "./profile/seller/SellerOveriew";
+
+import { useContext } from "react";
+import { AppContext } from "../context";
+
+function homeForRole(role){
+    if(role==='seller'){
+        return '/cabinet/sellerOverview';
+    }
+    if(role==='user'||role==='admin'){
+        return "/cabinet/overview"
+    }
+    return 'login';
+}
+function RequireRole({allowRoles,children}){
+    const {user,loading} = useContext(AppContext);
+    if(loading){
+        return(<p>Загрузка</p>)
+    }
+
+    if(!user){
+        return(<Navigate to='/login' replace/>)
+    }
+    if(!allowRoles.includes(user.role)){
+        return(<Navigate to={homeForRole(user.role)} replace/>)
+    }
+
+    return children;
+}
+
 export const router = createBrowserRouter([
     {
         path:'/',
@@ -27,47 +56,66 @@ export const router = createBrowserRouter([
     },
     {
         path:'/cabinet',
-        element:<Cabinet/>,
+        element:
+        <RequireRole allowRoles={["user", "admin",'seller']}>
+                        <Cabinet/>
+                    </RequireRole>,
         children:[
             {
-                index:true,
-                element:<Overview/>
-            },
-            {
                 path:'overview',
-                element:<Overview/>
+                element:(
+                    <RequireRole allowRoles={["user", "admin"]}>
+                        <Overview/>
+                    </RequireRole>
+                )
             },
             {
                 path:'orders',
-                element:<Orders/>
+                element:<RequireRole allowRoles={["user", "admin"]}>
+                        <Orders/>
+                    </RequireRole>
             },
             {
                 path:'location',
-                element:<Location/>
+                element:<RequireRole allowRoles={["user", "admin"]}>
+                        <Location/>
+                    </RequireRole>
             },
             {
                 path:'favorites',
-                element:<Favorites/>
+                element:<RequireRole allowRoles={["user", "admin"]}>
+                        <Favorites/>
+                    </RequireRole>
             },
             {
                 path:'settings',
-                element:<Settings/>
+                element:<RequireRole allowRoles={["user", "admin","seller"]}>
+                        <Settings/>
+                    </RequireRole>
             },
             {
                 path:'MyProduct',
-                element: <MyProduct/>
+                element:<RequireRole allowRoles={["admin","seller"]}>
+                        <MyProduct/>
+                    </RequireRole>
             },
             {
                 path:'Review',
-                element:<Reviews/>
+                element:<RequireRole allowRoles={["admin","seller"]}>
+                        <Reviews/>
+                    </RequireRole>
             },
             {
                 path:'SellerOrders',
-                element:<SellerOrders/>
+                element:<RequireRole allowRoles={["admin","seller"]}>
+                        <SellerOrders/>
+                    </RequireRole>
             },
             {
                 path:'sellerOverview',
-                element:<SellerOveriew/>
+                element:<RequireRole allowRoles={["admin","seller"]}>
+                        <SellerOveriew/>
+                    </RequireRole>
             }
         ]
     }

@@ -51,8 +51,7 @@ export default function Settings() {
   
     
     const registrationData = Object.fromEntries(handleFormData.entries());
-      console.log(registrationData);
-      console.log(formData)
+      
 
       const isIdent = Object.entries(registrationData).every(
         ([key, value]) => value === savedFormDataRef.current[key]

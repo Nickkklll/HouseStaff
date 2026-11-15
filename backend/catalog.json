@@ -1,893 +1,1990 @@
 [
   {
-    "id": 1,
+    "id": "17f82b7c-baf6-4811-b0a1-805cca15b770",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Стул серый",
-    "img": "chair-grey.webp",
+    "img": "http://localhost:3000/uploads/img/product/chair-grey.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "chairs",
     "price": 49.99,
-    "favoritesCount": 2
+    "favoritesCount": 2,
+    "quantity": 18,
+    "reviews": [
+      {
+        "id": "a39f1fa7-a182-431c-b7a0-2904c087fd1c",
+        "rating": 4,
+        "text": "Удобный стул, хорошо вписался в интерьер. Сборка прошла без сложностей.",
+        "createdAt": "2026-10-30T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 2,
+    "id": "fa6c1c32-126a-475a-b789-a4c793c48c29",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Стол",
-    "img": "table.webp",
+    "img": "http://localhost:3000/uploads/img/product/table.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "tables",
     "price": 149,
-    "favoritesCount": 2
+    "favoritesCount": 0,
+    "quantity": 7,
+    "reviews": [
+      {
+        "id": "24135dec-4551-4948-9ca8-09ef5207a81e",
+        "rating": 5,
+        "text": "Хорошо подошёл по размеру и аккуратно смотрится в комнате.",
+        "createdAt": "2026-10-29T12:00:00.000Z",
+        "isDemo": true
+      },
+      {
+        "id": "aa7dd795-4766-46a1-87e5-17fe6e24487f",
+        "rating": 4,
+        "text": "Припрпр при при оол",
+        "createdAt": "2026-11-11T21:37:11.940Z"
+      },
+      {
+        "id": "6db48490-88ea-4559-8aed-dcbf9e3ca33f",
+        "rating": 5,
+        "text": "Прикольный стул",
+        "createdAt": "2026-11-11T21:39:18.957Z"
+      },
+      {
+        "id": "ad0d44cd-b261-4442-ba9b-42211270bcbd",
+        "rating": 5,
+        "text": "0",
+        "createdAt": "2026-11-11T21:48:21.192Z"
+      }
+    ]
   },
   {
-    "id": 3,
+    "id": "e96967ce-16ad-46e7-a23f-4db81e8a492a",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Стул белый",
-    "img": "chair-white.webp",
+    "img": "http://localhost:3000/uploads/img/product/abf0b4ce-f4c4-412d-bcd3-2158edd8fe58.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "chairs",
     "price": 55,
-    "favoritesCount": 1
+    "favoritesCount": 1,
+    "quantity": 11,
+    "reviews": [
+      {
+        "id": "44c37df1-e1c2-49cb-b8a9-7147f7bc83ee",
+        "rating": 5,
+        "text": "Аккуратно сделан и удобен для повседневного использования.",
+        "createdAt": "2026-10-28T12:00:00.000Z",
+        "isDemo": true
+      },
+      {
+        "id": "efe8545e-4c0d-442f-9e4f-79d130102777",
+        "rating": 1,
+        "text": "Очень плохое качество товара",
+        "createdAt": "2026-11-14T19:14:29.607Z"
+      }
+    ]
   },
   {
-    "id": 4,
+    "id": "64c80b4a-2204-44ff-9f5f-3d8b3c531220",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Стул черный",
-    "img": "chair-black.webp",
+    "img": "http://localhost:3000/uploads/img/product/chair-black.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "chairs",
     "price": 45,
-    "favoritesCount": 1
+    "favoritesCount": 1,
+    "quantity": 17,
+    "reviews": [
+      {
+        "id": "2f04f547-6892-4941-85be-6a92b4de4a2c",
+        "rating": 5,
+        "text": "Удобный стул, хорошо вписался в интерьер. Сборка прошла без сложностей.",
+        "createdAt": "2026-10-27T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 5,
+    "id": "abeb341a-c59b-406e-b78e-2e107a49fc4b",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Стул деревянный",
-    "img": "chair-wood.webp",
+    "img": "http://localhost:3000/uploads/img/product/chair-wood.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "chairs",
     "price": 65,
-    "favoritesCount": 1
+    "favoritesCount": 1,
+    "quantity": 25,
+    "reviews": [
+      {
+        "id": "aa204fa5-011a-48d9-8f1b-4d0b76a51b6d",
+        "rating": 4,
+        "text": "Качество приятно удивило: конструкция устойчивая, сидеть комфортно.",
+        "createdAt": "2026-10-26T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 6,
-    "title": "Кресло мягкое",
-    "img": "armchair-soft.webp",
-    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
-    "category": "chairs",
-    "price": 120,
-    "favoritesCount": 1
-  },
-  {
-    "id": 7,
+    "id": "d82988ef-fe02-4b5c-85b5-7c83db2f992f",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Кресло офисное",
-    "img": "armchair-office.webp",
+    "img": "http://localhost:3000/uploads/img/product/armchair-office.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "chairs",
     "price": 180,
-    "favoritesCount": 1
+    "favoritesCount": 1,
+    "quantity": 26,
+    "reviews": [
+      {
+        "id": "cb5167df-0cd3-489d-9f53-2abb804e95e0",
+        "rating": 5,
+        "text": "Аккуратно сделан и удобен для повседневного использования.",
+        "createdAt": "2026-10-25T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 8,
+    "id": "4ad501df-8f02-4196-9988-ae70d9b7ff3d",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Стул барный",
-    "img": "chair-bar.webp",
+    "img": "http://localhost:3000/uploads/img/product/chair-bar.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "chairs",
     "price": 85,
-    "favoritesCount": 1
+    "favoritesCount": 1,
+    "quantity": 18,
+    "reviews": [
+      {
+        "id": "51adb48e-00cb-4ab1-854c-b6e417294937",
+        "rating": 5,
+        "text": "Удобный стул, хорошо вписался в интерьер. Сборка прошла без сложностей.",
+        "createdAt": "2026-10-24T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 9,
+    "id": "c46b9b6c-ce47-4b7a-a5c1-4d7bb0706057",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Стул складной",
-    "img": "chair-folding.webp",
+    "img": "http://localhost:3000/uploads/img/product/chair-folding.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "chairs",
     "price": 30,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 8,
+    "reviews": [
+      {
+        "id": "0eedc7e3-6ce2-4af6-844a-17013d151361",
+        "rating": 5,
+        "text": "Качество приятно удивило: конструкция устойчивая, сидеть комфортно.",
+        "createdAt": "2026-10-23T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 10,
+    "id": "b3abe364-1b03-4fd7-b5d3-1f3c75e355ef",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Стул обеденный",
-    "img": "chair-dining.webp",
+    "img": "http://localhost:3000/uploads/img/product/chair-dining.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "chairs",
     "price": 70,
-    "favoritesCount": 1
+    "favoritesCount": 1,
+    "quantity": 22,
+    "reviews": [
+      {
+        "id": "1ccc84d8-f0b7-4b3f-b47a-2d76a9cee742",
+        "rating": 4,
+        "text": "Аккуратно сделан и удобен для повседневного использования.",
+        "createdAt": "2026-10-22T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 11,
+    "id": "a7121c7c-1b63-4afe-8c9b-1b4c3fc84bc0",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Стол обеденный",
-    "img": "table-dining.webp",
+    "img": "http://localhost:3000/uploads/img/product/table-dining.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "tables",
     "price": 220,
-    "favoritesCount": 1
+    "favoritesCount": 1,
+    "quantity": 13,
+    "reviews": [
+      {
+        "id": "a8cb11af-be63-4f84-85e1-40ed820755d2",
+        "rating": 5,
+        "text": "Стол устойчивый, поверхность легко поддерживать в чистоте. Покупкой доволен.",
+        "createdAt": "2026-10-21T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 12,
+    "id": "52a7c16b-91e1-4f9a-a4cb-3ddb22bc232b",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Стол журнальный",
-    "img": "table-coffee.webp",
+    "img": "http://localhost:3000/uploads/img/product/table-coffee.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "tables",
     "price": 89.99,
-    "favoritesCount": 1
+    "favoritesCount": 1,
+    "quantity": 14,
+    "reviews": [
+      {
+        "id": "9ec2147c-200f-4d08-a431-ea4a9a8df966",
+        "rating": 5,
+        "text": "Хорошо подошёл по размеру и аккуратно смотрится в комнате.",
+        "createdAt": "2026-10-20T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 13,
+    "id": "fd33e7da-5051-4e07-9983-e954df859c17",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Стол письменный",
-    "img": "table-desk.webp",
+    "img": "http://localhost:3000/uploads/img/product/table-desk.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "tables",
     "price": 175,
-    "favoritesCount": 1
+    "favoritesCount": 1,
+    "quantity": 10,
+    "reviews": [
+      {
+        "id": "782ec8e3-246c-4882-ad77-c7b1bfa5b2e7",
+        "rating": 5,
+        "text": "Практичный стол, собрал без проблем. Всё соответствует ожиданиям.",
+        "createdAt": "2026-10-19T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 14,
-    "title": "Стол компьютерный",
-    "img": "table-pc.webp",
-    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
-    "category": "tables",
-    "price": 199.99,
-    "favoritesCount": 0
-  },
-  {
-    "id": 15,
+    "id": "9104a917-b758-4c35-8048-23b13c8de7ce",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Стол стеклянный",
-    "img": "table-glass.webp",
+    "img": "http://localhost:3000/uploads/img/product/table-glass.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "tables",
     "price": 160,
-    "favoritesCount": 1
+    "favoritesCount": 0,
+    "quantity": 24,
+    "reviews": [
+      {
+        "id": "fcdcde93-3868-47c9-86da-41fa1bfb8353",
+        "rating": 4,
+        "text": "Стол устойчивый, поверхность легко поддерживать в чистоте. Покупкой доволен.",
+        "createdAt": "2026-10-18T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 16,
+    "id": "ee60187f-44ef-4782-abb0-24333709bd68",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Стол круглый",
-    "img": "table-round.webp",
+    "img": "http://localhost:3000/uploads/img/product/table-round.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "tables",
     "price": 135,
-    "favoritesCount": 1
+    "favoritesCount": 0,
+    "quantity": 31,
+    "reviews": [
+      {
+        "id": "302e91a4-8062-4bbd-9eca-c043b6587203",
+        "rating": 5,
+        "text": "Хорошо подошёл по размеру и аккуратно смотрится в комнате.",
+        "createdAt": "2026-10-17T12:00:00.000Z",
+        "isDemo": true
+      },
+      {
+        "id": "b3c7e6ad-7702-4b2c-9339-478fe2e3c114",
+        "rating": 2,
+        "text": "Мне просто такое не нравиться",
+        "createdAt": "2026-11-14T19:18:11.607Z"
+      },
+      {
+        "id": "052240be-a664-4200-ab0c-4feb73183726",
+        "rating": 3,
+        "text": "Я бы такое взял",
+        "createdAt": "2026-11-14T23:01:15.133Z"
+      }
+    ]
   },
   {
-    "id": 17,
+    "id": "8b5eeb8a-7d14-4c06-a4c7-75f786e90136",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Стол раздвижной",
-    "img": "table-expandable.webp",
+    "img": "http://localhost:3000/uploads/img/product/table-expandable.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "tables",
     "price": 290,
-    "favoritesCount": 1
+    "favoritesCount": 1,
+    "quantity": 15,
+    "reviews": [
+      {
+        "id": "c6f07ecd-991f-4b8f-902a-65abc5544461",
+        "rating": 5,
+        "text": "Практичный стол, собрал без проблем. Всё соответствует ожиданиям.",
+        "createdAt": "2026-10-16T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 18,
+    "id": "956169a4-fc98-4b02-985c-9cd6150e0e30",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Столик прикроватный",
-    "img": "table-night.webp",
+    "img": "http://localhost:3000/uploads/img/product/table-night.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "tables",
     "price": 45,
-    "favoritesCount": 1
+    "favoritesCount": 1,
+    "quantity": 24,
+    "reviews": [
+      {
+        "id": "1b5831f1-81e6-4422-9d6d-d4814b9aafba",
+        "rating": 5,
+        "text": "Стол устойчивый, поверхность легко поддерживать в чистоте. Покупкой доволен.",
+        "createdAt": "2026-10-15T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 19,
+    "id": "ca1db56c-1d0b-4572-9fbb-622d2b84e7de",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Стол лофт",
-    "img": "table-loft.webp",
+    "img": "http://localhost:3000/uploads/img/product/table-loft.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "tables",
     "price": 210,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 17,
+    "reviews": [
+      {
+        "id": "d063ac26-540c-42e4-b4cb-c6480670b506",
+        "rating": 4,
+        "text": "Хорошо подошёл по размеру и аккуратно смотрится в комнате.",
+        "createdAt": "2026-10-14T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 20,
+    "id": "48a9c8dd-c1cf-4f4c-b0d2-b95b2500022e",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Диван двухместный",
-    "img": "sofa-2seat.webp",
+    "img": "http://localhost:3000/uploads/img/product/sofa-2seat.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "sofas",
     "price": 450,
-    "favoritesCount": 1
+    "favoritesCount": 1,
+    "quantity": 25,
+    "reviews": [
+      {
+        "id": "abd67954-352f-474f-a5cb-fb257422fbfd",
+        "rating": 5,
+        "text": "Качество порадовало, пользоваться комфортно. Хороший вариант для дома.",
+        "createdAt": "2026-10-13T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 21,
+    "id": "fbdf3628-9469-4de6-b740-e40df1607bed",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Диван трехместный",
-    "img": "sofa-3seat.webp",
+    "img": "http://localhost:3000/uploads/img/product/sofa-3seat.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "sofas",
     "price": 600,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 18,
+    "reviews": [
+      {
+        "id": "8f52f245-e715-41b3-95ce-971c6a61279c",
+        "rating": 5,
+        "text": "Удобная мебель, выглядит аккуратно и хорошо смотрится в комнате.",
+        "createdAt": "2026-10-12T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 22,
+    "id": "435795b5-6408-41a1-a27f-d7f1013d99f2",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Диван угловой",
-    "img": "sofa-corner.webp",
+    "img": "http://localhost:3000/uploads/img/product/sofa-corner.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "sofas",
     "price": 850,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 15,
+    "reviews": [
+      {
+        "id": "d9b99b9f-c748-4bb6-87e7-4b10bb509da3",
+        "rating": 5,
+        "text": "Качество порадовало, пользоваться комфортно. Хороший вариант для дома.",
+        "createdAt": "2026-10-11T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 23,
-    "title": "Диван кожаный",
-    "img": "sofa-leather.webp",
-    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
-    "category": "sofas",
-    "price": 1200,
-    "favoritesCount": 0
-  },
-  {
-    "id": 24,
+    "id": "6ccca751-4fb6-4e94-9589-e4751019f269",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Диван раскладной",
-    "img": "sofa-bed.webp",
+    "img": "http://localhost:3000/uploads/img/product/sofa-bed.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "sofas",
     "price": 520,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 14,
+    "reviews": [
+      {
+        "id": "71bbebaa-4ece-4428-bbd1-b85a2c6b60c4",
+        "rating": 4,
+        "text": "Удобная мебель, выглядит аккуратно и хорошо смотрится в комнате.",
+        "createdAt": "2026-10-10T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 25,
+    "id": "8753bd1e-3fd0-46b4-94a7-e31a90051155",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Диван зеленый",
-    "img": "sofa-green.webp",
+    "img": "http://localhost:3000/uploads/img/product/sofa-green.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "sofas",
     "price": 480,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 27,
+    "reviews": [
+      {
+        "id": "0cd0106f-8b3f-4eca-862c-7ca2acc973b1",
+        "rating": 5,
+        "text": "Качество порадовало, пользоваться комфортно. Хороший вариант для дома.",
+        "createdAt": "2026-10-09T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 26,
+    "id": "1c1090fe-3b5d-4783-ac30-ee737427ec81",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Диван синий",
-    "img": "sofa-blue.webp",
+    "img": "http://localhost:3000/uploads/img/product/sofa-blue.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "sofas",
     "price": 490,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 23,
+    "reviews": [
+      {
+        "id": "6d6e09a6-2c0c-4383-9986-cdda8ba8f3d1",
+        "rating": 5,
+        "text": "Удобная мебель, выглядит аккуратно и хорошо смотрится в комнате.",
+        "createdAt": "2026-10-08T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 27,
+    "id": "8a2b1cfa-ec88-4926-ae3c-ec2889e8498a",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Кушетка",
-    "img": "sofa-daybed.webp",
+    "img": "http://localhost:3000/uploads/img/product/sofa-daybed.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "sofas",
     "price": 320,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 20,
+    "reviews": [
+      {
+        "id": "00456bed-6727-43ac-b0d2-6b3cc10f3298",
+        "rating": 5,
+        "text": "Качество порадовало, пользоваться комфортно. Хороший вариант для дома.",
+        "createdAt": "2026-10-07T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 28,
+    "id": "9436be7b-373c-4a12-98f3-f76e5e2355f4",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Тахта",
-    "img": "sofa-ottoman.webp",
+    "img": "http://localhost:3000/uploads/img/product/sofa-ottoman.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "sofas",
     "price": 280,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 19,
+    "reviews": [
+      {
+        "id": "6100ea4b-613c-4ea7-b4cb-af0292b82f08",
+        "rating": 4,
+        "text": "Удобная мебель, выглядит аккуратно и хорошо смотрится в комнате.",
+        "createdAt": "2026-10-06T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 29,
+    "id": "19400c72-054b-40d4-99da-a8a46abf51b6",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Лампа настольная",
-    "img": "lamp-desk.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-desk.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "lights",
     "price": 35,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 20,
+    "reviews": [
+      {
+        "id": "a07b8083-1719-4455-bd83-b549e96fb2cf",
+        "rating": 5,
+        "text": "Хорошо вписался в интерьер, качество соответствует ожиданиям.",
+        "createdAt": "2026-10-05T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 30,
+    "id": "91601508-d17d-41b0-99e9-a401338a0638",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Торшер напольный",
-    "img": "lamp-floor.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-floor.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "lights",
     "price": 85,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 24,
+    "reviews": [
+      {
+        "id": "3d92ec87-df08-4504-b498-edf931982274",
+        "rating": 5,
+        "text": "Смотрится аккуратно и даёт приятный свет. Покупкой доволен.",
+        "createdAt": "2026-10-04T12:00:00.000Z",
+        "isDemo": true
+      },
+      {
+        "id": "a6bb7db0-7d47-470d-9544-00b7eea78efd",
+        "rating": 2,
+        "text": "Выглядит... мягко говоря не очень. Ещё и попахивает чем-то...",
+        "createdAt": "2026-11-14T19:18:57.845Z"
+      }
+    ]
   },
   {
-    "id": 31,
+    "id": "dfe1ba73-da16-41ff-a930-1778b2df7f73",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Люстра потолочная",
-    "img": "lamp-ceiling.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-ceiling.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "lights",
     "price": 150,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 21,
+    "reviews": [
+      {
+        "id": "a21511a2-c18f-496c-9b95-449c9a6bb4fa",
+        "rating": 5,
+        "text": "Хорошо вписался в интерьер, качество соответствует ожиданиям.",
+        "createdAt": "2026-10-03T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 32,
+    "id": "9baab83a-c1bb-4f0e-a3d4-365b9f12811b",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Бра настенное",
-    "img": "lamp-wall.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-wall.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "lights",
     "price": 40,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 25,
+    "reviews": [
+      {
+        "id": "4b6404e7-0bb5-4fd8-97da-9e485260cfbf",
+        "rating": 4,
+        "text": "Смотрится аккуратно и даёт приятный свет. Покупкой доволен.",
+        "createdAt": "2026-10-30T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 33,
+    "id": "7d5716c9-c457-4c53-ab80-1ea21f2352ab",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Светильник точечный",
-    "img": "lamp-spot.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-spot.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "lights",
     "price": 15,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 11,
+    "reviews": [
+      {
+        "id": "d7ca6069-75ce-49e2-acf3-99af8758dafa",
+        "rating": 5,
+        "text": "Хорошо вписался в интерьер, качество соответствует ожиданиям.",
+        "createdAt": "2026-10-29T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 34,
+    "id": "8624d427-635a-4580-adac-1382aebe991a",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Лампа лофт",
-    "img": "lamp-loft.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-loft.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "lights",
     "price": 65,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 13,
+    "reviews": [
+      {
+        "id": "f4f34293-1712-465b-b876-67aca7567da4",
+        "rating": 5,
+        "text": "Смотрится аккуратно и даёт приятный свет. Покупкой доволен.",
+        "createdAt": "2026-10-28T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 35,
+    "id": "9da20d74-4d61-4cf5-9c2c-33ec6e96c6be",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Лампа светодиодная",
-    "img": "lamp-led.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-led.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "lights",
     "price": 25,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 19,
+    "reviews": [
+      {
+        "id": "2951e22d-21f4-4438-a064-56ae6a348da3",
+        "rating": 5,
+        "text": "Хорошо вписался в интерьер, качество соответствует ожиданиям.",
+        "createdAt": "2026-10-27T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 36,
+    "id": "1def6fe7-ccb6-4243-a4ea-0e50c561b685",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Ночник детский",
-    "img": "lamp-night.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-night.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "lights",
     "price": 20,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 23,
+    "reviews": [
+      {
+        "id": "0580d849-3ee3-4c38-9196-91f3c8e6e0f3",
+        "rating": 4,
+        "text": "Смотрится аккуратно и даёт приятный свет. Покупкой доволен.",
+        "createdAt": "2026-10-26T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 37,
+    "id": "3945d3fe-97d3-471c-8f80-6b3644977521",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Кровать двуспальная",
-    "img": "bed-double.webp",
+    "img": "http://localhost:3000/uploads/img/product/bed-double.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "beds",
     "price": 500,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 19,
+    "reviews": [
+      {
+        "id": "1b9dab69-e9af-44b7-ba6a-40acdef3fdd6",
+        "rating": 5,
+        "text": "Сборка прошла нормально, пользоваться комфортно. Покупкой доволен.",
+        "createdAt": "2026-10-25T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 38,
+    "id": "96407fcf-a564-4e66-8af8-59241e05fbae",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Кровать односпальная",
-    "img": "bed-single.webp",
+    "img": "http://localhost:3000/uploads/img/product/bed-single.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "beds",
     "price": 300,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 27,
+    "reviews": [
+      {
+        "id": "6aa3ac9a-0cd9-4609-a4a5-94110fed4d22",
+        "rating": 5,
+        "text": "Удобная и крепкая конструкция, хорошо подошла для спальни.",
+        "createdAt": "2026-10-24T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 39,
+    "id": "a44298fc-f4ec-417a-a205-09dc7587b482",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Кровать двухъярусная",
-    "img": "bed-bunk.webp",
+    "img": "http://localhost:3000/uploads/img/product/bed-bunk.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "beds",
     "price": 450,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 17,
+    "reviews": [
+      {
+        "id": "4de33d6b-1a23-49da-a5ae-6e517fce574a",
+        "rating": 5,
+        "text": "Сборка прошла нормально, пользоваться комфортно. Покупкой доволен.",
+        "createdAt": "2026-10-23T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 40,
+    "id": "8f03c43b-94c5-490d-9c9c-fe6fc118ca2f",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Кровать с подъемным механизмом",
-    "img": "bed-storage.webp",
+    "img": "http://localhost:3000/uploads/img/product/bed-storage.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "beds",
     "price": 650,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 23,
+    "reviews": [
+      {
+        "id": "028f15e9-3897-4be5-8b10-133a4171953b",
+        "rating": 4,
+        "text": "Удобная и крепкая конструкция, хорошо подошла для спальни.",
+        "createdAt": "2026-10-22T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 41,
+    "id": "2060682b-95aa-4d30-a61b-9dce8d5bf71d",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Кровать королевская",
-    "img": "bed-king.webp",
+    "img": "http://localhost:3000/uploads/img/product/bed-king.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "beds",
     "price": 800,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 29,
+    "reviews": [
+      {
+        "id": "129fd269-0d66-44d5-aeb7-c2ff35845ff8",
+        "rating": 5,
+        "text": "Сборка прошла нормально, пользоваться комфортно. Покупкой доволен.",
+        "createdAt": "2026-10-21T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 42,
-    "title": "Кровать детская",
-    "img": "bed-kids.webp",
-    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
-    "category": "beds",
-    "price": 250,
-    "favoritesCount": 0
-  },
-  {
-    "id": 43,
+    "id": "01c8387a-0dd5-4429-966e-8941ff90a547",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Шкаф двухдверный",
-    "img": "wardrobe-2door.webp",
+    "img": "http://localhost:3000/uploads/img/product/wardrobe-2door.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "decor",
     "price": 350,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 18,
+    "reviews": [
+      {
+        "id": "0618f083-f4d4-4842-98c5-191b7ad4b089",
+        "rating": 5,
+        "text": "Аккуратная вещь, хорошо дополнила интерьер комнаты.",
+        "createdAt": "2026-10-20T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 44,
-    "title": "Шкаф-купе",
-    "img": "wardrobe-sliding.webp",
-    "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
-    "category": "decor",
-    "price": 550,
-    "favoritesCount": 0
-  },
-  {
-    "id": 45,
+    "id": "2bc986d8-afd9-4d45-a082-6fa29c99b779",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Комод 4 ящика",
-    "img": "dresser-4drawer.webp",
+    "img": "http://localhost:3000/uploads/img/product/dresser-4drawer.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "decor",
     "price": 180,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 25,
+    "reviews": [
+      {
+        "id": "00fad64a-72bd-4214-b3cd-0ab3e512e4a8",
+        "rating": 5,
+        "text": "Выглядит как на фото, покупкой доволен.",
+        "createdAt": "2026-10-19T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 46,
+    "id": "c7ac5b8f-e0f1-42f2-9d4f-d1ad13e8163a",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Тумба под ТВ",
-    "img": "tv-stand.webp",
+    "img": "http://localhost:3000/uploads/img/product/tv-stand.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "decor",
     "price": 130,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 19,
+    "reviews": [
+      {
+        "id": "d5d2f064-0578-439a-a005-65a05ed533e6",
+        "rating": 4,
+        "text": "Аккуратная вещь, хорошо дополнила интерьер комнаты.",
+        "createdAt": "2026-10-18T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 47,
+    "id": "13ef02d2-913e-4aa9-8ce0-f8c76830e0f7",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Стеллаж книжный",
-    "img": "bookshelf.webp",
+    "img": "http://localhost:3000/uploads/img/product/bookshelf.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "decor",
     "price": 110,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 29,
+    "reviews": [
+      {
+        "id": "bcd0a469-8ae3-49d1-850b-4bcef833131e",
+        "rating": 5,
+        "text": "Выглядит как на фото, покупкой доволен.",
+        "createdAt": "2026-10-17T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 48,
+    "id": "4740f53f-cef5-4738-b2e0-f8b0b7370a49",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Зеркало напольное",
-    "img": "mirror-floor.webp",
+    "img": "http://localhost:3000/uploads/img/product/mirror-floor.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "decor",
     "price": 75,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 16,
+    "reviews": [
+      {
+        "id": "82942051-1ef9-40e8-9fc4-af8b67661ac7",
+        "rating": 5,
+        "text": "Аккуратная вещь, хорошо дополнила интерьер комнаты.",
+        "createdAt": "2026-10-16T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 49,
+    "id": "7836883f-398b-402f-b9f7-1a34f2e08472",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Зеркало настенное",
-    "img": "mirror-wall.webp",
+    "img": "http://localhost:3000/uploads/img/product/mirror-wall.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "decor",
     "price": 45,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 24,
+    "reviews": [
+      {
+        "id": "92b8aeb5-f175-4e9d-912b-f2aef8f74194",
+        "rating": 5,
+        "text": "Выглядит как на фото, покупкой доволен.",
+        "createdAt": "2026-10-15T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 50,
+    "id": "3dfeabb3-3877-4fcc-b3ad-8d807e5e4b76",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Вешалка напольная",
-    "img": "coat-rack.webp",
+    "img": "http://localhost:3000/uploads/img/product/coat-rack.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "decor",
     "price": 35,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 21,
+    "reviews": [
+      {
+        "id": "9b81593d-4e03-4f62-a942-52b4a2446615",
+        "rating": 4,
+        "text": "Аккуратная вещь, хорошо дополнила интерьер комнаты.",
+        "createdAt": "2026-10-14T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 51,
+    "id": "f4e767f6-b5fc-4a97-90a2-f9ab31c3af6e",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Стул пластиковый",
-    "img": "chair-plastic.webp",
+    "img": "http://localhost:3000/uploads/img/product/chair-plastic.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "chairs",
     "price": 25,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 14,
+    "reviews": [
+      {
+        "id": "2a1b84ba-8013-42fc-b29b-39f8f603bafd",
+        "rating": 5,
+        "text": "Удобный стул, хорошо вписался в интерьер. Сборка прошла без сложностей.",
+        "createdAt": "2026-10-13T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 52,
+    "id": "c099d219-37cf-4fe4-bdbc-d9c35b7aaa1a",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Стул кухонный",
-    "img": "chair-kitchen.webp",
+    "img": "http://localhost:3000/uploads/img/product/chair-kitchen.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "chairs",
     "price": 40,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 27,
+    "reviews": [
+      {
+        "id": "e8f5c21f-73e2-4ed4-819f-6df7d504d4a8",
+        "rating": 5,
+        "text": "Качество приятно удивило: конструкция устойчивая, сидеть комфортно.",
+        "createdAt": "2026-10-12T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 53,
+    "id": "e0694067-3d92-4912-a619-92d5f1a39868",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Кресло качалка",
-    "img": "armchair-rocking.webp",
+    "img": "http://localhost:3000/uploads/img/product/armchair-rocking.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "chairs",
     "price": 160,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 18,
+    "reviews": [
+      {
+        "id": "659c09b2-2e92-4e4a-b74f-a7565a3f82be",
+        "rating": 5,
+        "text": "Аккуратно сделан и удобен для повседневного использования.",
+        "createdAt": "2026-10-11T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 54,
+    "id": "f1c92d46-4f07-459a-bf0f-faa7d45d6057",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Кресло-мешок",
-    "img": "beanbag.webp",
+    "img": "http://localhost:3000/uploads/img/product/beanbag.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "chairs",
     "price": 50,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 26,
+    "reviews": [
+      {
+        "id": "bb071ba2-a725-4c79-946d-ee9aefaa750c",
+        "rating": 4,
+        "text": "Удобный стул, хорошо вписался в интерьер. Сборка прошла без сложностей.",
+        "createdAt": "2026-10-10T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 55,
+    "id": "5638c030-f3b5-4c36-a818-3a6c8d5389d2",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Стул геймерский",
-    "img": "chair-gaming.webp",
+    "img": "http://localhost:3000/uploads/img/product/chair-gaming.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "chairs",
     "price": 210,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 20,
+    "reviews": [
+      {
+        "id": "b5ea4da5-ed23-4319-8ac0-4ccd74d25db0",
+        "rating": 5,
+        "text": "Качество приятно удивило: конструкция устойчивая, сидеть комфортно.",
+        "createdAt": "2026-10-09T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 56,
+    "id": "f02c4733-83d3-49fb-a856-bce29ede6f61",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Пуф мягкий",
-    "img": "pouf-soft.webp",
+    "img": "http://localhost:3000/uploads/img/product/pouf-soft.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "chairs",
     "price": 35,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 17,
+    "reviews": [
+      {
+        "id": "2f4d6fd0-3a79-4691-8dcc-e65de5cf48e3",
+        "rating": 5,
+        "text": "Аккуратно сделан и удобен для повседневного использования.",
+        "createdAt": "2026-10-08T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 57,
+    "id": "afd2643e-c9b3-407a-b87e-2ea661d03324",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Пуф с ящиком",
-    "img": "pouf-storage.webp",
+    "img": "http://localhost:3000/uploads/img/product/pouf-storage.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "chairs",
     "price": 45,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 23,
+    "reviews": [
+      {
+        "id": "07d850e9-6d38-4b7a-88a1-ffdfded7acca",
+        "rating": 5,
+        "text": "Удобный стул, хорошо вписался в интерьер. Сборка прошла без сложностей.",
+        "createdAt": "2026-10-07T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 58,
+    "id": "00d3eb83-e162-45ec-b779-ec74f698db99",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Стол садовый",
-    "img": "table-garden.webp",
+    "img": "http://localhost:3000/uploads/img/product/table-garden.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "tables",
     "price": 110,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 11,
+    "reviews": [
+      {
+        "id": "95ab43e7-accf-4156-a089-a7840620fb9b",
+        "rating": 4,
+        "text": "Хорошо подошёл по размеру и аккуратно смотрится в комнате.",
+        "createdAt": "2026-10-06T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 59,
+    "id": "f8040849-32be-45e3-81e0-f9591454be82",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Стол консольный",
-    "img": "table-console.webp",
+    "img": "http://localhost:3000/uploads/img/product/table-console.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "tables",
     "price": 125,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 21,
+    "reviews": [
+      {
+        "id": "253222c9-fd21-433b-8f9b-ad35acaa1b4e",
+        "rating": 5,
+        "text": "Практичный стол, собрал без проблем. Всё соответствует ожиданиям.",
+        "createdAt": "2026-10-05T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 60,
+    "id": "2d17c328-4486-4e3d-9e7b-307bcfce3aa4",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Стол сервировочный",
-    "img": "table-serving.webp",
+    "img": "http://localhost:3000/uploads/img/product/table-serving.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "tables",
     "price": 95,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 30,
+    "reviews": [
+      {
+        "id": "bf036ef8-da59-402e-8d8b-201fd08aa3d5",
+        "rating": 5,
+        "text": "Стол устойчивый, поверхность легко поддерживать в чистоте. Покупкой доволен.",
+        "createdAt": "2026-10-04T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 61,
+    "id": "0ffcd172-712a-4ef9-884a-661cf5afbc16",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Стол складной",
-    "img": "table-folding.webp",
+    "img": "http://localhost:3000/uploads/img/product/table-folding.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "tables",
     "price": 60,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 10,
+    "reviews": [
+      {
+        "id": "d8a6d897-1aef-43f0-9894-46e690a3638d",
+        "rating": 5,
+        "text": "Хорошо подошёл по размеру и аккуратно смотрится в комнате.",
+        "createdAt": "2026-10-03T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 62,
+    "id": "7c45150f-ca39-4fa4-b5cb-95ccdae8801f",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Стол туалетный",
-    "img": "table-vanity.webp",
+    "img": "http://localhost:3000/uploads/img/product/table-vanity.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "tables",
     "price": 190,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 30,
+    "reviews": [
+      {
+        "id": "178bdd67-c585-4001-83c6-c274c304c8e1",
+        "rating": 4,
+        "text": "Практичный стол, собрал без проблем. Всё соответствует ожиданиям.",
+        "createdAt": "2026-10-30T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 63,
+    "id": "88e84b38-2a70-4c50-af87-b190914cdbad",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Диван модульный",
-    "img": "sofa-modular.webp",
+    "img": "http://localhost:3000/uploads/img/product/sofa-modular.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "sofas",
     "price": 990,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 21,
+    "reviews": [
+      {
+        "id": "25875897-580a-4ca2-829a-a7c70057ceb1",
+        "rating": 5,
+        "text": "Качество порадовало, пользоваться комфортно. Хороший вариант для дома.",
+        "createdAt": "2026-10-29T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 64,
+    "id": "5b5e5e4b-7e76-4a86-8010-f37762dd303f",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Диван велюровый",
-    "img": "sofa-velvet.webp",
+    "img": "http://localhost:3000/uploads/img/product/sofa-velvet.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "sofas",
     "price": 580,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 10,
+    "reviews": [
+      {
+        "id": "8a832048-39d2-4242-938f-13fd7f41d83b",
+        "rating": 5,
+        "text": "Удобная мебель, выглядит аккуратно и хорошо смотрится в комнате.",
+        "createdAt": "2026-10-28T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 65,
+    "id": "25a6bd8a-6595-4479-ab46-06e9a0b0e543",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Диван прямой",
-    "img": "sofa-straight.webp",
+    "img": "http://localhost:3000/uploads/img/product/sofa-straight.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "sofas",
     "price": 410,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 13,
+    "reviews": [
+      {
+        "id": "04c74576-9f44-467b-867c-82c86fc7494f",
+        "rating": 5,
+        "text": "Качество порадовало, пользоваться комфортно. Хороший вариант для дома.",
+        "createdAt": "2026-10-27T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 66,
+    "id": "fbf65014-e45e-4959-b2c6-7bf212de4d2a",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Диван офисный",
-    "img": "sofa-office.webp",
+    "img": "http://localhost:3000/uploads/img/product/sofa-office.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "sofas",
     "price": 370,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 28,
+    "reviews": [
+      {
+        "id": "837dc843-6187-422b-874b-4abda9266dc8",
+        "rating": 4,
+        "text": "Удобная мебель, выглядит аккуратно и хорошо смотрится в комнате.",
+        "createdAt": "2026-10-26T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 67,
+    "id": "3bdc1f51-05f8-4938-9f1d-d104d2779b57",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Лампа подвесная",
-    "img": "lamp-pendant.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-pendant.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "lights",
     "price": 75,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 15,
+    "reviews": [
+      {
+        "id": "b4b5ba67-3ff8-478e-8bf9-5ace3d11fd72",
+        "rating": 5,
+        "text": "Хорошо вписался в интерьер, качество соответствует ожиданиям.",
+        "createdAt": "2026-10-25T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 68,
+    "id": "c7251318-81da-4bdd-bdc8-0b3d8fdcb8d7",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Лампа хрустальная",
-    "img": "lamp-crystal.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-crystal.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "lights",
     "price": 230,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 14,
+    "reviews": [
+      {
+        "id": "0137c144-9ec8-4945-b73b-dfc4e2d5b931",
+        "rating": 5,
+        "text": "Смотрится аккуратно и даёт приятный свет. Покупкой доволен.",
+        "createdAt": "2026-10-24T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 69,
+    "id": "ab70c7c6-d934-4e2c-bc6a-b2005d66dc14",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Лампа умная",
-    "img": "lamp-smart.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-smart.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "lights",
     "price": 55,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 20,
+    "reviews": [
+      {
+        "id": "29fd9815-6c77-46a6-bf55-cb70a93851af",
+        "rating": 5,
+        "text": "Хорошо вписался в интерьер, качество соответствует ожиданиям.",
+        "createdAt": "2026-10-23T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 70,
+    "id": "66bf1840-65e6-4b10-addd-d0d210384adf",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Лампа на прищепке",
-    "img": "lamp-clip.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-clip.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "lights",
     "price": 18,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 21,
+    "reviews": [
+      {
+        "id": "8dee1807-3a84-4c05-a8d0-4b0b6c00472a",
+        "rating": 4,
+        "text": "Смотрится аккуратно и даёт приятный свет. Покупкой доволен.",
+        "createdAt": "2026-10-22T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 71,
+    "id": "a0b781c6-bce0-4c6e-a0f4-f84f2a50b7b0",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Кровать с мягким изголовьем",
-    "img": "bed-padded.webp",
+    "img": "http://localhost:3000/uploads/img/product/bed-padded.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "beds",
     "price": 620,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 26,
+    "reviews": [
+      {
+        "id": "2694557e-930c-40cc-8856-f607b8b79851",
+        "rating": 5,
+        "text": "Сборка прошла нормально, пользоваться комфортно. Покупкой доволен.",
+        "createdAt": "2026-10-21T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 72,
+    "id": "ca2ed7c7-68cf-481d-b1a0-9ba78e234405",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Кровать металлическая",
-    "img": "bed-metal.webp",
+    "img": "http://localhost:3000/uploads/img/product/bed-metal.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "beds",
     "price": 280,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 18,
+    "reviews": [
+      {
+        "id": "afdfda9a-eebc-4afb-82e5-853ef551e816",
+        "rating": 5,
+        "text": "Удобная и крепкая конструкция, хорошо подошла для спальни.",
+        "createdAt": "2026-10-20T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 73,
+    "id": "2b512659-c333-4572-8a4d-a39d53823718",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Кровать-подиум",
-    "img": "bed-podium.webp",
+    "img": "http://localhost:3000/uploads/img/product/bed-podium.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "beds",
     "price": 490,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 29,
+    "reviews": [
+      {
+        "id": "67288f90-7592-4f26-97b8-da1d2ff780fe",
+        "rating": 5,
+        "text": "Сборка прошла нормально, пользоваться комфортно. Покупкой доволен.",
+        "createdAt": "2026-10-19T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 74,
+    "id": "cf9c5bef-94f0-4237-b154-5ec030e48cae",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Кровать трансформер",
-    "img": "bed-transform.webp",
+    "img": "http://localhost:3000/uploads/img/product/bed-transform.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "beds",
     "price": 750,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 13,
+    "reviews": [
+      {
+        "id": "93117b26-f829-43f3-8434-41228a5ef34c",
+        "rating": 4,
+        "text": "Удобная и крепкая конструкция, хорошо подошла для спальни.",
+        "createdAt": "2026-10-18T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 75,
+    "id": "d533cb42-c208-413c-89d2-ceaa201dca64",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Шкаф угловой",
-    "img": "wardrobe-corner.webp",
+    "img": "http://localhost:3000/uploads/img/product/wardrobe-corner.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "decor",
     "price": 420,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 11,
+    "reviews": [
+      {
+        "id": "d41730c4-618e-4fee-b535-9db45cf649fe",
+        "rating": 5,
+        "text": "Выглядит как на фото, покупкой доволен.",
+        "createdAt": "2026-10-17T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 76,
+    "id": "1ee0f561-4ed6-4673-9222-189f8a09b3d2",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Шкаф книжный со стеклом",
-    "img": "bookcase-glass.webp",
+    "img": "http://localhost:3000/uploads/img/product/bookcase-glass.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "decor",
     "price": 260,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 25,
+    "reviews": [
+      {
+        "id": "299d1218-20f1-4c82-bde2-061d3f52b67c",
+        "rating": 5,
+        "text": "Аккуратная вещь, хорошо дополнила интерьер комнаты.",
+        "createdAt": "2026-10-16T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 77,
+    "id": "18372d3e-cb7a-4457-8565-6c4d2cc8a128",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Полка настенная",
-    "img": "shelf-wall.webp",
+    "img": "http://localhost:3000/uploads/img/product/shelf-wall.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "decor",
     "price": 25,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 11,
+    "reviews": [
+      {
+        "id": "521f9940-01a7-47dc-b053-e0c55510937c",
+        "rating": 5,
+        "text": "Выглядит как на фото, покупкой доволен.",
+        "createdAt": "2026-10-15T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 78,
+    "id": "29418638-09a3-4898-9c08-f2ca24bba459",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Полка угловая",
-    "img": "shelf-corner.webp",
+    "img": "http://localhost:3000/uploads/img/product/shelf-corner.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "decor",
     "price": 30,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 22,
+    "reviews": [
+      {
+        "id": "7ee82edf-265c-43dd-8772-517dede4401f",
+        "rating": 4,
+        "text": "Аккуратная вещь, хорошо дополнила интерьер комнаты.",
+        "createdAt": "2026-10-14T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 79,
+    "id": "8212c4b9-53df-4b6f-ab44-479dcadb2dfc",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Обувница",
-    "img": "shoe-rack.webp",
+    "img": "http://localhost:3000/uploads/img/product/shoe-rack.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "decor",
     "price": 65,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 12,
+    "reviews": [
+      {
+        "id": "248ae076-464e-47dd-984c-1cda5099ba9d",
+        "rating": 5,
+        "text": "Выглядит как на фото, покупкой доволен.",
+        "createdAt": "2026-10-13T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 80,
+    "id": "83f3afe6-c459-4ed2-b660-d5a7c061a47d",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Банкетка",
-    "img": "bench.webp",
+    "img": "http://localhost:3000/uploads/img/product/bench.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "chairs",
     "price": 70,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 14,
+    "reviews": [
+      {
+        "id": "4e65cd25-98e2-4793-a869-bb04b631cd53",
+        "rating": 5,
+        "text": "Аккуратно сделан и удобен для повседневного использования.",
+        "createdAt": "2026-10-12T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 81,
+    "id": "f8e4512e-5cac-4886-97aa-cec9dd7b1e22",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Стул мягкий",
-    "img": "chair-upholstered.webp",
+    "img": "http://localhost:3000/uploads/img/product/chair-upholstered.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "chairs",
     "price": 75,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 12,
+    "reviews": [
+      {
+        "id": "82ede48e-a5d1-4eb6-b510-03cc652adeb1",
+        "rating": 5,
+        "text": "Удобный стул, хорошо вписался в интерьер. Сборка прошла без сложностей.",
+        "createdAt": "2026-10-11T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 82,
+    "id": "a92bed79-d693-458d-a9c4-c4d245e5af71",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Стул металлический",
-    "img": "chair-metal.webp",
+    "img": "http://localhost:3000/uploads/img/product/chair-metal.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "chairs",
     "price": 48,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 22,
+    "reviews": [
+      {
+        "id": "c81d2df2-a45c-44db-9d35-be46c67e7d82",
+        "rating": 4,
+        "text": "Качество приятно удивило: конструкция устойчивая, сидеть комфортно.",
+        "createdAt": "2026-10-10T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 83,
+    "id": "a28b6401-2b10-4a08-9549-3fea1010ffb6",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Стол из массива",
-    "img": "table-solidwood.webp",
+    "img": "http://localhost:3000/uploads/img/product/table-solidwood.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "tables",
     "price": 340,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 13,
+    "reviews": [
+      {
+        "id": "98debd26-cc7c-44d8-84ed-ad4b916afe38",
+        "rating": 5,
+        "text": "Практичный стол, собрал без проблем. Всё соответствует ожиданиям.",
+        "createdAt": "2026-10-09T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 84,
+    "id": "e3753cff-7d7e-468a-957d-6c4cc15cc93d",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Стол трансформер",
-    "img": "table-transform.webp",
+    "img": "http://localhost:3000/uploads/img/product/table-transform.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "tables",
     "price": 230,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 22,
+    "reviews": [
+      {
+        "id": "11e26cb8-2370-414e-9e66-5fa6e0b69272",
+        "rating": 5,
+        "text": "Стол устойчивый, поверхность легко поддерживать в чистоте. Покупкой доволен.",
+        "createdAt": "2026-10-08T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 85,
+    "id": "f0abed54-8b8c-42e0-a59a-af146f131fb9",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Диван компактный",
-    "img": "sofa-compact.webp",
+    "img": "http://localhost:3000/uploads/img/product/sofa-compact.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "sofas",
     "price": 330,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 14,
+    "reviews": [
+      {
+        "id": "f52bae41-0f84-4249-a8ef-4fe4add05c7d",
+        "rating": 5,
+        "text": "Качество порадовало, пользоваться комфортно. Хороший вариант для дома.",
+        "createdAt": "2026-10-07T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 86,
+    "id": "f7e69c63-554f-43f0-9968-7b0b8eb311dc",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Диван-клик-кляк",
-    "img": "sofa-clickclack.webp",
+    "img": "http://localhost:3000/uploads/img/product/sofa-clickclack.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "sofas",
     "price": 390,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 21,
+    "reviews": [
+      {
+        "id": "1d012d3d-4ce9-49d2-a129-99cb39887469",
+        "rating": 4,
+        "text": "Удобная мебель, выглядит аккуратно и хорошо смотрится в комнате.",
+        "createdAt": "2026-10-06T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 87,
+    "id": "dd716136-20ee-4666-9805-d5019b0bc1eb",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Лампа декоративная",
-    "img": "lamp-decor.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-decor.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "lights",
     "price": 45,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 23,
+    "reviews": [
+      {
+        "id": "4d86d95f-9d47-47bf-a8dc-dc1d9d397b03",
+        "rating": 5,
+        "text": "Хорошо вписался в интерьер, качество соответствует ожиданиям.",
+        "createdAt": "2026-10-05T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 88,
+    "id": "141033f9-80c2-4b9b-8edd-b2f8a9204682",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Лампа трековая",
-    "img": "lamp-track.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-track.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "lights",
     "price": 90,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 11,
+    "reviews": [
+      {
+        "id": "f39a9195-ea55-4fa6-950d-36121dec6a1f",
+        "rating": 5,
+        "text": "Смотрится аккуратно и даёт приятный свет. Покупкой доволен.",
+        "createdAt": "2026-10-04T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 89,
+    "id": "8a40c6ce-27c5-400a-ae3f-a9a8e94ebe53",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Кровать полутораспальная",
-    "img": "bed-1.5.webp",
+    "img": "http://localhost:3000/uploads/img/product/bed-1.5.webp",
     "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
     "category": "beds",
     "price": 380,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 24,
+    "reviews": [
+      {
+        "id": "ea015422-d574-4070-95cf-d87e3e699af5",
+        "rating": 5,
+        "text": "Сборка прошла нормально, пользоваться комфортно. Покупкой доволен.",
+        "createdAt": "2026-10-03T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 90,
+    "id": "8e399693-61f1-46f5-aea5-5936cc96c9eb",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Светильник потолочный LED",
-    "img": "lamp-led.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-led.webp",
     "desc": "Современный потолочный светильник с мягким и равномерным освещением.",
     "category": "lights",
     "price": 1250,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 28,
+    "reviews": [
+      {
+        "id": "1c74771a-698c-4ee3-8a76-a5ad607e3335",
+        "rating": 4,
+        "text": "Смотрится аккуратно и даёт приятный свет. Покупкой доволен.",
+        "createdAt": "2026-10-30T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 91,
+    "id": "5b058602-7196-4d76-b5de-a98caf299ba2",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Светильник настенный Loft",
-    "img": "lamp-wall-loft.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-wall-loft.webp",
     "desc": "Стильный настенный светильник в стиле лофт для уютного интерьера.",
     "category": "lights",
     "price": 890,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 14,
+    "reviews": [
+      {
+        "id": "94e69512-1593-4dad-b8f5-5ca4f674f1b3",
+        "rating": 5,
+        "text": "Хорошо вписался в интерьер, качество соответствует ожиданиям.",
+        "createdAt": "2026-10-29T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 92,
+    "id": "cffb3eba-a46c-49b1-952b-9251e495ec23",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Светильник подвесной Modern",
-    "img": "lamp-pendant-modern.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-pendant-modern.webp",
     "desc": "Элегантный подвесной светильник для гостиной или столовой.",
     "category": "lights",
     "price": 1790,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 16,
+    "reviews": [
+      {
+        "id": "afd60253-4049-4729-9c43-e96d3b877425",
+        "rating": 5,
+        "text": "Смотрится аккуратно и даёт приятный свет. Покупкой доволен.",
+        "createdAt": "2026-10-28T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 93,
+    "id": "dc16adf7-ecee-4947-a948-e03011604395",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Настольный светильник Classic",
-    "img": "lamp-table-classic.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-table-classic.webp",
     "desc": "Компактный настольный светильник для рабочего стола или спальни.",
     "category": "lights",
     "price": 650,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 15,
+    "reviews": [
+      {
+        "id": "2bad74d3-94f1-4d33-8ae2-b2bf6e03c496",
+        "rating": 5,
+        "text": "Хорошо вписался в интерьер, качество соответствует ожиданиям.",
+        "createdAt": "2026-10-27T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 94,
+    "id": "c5700c15-a2c1-4004-a539-b4e656fb0ab4",
+    "sellerId": "44eb5b9d-4b0f-4a51-a51b-be10b9aa26f9",
     "title": "Торшер напольный Elegance",
-    "img": "lamp-floor-elegance.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-floor-elegance.webp",
     "desc": "Высокий напольный светильник с классическим дизайном.",
     "category": "lights",
     "price": 2150,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 12,
+    "reviews": [
+      {
+        "id": "d56dc1ec-0d0e-4737-bd12-cdc833a0624e",
+        "rating": 4,
+        "text": "Смотрится аккуратно и даёт приятный свет. Покупкой доволен.",
+        "createdAt": "2026-10-26T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 95,
+    "id": "9b010770-dd51-42a3-b065-3585e618af7a",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Светильник точечный LED",
-    "img": "lamp-spot-led.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-spot-led.webp",
     "desc": "Практичный точечный светильник для направленного освещения.",
     "category": "lights",
     "price": 420,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 11,
+    "reviews": [
+      {
+        "id": "4d7ebafa-5878-42b2-abe9-40ace8503797",
+        "rating": 5,
+        "text": "Хорошо вписался в интерьер, качество соответствует ожиданиям.",
+        "createdAt": "2026-10-25T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 96,
+    "id": "2dd75d3a-c103-4c90-a60a-208b5fca51b9",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Светильник подвесной Loft",
-    "img": "lamp-pendant-loft.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-pendant-loft.webp",
     "desc": "Оригинальный подвесной светильник с металлическим плафоном.",
     "category": "lights",
     "price": 1450,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 21,
+    "reviews": [
+      {
+        "id": "77cd0d0e-cf26-4685-aa80-da353278de74",
+        "rating": 5,
+        "text": "Смотрится аккуратно и даёт приятный свет. Покупкой доволен.",
+        "createdAt": "2026-10-24T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 97,
+    "id": "af9380a6-de72-40de-b2d3-103c53a6d44f",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Ночник настольный LED",
-    "img": "lamp-night-led.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-night-led.webp",
     "desc": "Небольшой LED-светильник с приятным мягким освещением.",
     "category": "lights",
     "price": 540,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 10,
+    "reviews": [
+      {
+        "id": "0f2d9151-bafc-4607-ac93-1f5560627dfd",
+        "rating": 5,
+        "text": "Хорошо вписался в интерьер, качество соответствует ожиданиям.",
+        "createdAt": "2026-10-23T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 98,
+    "id": "0343e43b-5208-468f-993c-176d95e0d005",
+    "sellerId": "5ddc1cfe-5b30-489e-83a4-23fd500ccaa7",
     "title": "Светильник бра настенный",
-    "img": "lamp-bra.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-bra.webp",
     "desc": "Настенный светильник для дополнительного освещения комнаты.",
     "category": "lights",
     "price": 980,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 22,
+    "reviews": [
+      {
+        "id": "b75851e8-6042-4326-b7d4-0ca1856c3e7c",
+        "rating": 4,
+        "text": "Смотрится аккуратно и даёт приятный свет. Покупкой доволен.",
+        "createdAt": "2026-10-22T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   },
   {
-    "id": 99,
+    "id": "0bf65b51-0d0d-46e7-abe9-4a207a324832",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
     "title": "Светильник потолочный Smart LED",
-    "img": "lamp-smart-led.webp",
+    "img": "http://localhost:3000/uploads/img/product/lamp-smart-led.webp",
     "desc": "Современный потолочный светильник с энергоэффективной LED-подсветкой.",
     "category": "lights",
     "price": 2390,
-    "favoritesCount": 0
+    "favoritesCount": 0,
+    "quantity": 16,
+    "reviews": [
+      {
+        "id": "8f936049-a929-4a46-9a09-91f4107fab30",
+        "rating": 5,
+        "text": "Хорошо вписался в интерьер, качество соответствует ожиданиям.",
+        "createdAt": "2026-10-21T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
+  },
+  {
+    "id": "311de4b3-d538-47c8-a9b1-f036e1611eed",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
+    "title": "Стол",
+    "desc": "Стол обыяный ничем не примечательный",
+    "category": "tables",
+    "price": 10,
+    "quantity": 12,
+    "img": "http://localhost:3000/uploads/img/product/b8ea7cca-75ce-46ec-bce6-425ebf8cb919.webp",
+    "favoritesCount": 0,
+    "hidden": false,
+    "createdAt": "2026-11-01T12:53:47.240Z",
+    "reviews": [
+      {
+        "id": "cde1043c-936c-4164-87f5-a8ac664be051",
+        "rating": 5,
+        "text": "Хорошо подошёл по размеру и аккуратно смотрится в комнате.",
+        "createdAt": "2026-10-20T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
+  },
+  {
+    "id": "3532b217-d2a9-4d11-b688-717f7fc8ae8e",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
+    "title": "Диван",
+    "desc": "Дивна если честно очень комфортный",
+    "category": "sofas",
+    "price": 50,
+    "quantity": 20,
+    "img": "http://localhost:3000/uploads/img/product/99d6cc6f-b3c1-45b3-9a1d-687df6c78f6c.webp",
+    "favoritesCount": 0,
+    "hidden": false,
+    "createdAt": "2026-11-01T13:06:16.189Z",
+    "reviews": [
+      {
+        "id": "fcccafa9-89e4-4739-b7e4-6c61569c2a37",
+        "rating": 5,
+        "text": "Качество порадовало, пользоваться комфортно. Хороший вариант для дома.",
+        "createdAt": "2026-10-19T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
+  },
+  {
+    "id": "1463f385-5438-455c-9330-185454cdf4bb",
+    "sellerId": "69aa39ff-f086-4ab6-bfb8-e9c43daaf7a7",
+    "title": "TEST product",
+    "desc": "TestPRoduct item len",
+    "category": "tables",
+    "price": 25,
+    "quantity": 20,
+    "img": "http://localhost:3000/uploads/img/product/4363b55f-9c5c-4c22-bfd4-254f992b01e5.webp",
+    "favoritesCount": 0,
+    "hidden": false,
+    "createdAt": "2026-11-06T22:23:38.388Z",
+    "reviews": [
+      {
+        "id": "858117c8-d44f-4644-aec8-457202ad75ec",
+        "rating": 4,
+        "text": "Стол устойчивый, поверхность легко поддерживать в чистоте. Покупкой доволен.",
+        "createdAt": "2026-10-18T12:00:00.000Z",
+        "isDemo": true
+      }
+    ]
   }
 ]

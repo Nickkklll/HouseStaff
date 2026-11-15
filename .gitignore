@@ -2,6 +2,7 @@
 node_modules/
 frontend/build/
 coverage/
+DEVELOPMENT_IDEAS.md
 
 #Локальные секреты 
 .env

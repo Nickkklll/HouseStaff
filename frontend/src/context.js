@@ -90,13 +90,18 @@ export function AppProvider ({children}){
     }, []);
 
     useEffect(() => {
-        if (!loading) {
-            async function loadCart() {
-                setCartItems(await getCartItems());
-            }
+        if (loading) return;
 
-            loadCart();
+        if (user?.role !== 'user' && user?.role !== 'admin') {
+            setCartItems([]);
+            return;
         }
+
+        async function loadCart() {
+            setCartItems(await getCartItems());
+        }
+
+        loadCart();
     }, [loading, user]);
 
 
@@ -107,7 +112,9 @@ export function AppProvider ({children}){
         credentials: 'include'
       }
     );
+    if(!csrfResponse.ok) throw new Error('Ошибка получения csrf токена')
     const {csrfToken}= await csrfResponse.json();
+    
     return csrfToken
     }
 async function createOrder() {
