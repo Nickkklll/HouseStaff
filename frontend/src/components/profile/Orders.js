@@ -3,10 +3,11 @@ import React,{useState, useEffect, useCallback} from 'react';
 import '../../Style/profile/cabinet.scss'
 
 import OrderBlock from './OrderBlock';
+import { apiUrl } from '../../config';
 
 async function getOrders() {
   try {
-    const response = await fetch("http://localhost:3000/orders", {
+    const response = await fetch(apiUrl("/orders"), {
       credentials: "include",
     });
     if (!response.ok) {

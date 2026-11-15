@@ -2,6 +2,7 @@
 import React, { useState,useEffect, useRef } from "react";
 
 import { useOutletContext } from "react-router-dom";
+import { apiUrl } from "../../config";
 
 export default function Settings() {
   const { user } = useOutletContext();
@@ -66,7 +67,7 @@ export default function Settings() {
          
 
     try {
-      const csrfResponse = await fetch("http://localhost:3000/auth/csrf", {
+      const csrfResponse = await fetch(apiUrl("/auth/csrf"), {
         credentials: "include",
       });
       if (!csrfResponse.ok) {
@@ -75,7 +76,7 @@ export default function Settings() {
 
       const { csrfToken } = await csrfResponse.json();
 
-      const response = await fetch("http://localhost:3000/me", {
+      const response = await fetch(apiUrl("/me"), {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -115,12 +116,12 @@ export default function Settings() {
       password: formData.get("oldPassword"),
     };
 
-    const csrfResponse = await fetch("http://localhost:3000/auth/csrf", {
+    const csrfResponse = await fetch(apiUrl("/auth/csrf"), {
       credentials: "include",
     });
     const { csrfToken } = await csrfResponse.json();
 
-    const response = await fetch("http://localhost:3000/auth/login", {
+    const response = await fetch(apiUrl("/auth/login"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -143,11 +144,11 @@ export default function Settings() {
     const form = event.currentTarget;
     const formData = new FormData(form);
     await authorizationUser(event, formData);
-    const csrfResponse = await fetch("http://localhost:3000/auth/csrf", {
+    const csrfResponse = await fetch(apiUrl("/auth/csrf"), {
       credentials: "include",
     });
     const { csrfToken } = await csrfResponse.json();
-    const newPassResponse = await fetch("http://localhost:3000/me/password", {
+    const newPassResponse = await fetch(apiUrl("/me/password"), {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

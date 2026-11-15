@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import Item from '../../Item'
 import { AppContext } from '../../../context'
+import { apiUrl } from '../../../config'
 
 
 export default function FullOrderCard({order,setSelectItem, setIsFullItemSecondModalOpen, onClose,refreshOrderList, onOrderUpdated}) {
@@ -9,7 +10,7 @@ export default function FullOrderCard({order,setSelectItem, setIsFullItemSecondM
      const csrfToken = await getCsrfToken();
  
      try{
-       const response = await fetch(`http://localhost:3000/orders/${order.id}`,{
+       const response = await fetch(apiUrl(`/orders/${order.id}`),{
          method:'PATCH',
          headers:{
            'Content-Type':'application/json',

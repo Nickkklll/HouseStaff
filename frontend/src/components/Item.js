@@ -3,6 +3,7 @@ import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import { AppContext } from "../context";
 import { useLocation } from "react-router-dom";
 import "../Style/components/Item.scss";
+import { assetUrl } from "../config";
 
 export function Item({item,isFav,setIsFullItemModalOpen,setSelectItem,setMode,deleteItem, onAdd, reloadList}) {
   const location = useLocation();
@@ -23,7 +24,7 @@ export function Item({item,isFav,setIsFullItemModalOpen,setSelectItem,setMode,de
         }>
       <img
         className="product-card__image"
-        src={item.img}
+        src={assetUrl(item.img)}
         alt=""
        
       />

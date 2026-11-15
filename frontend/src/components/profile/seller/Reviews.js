@@ -6,6 +6,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import ShowFullItem from '../../ShowFullItem/ShowFullItem'
 import { FaStar } from "react-icons/fa";
 import { useMatch } from 'react-router-dom';
+import { apiUrl } from '../../../config';
 export default function Reviews() {
 
   const isReviewRoute = useMatch('/cabinet/review');
@@ -20,7 +21,7 @@ export default function Reviews() {
   });
   const [reviews, setReviews]= useState([])
   const getReviews = useCallback(async ()=>{
-    const response = await fetch('http://localhost:3000/seller/reviews',{
+    const response = await fetch(apiUrl('/seller/reviews'),{
       method:"GET",
       credentials:'include'
     })
@@ -29,7 +30,7 @@ export default function Reviews() {
     return data
   },[])
   const getReviewsAnalytics = useCallback(async ()=>{
-      const response = await fetch('http://localhost:3000/seller/reviews?analytics=true',{
+      const response = await fetch(apiUrl('/seller/reviews?analytics=true'),{
         method:"GET",
         credentials:"include"
       })

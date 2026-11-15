@@ -1,10 +1,11 @@
 import { createContext,useState, useEffect } from "react";
+import { apiUrl } from "./config";
 
 export const AppContext = createContext(null);
 
 async function authentication() {
     try{
-        const response = await fetch('http://localhost:3000/me',{
+        const response = await fetch(apiUrl('/me'),{
             credentials:'include'
         });
         if(!response.ok){
@@ -23,11 +24,11 @@ async function authentication() {
 
 async function getCartItems() {
     try {
-        const csrfResponse = await fetch('http://localhost:3000/auth/csrf', {
+        const csrfResponse = await fetch(apiUrl('/auth/csrf'), {
             credentials: 'include'
         });
         const { csrfToken } = await csrfResponse.json();
-        const response = await fetch('http://localhost:3000/cart', {
+        const response = await fetch(apiUrl('/cart'), {
             method: 'GET',
             headers: {
                 'X-CSRF-Token': csrfToken
@@ -62,12 +63,12 @@ export function AppProvider ({children}){
 
 
     async function logout(){
-        const csrfResponse = await fetch('http://localhost:3000/auth/csrf', {
+        const csrfResponse = await fetch(apiUrl('/auth/csrf'), {
             credentials: 'include'
         });
         const { csrfToken } = await csrfResponse.json();
 
-        await fetch('http://localhost:3000/auth/logout', {
+        await fetch(apiUrl('/auth/logout'), {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -107,7 +108,7 @@ export function AppProvider ({children}){
 
     async function getCsrfToken(){
        const csrfResponse = await fetch(
-      'http://localhost:3000/auth/csrf',
+      apiUrl('/auth/csrf'),
       {
         credentials: 'include'
       }
@@ -140,13 +141,13 @@ async function createOrder() {
       totalAmount: cartItems.reduce((sum, el) => sum + el.price * el.count, 0)
     };
     const csrfResponse = await fetch(
-      'http://localhost:3000/auth/csrf',
+      apiUrl('/auth/csrf'),
       {
         credentials: 'include'
       }
     );
       const { csrfToken } = await csrfResponse.json();
-    const response = await fetch('http://localhost:3000/orders', {
+    const response = await fetch(apiUrl('/orders'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -155,7 +156,7 @@ async function createOrder() {
       credentials: 'include',
       body: JSON.stringify(order)
     });
-    const userCartResponse = await fetch('http://localhost:3000/cart',{
+    const userCartResponse = await fetch(apiUrl('/cart'),{
       method:'DELETE',
       headers:{
         'Content-Type': 'application/json',
@@ -172,7 +173,7 @@ async function createOrder() {
 
   async function onChangeCount(id, count) {
     const csrfResponse = await fetch(
-      'http://localhost:3000/auth/csrf',
+      apiUrl('/auth/csrf'),
       {
         credentials: 'include'
       }
@@ -181,7 +182,7 @@ async function createOrder() {
     const cartItem ={
       quantity: count
     }
-    const response = await fetch(`http://localhost:3000/cart/items/${id}`, {
+    const response = await fetch(apiUrl(`/cart/items/${id}`), {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -198,13 +199,13 @@ async function createOrder() {
   }
   async function onDeleteOrder(id) {
     const csrfResponse = await fetch(
-      'http://localhost:3000/auth/csrf',
+      apiUrl('/auth/csrf'),
       {
         credentials: 'include'
       }
     );
     const { csrfToken } = await csrfResponse.json();
-    const response = await fetch(`http://localhost:3000/cart/items/${id}`, {
+    const response = await fetch(apiUrl(`/cart/items/${id}`), {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -220,7 +221,7 @@ async function createOrder() {
 async function addToFavorites(id){
   const csrfToken = await getCsrfToken()
      try{
-       const favResponse = await fetch(`http://localhost:3000/favorites/${id}`, {
+       const favResponse = await fetch(apiUrl(`/favorites/${id}`), {
         method:"POST",
         headers:{
           "Content-Type":"application/json",
@@ -245,7 +246,7 @@ async function addToFavorites(id){
   async function delFromFavorites(id){
     const csrfToken = await getCsrfToken();
     try {
-      const favResponse = await fetch (`http://localhost:3000/favorites/${id}`,{
+      const favResponse = await fetch (apiUrl(`/favorites/${id}`),{
         method: 'DELETE',
         headers: {
           "Content-Type":"application/json",
@@ -264,7 +265,7 @@ async function addToFavorites(id){
   }
   async function onAddToOrder(item) {
     const csrfResponse = await fetch(
-      'http://localhost:3000/auth/csrf',
+      apiUrl('/auth/csrf'),
       {
         credentials: 'include'
       }
@@ -275,7 +276,7 @@ async function addToFavorites(id){
       quantity: 1
     }
 
-    const response = await fetch('http://localhost:3000/cart/items', {
+    const response = await fetch(apiUrl('/cart/items'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -1,6 +1,7 @@
 import {useState,useEffect,useContext,useRef} from 'react';
 import { AppContext } from '../../../context';
 import { capitalizeFirstLetter, validateProductText } from './productFormUtils';
+import { apiUrl, assetUrl } from '../../../config';
 
 
 export default function FullEditCard({item}) {
@@ -64,7 +65,7 @@ if(!hasChanges) return;
     submissionInProgressRef.current = true;
     setIsSubmitting(true);
     try{
-      const response = await fetch (`http://localhost:3000/products/${item.id}`,{
+      const response = await fetch (apiUrl(`/products/${item.id}`),{
         method:'PATCH',
         headers:{
           "X-CSRF-Token":  await getCsrfToken(),
@@ -124,7 +125,7 @@ if(!hasChanges) return;
   return (
        <div className="card-edit-product">
             <div className="preview-block__image">
-              <img src={previewUrl || formData.img} alt={formData.title || "preview-image"} />
+              <img src={assetUrl(previewUrl || formData.img)} alt={formData.title || "preview-image"} />
             </div>
             <form onSubmit={handleSubmit}>
               <div className="form-row">

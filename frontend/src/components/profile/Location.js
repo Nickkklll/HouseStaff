@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useContext, useState,useCallback } from "react";
 import { AppContext } from "../../context";
 import AddressBlock from "./AddressBlock";
+import { apiUrl } from "../../config";
 
 
 
@@ -18,12 +19,12 @@ export default function Location() {
     const formData = new FormData(form);
     const adressData = Object.fromEntries(formData.entries());
 
-    const csrfResponse = await fetch("http://localhost:3000/auth/csrf", {
+    const csrfResponse = await fetch(apiUrl("/auth/csrf"), {
       credentials: "include",
     });
     const { csrfToken } = await csrfResponse.json();
 
-    const response = await fetch("http://localhost:3000/addresses", {
+    const response = await fetch(apiUrl("/addresses"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,7 +47,7 @@ export default function Location() {
 
   const getAddressList = useCallback(async ()=>{
   
-    const adressResponse= await fetch('http://localhost:3000/addresses',{
+    const adressResponse= await fetch(apiUrl('/addresses'),{
       method:"GET",
       headers:{
          'Content-Type': 'application/json',
@@ -59,7 +60,7 @@ export default function Location() {
 async function deleteAddress(id){
 
     const csrfToken = await getCsrfToken();
-    const response = await fetch(`http://localhost:3000/addresses/${id}`, {
+    const response = await fetch(apiUrl(`/addresses/${id}`), {
       method: 'DELETE',
       headers: {
         'X-CSRF-Token': csrfToken,

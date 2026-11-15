@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useState, useContext} from 'react';
 import Item from '../Item';
 import { AppContext } from '../../context';
+import { apiUrl } from '../../config';
 
 
 export default function Favorites() {
   const [favoritesList, setFavoritesList] = useState([]);
   const{onAddToOrder} = useContext(AppContext);
   const getFavorites = useCallback(async ()=>{
-    const response = await fetch('http://localhost:3000/favorites', {
+    const response = await fetch(apiUrl('/favorites'), {
         credentials: 'include',
       });
       if (!response.ok) {

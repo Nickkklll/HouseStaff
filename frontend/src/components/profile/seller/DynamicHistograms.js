@@ -13,6 +13,7 @@ import {
 } from "chart.js";
 
 import { Bar } from "react-chartjs-2";
+import { assetUrl } from "../../../config";
 
 ChartJS.register(
   CategoryScale,
@@ -118,14 +119,15 @@ const productImagesPlugin = {
       const imageLeft = centerX - PRODUCT_IMAGE_SIZE / 2;
 
       if (product.img) {
-        let image = imageCache.get(product.img);
+        const imageSource = assetUrl(product.img);
+        let image = imageCache.get(imageSource);
         if (!image) {
           image = new Image();
           image.onload = () => chart.draw();
-          image.onerror = () => imageCache.delete(product.img);
+          image.onerror = () => imageCache.delete(imageSource);
           image.crossOrigin = "anonymous";
-          image.src = product.img;
-          imageCache.set(product.img, image);
+          image.src = imageSource;
+          imageCache.set(imageSource, image);
         }
 
         if (image.complete && image.naturalWidth) {

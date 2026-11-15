@@ -1,9 +1,10 @@
 import { useState ,useRef, useEffect, useContext} from "react";
 import { AppContext } from "../../../context";
 import { capitalizeFirstLetter, validateProductText } from "./productFormUtils";
+import { apiUrl, assetUrl } from "../../../config";
 
 export default function FullNewCard({onClose, refreshProductsList }) {
-  const [previewUrl, setPreviewUrl] = useState('http://localhost:3000/uploads/img/system/Image-placeholder.jpg');
+  const [previewUrl, setPreviewUrl] = useState(assetUrl('/uploads/img/system/Image-placeholder.jpg'));
     const [selectedFile, setSelectedFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [categories, setCategories] = useState(null);
@@ -21,7 +22,7 @@ export default function FullNewCard({onClose, refreshProductsList }) {
   const submissionInProgressRef = useRef(false);
   useEffect(() => {
     let isMounted = true;
-    fetch('http://localhost:3000/categories')
+    fetch(apiUrl('/categories'))
       .then(async (response) => {
         const data = await response.json();
         if (!response.ok) {
@@ -72,7 +73,7 @@ async function handleSubmit(event){
   setIsSubmitting(true);
   try{
     const csrfToken =await getCsrfToken();
-    const response = await fetch('http://localhost:3000/products',{
+    const response = await fetch(apiUrl('/products'),{
       method:'POST',
       headers:{
         "X-CSRF-Token": csrfToken
@@ -108,7 +109,7 @@ async function handleSubmit(event){
   }
   useEffect(() => {
       if (!selectedFile) {
-        setPreviewUrl('http://localhost:3000/uploads/img/system/Image-placeholder.jpg');
+        setPreviewUrl(assetUrl('/uploads/img/system/Image-placeholder.jpg'));
         return;
       }
   

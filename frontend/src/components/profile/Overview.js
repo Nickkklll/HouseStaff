@@ -8,10 +8,11 @@ import { useOutletContext } from "react-router-dom";
 import { AppContext } from "../../context";
 import avatarImage from "../../img/system/man-avatar.png";
 import Order from "../Order";
+import { apiUrl } from "../../config";
 
 async function getOrders() {
   try {
-    const response = await fetch("http://localhost:3000/orders?_sort=createdAt&_order=desc&_limit=5", {
+    const response = await fetch(apiUrl("/orders?_sort=createdAt&_order=desc&_limit=5"), {
       credentials: "include",
     });
     if (!response.ok) {

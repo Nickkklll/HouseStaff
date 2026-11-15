@@ -1,4 +1,5 @@
 import React, { Component} from 'react'
+import { assetUrl } from '../config';
 import {FaTrash} from 'react-icons/fa';
 import '../Style/components/Order.scss';
 
@@ -10,7 +11,7 @@ export class Order extends Component {
 
     return (
       <div className='order-item'>
-        <img className='order-item__image' src={item.img} alt={item.title} />
+        <img className='order-item__image' src={assetUrl(item.img)} alt={item.title} />
 
         <div className='order-item__content'>
           <h2 className='order-item__title'>{item.title}</h2>

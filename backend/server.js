@@ -3,6 +3,7 @@ const cors = require('cors');
 const fs = require('fs');
 const crypto = require('crypto');
 const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 const multer = require('multer');
 const sharp = require('sharp');
 const { register, login, changePassword, publicUser } = require('./auth/authService');

@@ -1,4 +1,5 @@
 import React from "react";
+import { assetUrl } from "../../config";
 
 export default function OrderBlock({order,clickable, setSelectOrder, setIsFullItemModalOpen, setMode}) {
  
@@ -17,7 +18,7 @@ export default function OrderBlock({order,clickable, setSelectOrder, setIsFullIt
       <td><div className=" order-pictures">
             {order.items.map(el=>(
               <div  key={el.productId} className="picture-block">
-                <img src={el.img} alt="" />
+                <img src={assetUrl(el.img)} alt="" />
                 <span>{el.quantity} шт</span>
               </div>
               

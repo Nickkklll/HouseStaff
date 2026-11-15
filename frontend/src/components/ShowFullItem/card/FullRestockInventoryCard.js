@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../../context";
+import { apiUrl, assetUrl } from "../../../config";
 
 export default function FullRestockInventoryCard({productList, refreshProductsList }) {
 
@@ -18,7 +19,7 @@ export default function FullRestockInventoryCard({productList, refreshProductsLi
 
     
 
-    const response = await fetch(`http://localhost:3000/products/${selectItem.id}/restock`,{
+    const response = await fetch(apiUrl(`/products/${selectItem.id}/restock`),{
       method:'POST',
       headers:{
         "Content-Type":"application/json",
@@ -97,7 +98,7 @@ export default function FullRestockInventoryCard({productList, refreshProductsLi
               <>
                 <div className="card-restock-product">
                   <div className="preview-block__image">
-                    <img src={selectItem.img} alt={selectItem.title} />
+                    <img src={assetUrl(selectItem.img)} alt={selectItem.title} />
                   </div>
                   <form onSubmit={handleSubmit}>
                     <h2>{selectItem.title}</h2>

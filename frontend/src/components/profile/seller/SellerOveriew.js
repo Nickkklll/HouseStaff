@@ -1,16 +1,17 @@
 import React, { useCallback } from 'react';
 import DynamicHistogram from './DynamicHistograms';
+import { apiUrl } from '../../../config';
 
 export default function SellerOveriew() {
   const productData = useCallback(async (position) => {
-    const url = position === '1'
-      ? 'http://localhost:3000/analytics/categories/monthly'
+    const path = position === '1'
+      ? '/analytics/categories/monthly'
       : position === '2'
-        ? 'http://localhost:3000/analytics/products/top?limit=5'
+        ? '/analytics/products/top?limit=5'
         : null;
-    if (!url) throw new Error('Неизвестный тип диаграммы');
+    if (!path) throw new Error('Неизвестный тип диаграммы');
 
-    const response = await fetch(url, { credentials: 'include' });
+    const response = await fetch(apiUrl(path), { credentials: 'include' });
     if (!response.ok) throw new Error('Ошибка получения данных аналитики');
 
     return response.json();

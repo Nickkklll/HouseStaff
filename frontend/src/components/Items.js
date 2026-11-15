@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import Item from './Item';
 import ShowFullItem from './ShowFullItem/ShowFullItem';
+import { apiUrl } from '../config';
 
 export function Items({ items, onAdd, loadCatalog }) {
   const [favoritesList, setFavoritesList] = useState([]);
@@ -9,7 +10,7 @@ export function Items({ items, onAdd, loadCatalog }) {
     const [selectItem,setSelectItem]=useState({})
     useEffect(() => {
       async function loadFavorites() {
-        const response = await fetch('http://localhost:3000/favorites', {
+        const response = await fetch(apiUrl('/favorites'), {
           credentials: 'include',
         });
         if (!response.ok) {

@@ -6,6 +6,7 @@ import Categories from "./components/Categories";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import Presentation from "./components/Presentation";
 import { AppContext } from './context';
+import { apiUrl } from "./config";
 
 
 
@@ -13,7 +14,7 @@ import { AppContext } from './context';
 async function itemsData(){
   let data;
   
-  await fetch('http://localhost:3000/catalog')
+  await fetch(apiUrl('/catalog'))
   .then(res=>{if(!res.ok){throw new Error('Ошибка загрузки каталога')} return res})
     .then(res => res.json())
     .then(res => data = res)

@@ -3,6 +3,7 @@ import {useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AppContext } from '../context';
 import { FaHome } from 'react-icons/fa';
+import { apiUrl } from '../config';
 function Login() {
   const navigate = useNavigate();
   const { setUser } = useContext(AppContext);
@@ -14,12 +15,12 @@ function Login() {
     const formData = new FormData(form);
     const loginData = Object.fromEntries(formData.entries());
 
-    const csrfResponse = await fetch('http://localhost:3000/auth/csrf', {
+    const csrfResponse = await fetch(apiUrl('/auth/csrf'), {
       credentials: 'include'
     });
     const { csrfToken } = await csrfResponse.json();
 
-    const response = await fetch('http://localhost:3000/auth/login', {
+    const response = await fetch(apiUrl('/auth/login'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

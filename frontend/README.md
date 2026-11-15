@@ -2,6 +2,13 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Backend host
+
+The frontend uses `REACT_APP_API_ORIGIN` from `frontend/.env.example` as the
+single base URL for API requests and backend-hosted product images. Copy the
+example to `frontend/.env` and set the backend's public URL before starting or
+building the frontend. The default is `http://localhost:3000`.
+
 ## Available Scripts
 
 In the project directory, you can run:

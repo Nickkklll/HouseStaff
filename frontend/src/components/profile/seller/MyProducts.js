@@ -3,6 +3,7 @@ import { AppContext } from "../../../context";
 import { useContext } from "react";
 import Item from "../../Item";
 import ShowFullItem from "../../ShowFullItem/ShowFullItem";
+import { apiUrl } from "../../../config";
 
 export default function MyProducts() {
    
@@ -16,7 +17,7 @@ export default function MyProducts() {
   const productData = useCallback(async () => {
     const id = user.id;
     const response = await fetch(
-      `http://localhost:3000/catalog?sellerId=${id}`,
+      apiUrl(`/catalog?sellerId=${id}`),
       {
         credentials: "include",
       },
@@ -29,7 +30,7 @@ export default function MyProducts() {
 
  async function deleteProduct(id) {
     const csrfToken= await getCsrfToken();
-    const response = await fetch(`http://localhost:3000/products/${id}`,{
+    const response = await fetch(apiUrl(`/products/${id}`),{
       method:'DELETE',
       headers:{
 

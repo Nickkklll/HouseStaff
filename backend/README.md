@@ -54,7 +54,7 @@ npm run migrate:product-ids
 
 Скрипт обновляет ID товаров как в каталоге, так и в `trash/products.json`.
 
-Для cookie-запросов frontend по умолчанию разрешен с origin `http://localhost:3001`. Другой origin задайте через `FRONTEND_ORIGIN`.
+Для cookie-запросов frontend по умолчанию разрешен с origin `http://localhost:3001`. Чтобы задать другой адрес локально, скопируйте `.env.example` в `.env` и измените `FRONTEND_ORIGIN`. Укажите точный origin frontend со схемой и доменом, без пути, например `https://shop.example.com`. На хостинге задайте `FRONTEND_ORIGIN` в переменных окружения сервиса backend.
 
 При загрузке изображений товаров backend сохраняет в каталоге абсолютный URL. Для production задайте публичный origin backend через `BACKEND_ORIGIN` (например, `https://api.example.com`); по умолчанию используется `http://localhost:3000`.
 

@@ -3,6 +3,7 @@ import '../../../Style/components/ReviewBlock.scss'
 import {AppContext} from '../../../context'
 import { capitalizeFirstLetter } from "./productFormUtils";
 import { FaStar } from "react-icons/fa";
+import { apiUrl, assetUrl } from "../../../config";
 
 export default function FullUserCard({
   item,
@@ -27,7 +28,7 @@ export default function FullUserCard({
  
   try{
      const csrfToken = await getCsrfToken();
-     const response = await fetch(`http://localhost:3000/products/${item.id}/reviews`, {
+     const response = await fetch(apiUrl(`/products/${item.id}/reviews`), {
     method:"POST",
     headers:{
       'Content-Type': "application/json",
@@ -62,7 +63,7 @@ export default function FullUserCard({
 
   return (
     <div className="user-card">
-      <img src={item.img} alt="" />
+      <img src={assetUrl(item.img)} alt="" />
       <h2>{item.title}</h2>
       <p>{item.desc}</p>
       <b>${item.price}</b>
