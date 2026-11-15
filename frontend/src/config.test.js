@@ -44,4 +44,19 @@ describe("backend URL helpers", () => {
       );
     });
   });
+
+  test("preserves images hosted outside the backend", () => {
+    process.env.REACT_APP_API_ORIGIN = "https://api.example.test";
+
+    jest.isolateModules(() => {
+      const { assetUrl } = require("./config");
+      expect(
+        assetUrl(
+          "https://project.supabase.co/storage/v1/object/public/product-images/chair.webp"
+        )
+      ).toBe(
+        "https://project.supabase.co/storage/v1/object/public/product-images/chair.webp"
+      );
+    });
+  });
 });

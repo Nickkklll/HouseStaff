@@ -7,7 +7,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 The frontend uses `REACT_APP_API_ORIGIN` from `frontend/.env.example` as the
 single base URL for API requests and backend-hosted product images. Copy the
 example to `frontend/.env` and set the backend's public URL before starting or
-building the frontend. The default is `http://localhost:3000`.
+building the frontend. The default is `http://localhost:3000`. Images hosted in
+Supabase Storage use their own public URLs and are not rewritten to the API host.
 
 ## Available Scripts
 
