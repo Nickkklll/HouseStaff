@@ -1,5 +1,5 @@
 import React from 'react'
-import {useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AppContext } from '../context';
 import { FaHome } from 'react-icons/fa';
@@ -53,7 +53,7 @@ function Login() {
         <input type="text" name='login' alt='login' placeholder='Логин'/>
         <input type="password" name='password' alt='password' placeholder='Пароль' />
         <input type="submit" value={'Войти'} />
-        <a href="/register">Регистрация</a>
+        <Link to="/register">Регистрация</Link>
       </form>
     </div>
   );

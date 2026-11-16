@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaHome } from 'react-icons/fa';
 import { apiUrl } from '../config';
 
@@ -71,7 +71,7 @@ function Registration() {
           </label>
         </div>
         <input type="submit" value="Регистрация" />
-        <a href="/login">Уже есть уч.запись?</a>
+        <Link to="/login">Уже есть уч.запись?</Link>
       </form>
     </div>
   );
