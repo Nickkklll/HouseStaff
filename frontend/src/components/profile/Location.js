@@ -34,8 +34,11 @@ export default function Location() {
       body: JSON.stringify(adressData),
     });
 
-    const data = await response.json();
-    
+    if (!response.ok) {
+      console.error("Не удалось добавить адрес");
+      return;
+    }
+
     async  function setAddress(){
     const address=await getAddressList();
     setAddressList(address);

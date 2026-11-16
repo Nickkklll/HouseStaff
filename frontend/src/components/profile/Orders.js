@@ -40,7 +40,7 @@ const loadOrders= useCallback(async()=>{
         setRefreshFunc(()=>loadOrders)
 
       }
-    }, [loadOrders]);
+    }, [loadOrders, setRefreshFunc, setSelectOrder]);
   return (
     <>
     <h2>История заказов</h2>

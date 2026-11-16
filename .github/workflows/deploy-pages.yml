@@ -3,6 +3,7 @@ name: Deploy frontend to GitHub Pages
 on:
   push:
     branches:
+      - main
       - feature/centralize-hosting-urls
   workflow_dispatch:
 
