@@ -113,7 +113,7 @@ Content-Type: application/json
 При регистрации можно указать роль `user` или `seller`. Новый пользователь получает статус `active`, пустую корзину и пустой список избранного. Роль `admin` через регистрацию недоступна. Ответ содержит:
 
 - `user` — публичные данные пользователя без пароля;
-- JWT устанавливается сервером в cookie `access_token` с флагами `HttpOnly` и `SameSite=Lax`.
+- JWT устанавливается сервером в cookie `access_token` с флагом `HttpOnly`. В production cookie имеют `SameSite=None; Secure`, чтобы frontend и API на разных доменах могли обмениваться cookie; локально используется `SameSite=Lax`.
 
 Пароль сохраняется только в виде bcrypt-хеша в `userData.json`.
 

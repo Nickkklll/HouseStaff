@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const cookie = require('cookie');
 
 const isProduction = process.env.NODE_ENV === 'production';
+const cookieSameSite = isProduction ? 'none' : 'lax';
 const authCookieName = 'access_token';
 const csrfCookieName = 'csrf_token';
 
@@ -13,7 +14,7 @@ function setAuthCookie(res, token, maxAge) {
     res.append('Set-Cookie', cookie.serialize(authCookieName, token, {
         httpOnly: true,
         secure: isProduction,
-        sameSite: 'lax',
+        sameSite: cookieSameSite,
         path: '/',
         maxAge
     }));
@@ -23,7 +24,7 @@ function clearAuthCookie(res) {
     res.append('Set-Cookie', cookie.serialize(authCookieName, '', {
         httpOnly: true,
         secure: isProduction,
-        sameSite: 'lax',
+        sameSite: cookieSameSite,
         path: '/',
         expires: new Date(0)
     }));
@@ -33,7 +34,7 @@ function clearCsrfCookie(res) {
     res.append('Set-Cookie', cookie.serialize(csrfCookieName, '', {
         httpOnly: false,
         secure: isProduction,
-        sameSite: 'lax',
+        sameSite: cookieSameSite,
         path: '/',
         expires: new Date(0)
     }));
@@ -43,7 +44,7 @@ function setCsrfCookie(res, token = crypto.randomBytes(32).toString('hex')) {
     res.append('Set-Cookie', cookie.serialize(csrfCookieName, token, {
         httpOnly: false,
         secure: isProduction,
-        sameSite: 'lax',
+        sameSite: cookieSameSite,
         path: '/',
         maxAge: 86400
     }));
