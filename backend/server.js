@@ -7,7 +7,8 @@ require('dotenv').config({ path: path.join(__dirname, '.env') });
 const multer = require('multer');
 const sharp = require('sharp');
 const { register, login, changePassword, publicUser } = require('./auth/authService');
-const { initializeUserStore, readUsers, writeUsers } = require('./auth/userStore');
+const { readUsers, writeUsers } = require('./auth/userStore');
+const { appStateStore } = require('./appStateStore');
 const { authenticate, requirePermission } = require('./middleware/authMiddleware');
 const { csrfProtection } = require('./middleware/csrfMiddleware');
 const { secondsUntilMidnight } = require('./auth/jwt');
@@ -53,6 +54,11 @@ const uploadTempPath = path.join(__dirname, '.upload-tmp');
 const trashPath = path.join(__dirname, 'trash');
 const trashImagesPath = path.join(trashPath, 'img');
 const trashProductsPath = path.join(trashPath, 'products.json');
+const stateKeyByPath = new Map([
+    [catalogPath, 'catalog'],
+    [ordersPath, 'orders'],
+    [trashProductsPath, 'trash-products']
+]);
 const FAVORITE_UPDATE_DELAY_MS = 1_000;
 const productImageTypes = {
     'image/jpeg': '.jpg',
@@ -115,44 +121,22 @@ function originProtection(req, res, next) {
 app.use(originProtection);
 app.use(csrfProtection);
 
+function getStateKey(filePath) {
+    const stateKey = stateKeyByPath.get(filePath);
+    if (!stateKey) throw new Error(`Unknown application state file: ${filePath}`);
+    return stateKey;
+}
+
 function readJson(filePath) {
-    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    return appStateStore.get(getStateKey(filePath));
 }
 
 function writeJson(filePath, data) {
-    const temporaryPath = `${filePath}.${crypto.randomUUID()}.tmp`;
-    try {
-        fs.writeFileSync(temporaryPath, JSON.stringify(data, null, 2));
-        fs.renameSync(temporaryPath, filePath);
-    } catch (error) {
-        if (fs.existsSync(temporaryPath)) fs.unlinkSync(temporaryPath);
-        throw error;
-    }
-}
-
-function initializeEmptyJsonFile(filePath) {
-    try {
-        fs.writeFileSync(filePath, '[]\n', { flag: 'wx' });
-        console.warn(`Data file was missing; initialized an empty file at ${filePath}`);
-    } catch (error) {
-        if (error.code !== 'EEXIST') throw error;
-    }
+    return appStateStore.set(getStateKey(filePath), data);
 }
 
 function readCatalog() {
-    const catalog = readJson(catalogPath);
-    let needsWrite = false;
-    const normalizedCatalog = catalog.map((product) => {
-        if (Number.isInteger(product.favoritesCount) && product.favoritesCount >= 0) {
-            return product;
-        }
-
-        needsWrite = true;
-        return { ...product, favoritesCount: 0 };
-    });
-
-    if (needsWrite) writeJson(catalogPath, normalizedCatalog);
-    return normalizedCatalog;
+    return readJson(catalogPath);
 }
 
 function delay(milliseconds) {
@@ -197,8 +181,8 @@ async function updateFavorite(req, res, shouldAdd) {
             .some((favorite) => String(getFavoriteProductId(favorite)) === String(product.id))
     ).length;
 
-    writeUsers(updatedUsers);
-    writeJson(catalogPath, catalog);
+    await writeUsers(updatedUsers);
+    await writeJson(catalogPath, catalog);
     return res.json({
         favorites: updatedFavorites,
         productId: product.id,
@@ -418,14 +402,18 @@ function sameAddressValue(left, right) {
     return normalizeAddressToken(left) === normalizeAddressToken(right);
 }
 
-app.post('/auth/register', (req, res) => {
+app.post('/auth/register', async (req, res) => {
     try {
-        const result = register(req.body);
+        const result = await register(req.body);
         setAuthCookie(res, result.token, TOKEN_TTL_SECONDS);
         // setAuthCookie(res, result.token, secondsUntilMidnight());
         setCsrfCookie(res);
         res.status(201).json({ user: result.user });
     } catch (error) {
+        if (error.code === 'SUPABASE_APP_STATE_ERROR') {
+            console.error('Registration could not be saved to Supabase:', error.message);
+            return res.status(503).json({ message: 'Регистрация временно недоступна' });
+        }
         res.status(400).json({ message: error.message });
     }
 });
@@ -446,7 +434,7 @@ app.get('/me', authenticate, (req, res) => {
     res.json(publicUser(req.user));
 });
 
-app.patch('/me', authenticate, (req, res) => {
+app.patch('/me', authenticate, async (req, res) => {
     if (!req.body || typeof req.body !== 'object' || Array.isArray(req.body)) {
         return res.status(400).json({ message: 'Передайте данные профиля в JSON-объекте' });
     }
@@ -525,11 +513,11 @@ app.patch('/me', authenticate, (req, res) => {
     }
 
     users[userIndex] = { ...users[userIndex], ...changes };
-    writeUsers(users);
+    await writeUsers(users);
     return res.json({ user: publicUser(users[userIndex]) });
 });
 
-app.patch('/me/password', authenticate, (req, res) => {
+app.patch('/me/password', authenticate, async (req, res) => {
     if (!req.body || typeof req.body !== 'object' || Array.isArray(req.body)) {
         return res.status(400).json({ message: 'Передайте данные пароля в JSON-объекте' });
     }
@@ -539,7 +527,7 @@ app.patch('/me/password', authenticate, (req, res) => {
         return res.status(400).json({ message: 'Новый пароль должен содержать минимум 6 символов' });
     }
 
-    if (changePassword(req.user.id, newPassword) === null) {
+    if (await changePassword(req.user.id, newPassword) === null) {
         return res.status(404).json({ message: 'Пользователь не найден' });
     }
 
@@ -550,7 +538,7 @@ app.get('/addresses', authenticate, (req, res) => {
     res.json(req.user.addresses || []);
 });
 
-app.post('/addresses', authenticate, (req, res) => {
+app.post('/addresses', authenticate, async (req, res) => {
     if (!req.body || typeof req.body !== 'object' || Array.isArray(req.body)) {
         return res.status(400).json({ message: 'Передайте данные адреса в JSON-объекте' });
     }
@@ -577,11 +565,11 @@ app.post('/addresses', authenticate, (req, res) => {
     address.id = crypto.randomUUID();
 
     const addresses = [...(req.user.addresses || []), address];
-    writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, addresses } : user));
+    await writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, addresses } : user));
     res.status(201).json(address);
 });
 
-app.delete('/addresses/:addressId', authenticate, (req, res) => {
+app.delete('/addresses/:addressId', authenticate, async (req, res) => {
     const addresses = req.user.addresses || [];
     const filteredAddresses = addresses.filter((address) => address.id !== req.params.addressId);
 
@@ -589,7 +577,7 @@ app.delete('/addresses/:addressId', authenticate, (req, res) => {
         return res.status(404).json({ message: 'Адрес не найден' });
     }
 
-    writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, addresses: filteredAddresses } : user));
+    await writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, addresses: filteredAddresses } : user));
     res.status(204).end();
 });
 
@@ -617,7 +605,7 @@ app.get('/products/:id/reviews', authenticate, requirePermission('reviews:read')
     return res.json(Array.isArray(product.reviews) ? product.reviews : []);
 });
 
-app.post('/products/:id/reviews', authenticate, requirePermission('reviews:create'), (req, res) => {
+app.post('/products/:id/reviews', authenticate, requirePermission('reviews:create'), async (req, res) => {
     if (req.user.role !== 'user') {
         return res.status(403).json({ message: 'Оставлять отзывы может только пользователь' });
     }
@@ -635,11 +623,11 @@ app.post('/products/:id/reviews', authenticate, requirePermission('reviews:creat
         ...product,
         reviews: [...(Array.isArray(product.reviews) ? product.reviews : []), review]
     };
-    writeJson(catalogPath, catalog);
+    await writeJson(catalogPath, catalog);
     return res.status(201).json(review);
 });
 
-app.delete('/products/:id/reviews/:reviewId', authenticate, requirePermission('reviews:delete'), (req, res) => {
+app.delete('/products/:id/reviews/:reviewId', authenticate, requirePermission('reviews:delete'), async (req, res) => {
     const catalog = readCatalog();
     const index = catalog.findIndex((item) => String(item.id) === req.params.id);
     if (index === -1) return res.status(404).json({ message: 'Товар не найден' });
@@ -648,7 +636,7 @@ app.delete('/products/:id/reviews/:reviewId', authenticate, requirePermission('r
     if (!reviews) return res.status(404).json({ message: 'Отзыв не найден' });
 
     catalog[index] = { ...catalog[index], reviews };
-    writeJson(catalogPath, catalog);
+    await writeJson(catalogPath, catalog);
     return res.status(204).end();
 });
 
@@ -785,7 +773,7 @@ app.get('/analytics/sellers/top', authenticate, (req, res) => {
     });
 });
 
-app.post('/products', authenticate, requirePermission('products:create'), uploadProductImage, (req, res) => {
+app.post('/products', authenticate, requirePermission('products:create'), uploadProductImage, async (req, res) => {
     const catalog = readCatalog();
     const category = typeof req.body.category === 'string' ? req.body.category.trim() : '';
     const validationError = validateProductFields(req.body, true, Boolean(req.file));
@@ -815,7 +803,7 @@ app.post('/products', authenticate, requirePermission('products:create'), upload
         createdAt: new Date().toISOString()
     };
     try {
-        writeJson(catalogPath, [...catalog, product]);
+        await writeJson(catalogPath, [...catalog, product]);
     } catch (error) {
         fs.unlinkSync(req.file.path);
         throw error;
@@ -823,7 +811,7 @@ app.post('/products', authenticate, requirePermission('products:create'), upload
     res.status(201).json(product);
 });
 
-app.patch('/products/:id', authenticate, uploadProductImage, (req, res) => {
+app.patch('/products/:id', authenticate, uploadProductImage, async (req, res) => {
     const catalog = readCatalog();
     const index = catalog.findIndex((product) => String(product.id) === req.params.id);
     const product = catalog[index];
@@ -893,7 +881,7 @@ app.patch('/products/:id', authenticate, uploadProductImage, (req, res) => {
         favoritesCount: changes.favoritesCount ?? product.favoritesCount
     };
     try {
-        writeJson(catalogPath, catalog);
+        await writeJson(catalogPath, catalog);
     } catch (error) {
         if (req.file) fs.unlinkSync(req.file.path);
         throw error;
@@ -901,7 +889,7 @@ app.patch('/products/:id', authenticate, uploadProductImage, (req, res) => {
     res.json(catalog[index]);
 });
 
-app.post('/products/:id/restock', authenticate, (req, res) => {
+app.post('/products/:id/restock', authenticate, async (req, res) => {
     const quantityToAdd = req.body.quantity;
     if (!Number.isSafeInteger(quantityToAdd) || quantityToAdd <= 0) {
         return res.status(400).json({
@@ -928,11 +916,11 @@ app.post('/products/:id/restock', authenticate, (req, res) => {
     }
 
     catalog[index] = { ...product, quantity: updatedQuantity };
-    writeJson(catalogPath, catalog);
+    await writeJson(catalogPath, catalog);
     return res.json(catalog[index]);
 });
 
-app.delete('/products/:id', authenticate, (req, res) => {
+app.delete('/products/:id', authenticate, async (req, res) => {
     const catalog = readCatalog();
     const index = catalog.findIndex((product) => String(product.id) === req.params.id);
     const product = catalog[index];
@@ -942,7 +930,7 @@ app.delete('/products/:id', authenticate, (req, res) => {
     }
 
     const remainingCatalog = catalog.filter((_, productIndex) => productIndex !== index);
-    const existingTrash = fs.existsSync(trashProductsPath) ? readJson(trashProductsPath) : [];
+    const existingTrash = readJson(trashProductsPath);
     if (!Array.isArray(existingTrash)) {
         throw new Error('Файл корзины товаров должен содержать массив');
     }
@@ -971,12 +959,12 @@ app.delete('/products/:id', authenticate, (req, res) => {
     };
 
     try {
-        writeJson(trashProductsPath, [...existingTrash, archivedProduct]);
-        writeJson(catalogPath, remainingCatalog);
+        await writeJson(trashProductsPath, [...existingTrash, archivedProduct]);
+        await writeJson(catalogPath, remainingCatalog);
     } catch (error) {
         const rollbackErrors = [];
         try {
-            if (fs.existsSync(trashProductsPath)) writeJson(trashProductsPath, existingTrash);
+            await writeJson(trashProductsPath, existingTrash);
         } catch (rollbackError) {
             rollbackErrors.push(rollbackError);
         }
@@ -996,17 +984,17 @@ app.delete('/products/:id', authenticate, (req, res) => {
     res.status(204).end();
 });
 
-app.patch('/products/:id/hide', authenticate, (req, res) => {
+app.patch('/products/:id/hide', authenticate, async (req, res) => {
     if (!isAdmin(req.user)) return res.status(403).json({ message: 'Только admin может скрывать товары' });
     const catalog = readCatalog();
     const product = catalog.find((item) => String(item.id) === req.params.id);
     if (!product) return res.status(404).json({ message: 'Товар не найден' });
     product.hidden = req.body.hidden !== false;
-    writeJson(catalogPath, catalog);
+    await writeJson(catalogPath, catalog);
     res.json(product);
 });
 
-app.post('/orders', authenticate, requirePermission('orders:create'), (req, res) => {
+app.post('/orders', authenticate, requirePermission('orders:create'), async (req, res) => {
     const orders = readJson(ordersPath);
     const catalog = readCatalog();
     if (!Array.isArray(req.body.items) || req.body.items.length === 0) {
@@ -1067,7 +1055,7 @@ app.post('/orders', authenticate, requirePermission('orders:create'), (req, res)
         totalQuantity: orderItems.reduce((total, item) => total + item.quantity, 0),
         totalAmount: roundMoney(orderItems.reduce((total, item) => total + item.totalForItem, 0))
     };
-    writeJson(ordersPath, [...orders, order]);
+    await writeJson(ordersPath, [...orders, order]);
     res.status(201).json({ message: 'Заказ создан', order });
 });
 
@@ -1112,7 +1100,7 @@ app.get('/orders', authenticate, (req, res) => {
     ));
 });
 
-app.patch('/orders/:id', authenticate, (req, res) => {
+app.patch('/orders/:id', authenticate, async (req, res) => {
     const orders = readJson(ordersPath);
     const index = orders.findIndex((order) => order.id === req.params.id);
     const order = orders[index];
@@ -1162,12 +1150,12 @@ app.patch('/orders/:id', authenticate, (req, res) => {
         orders[index] = { ...order, ...changes, id: order.id, userId: order.userId };
     }
     try {
-        if (updatedInventory) writeJson(catalogPath, updatedInventory);
-        writeJson(ordersPath, orders);
+        if (updatedInventory) await writeJson(catalogPath, updatedInventory);
+        await writeJson(ordersPath, orders);
     } catch (error) {
         if (originalInventory) {
             try {
-                writeJson(catalogPath, originalInventory);
+                await writeJson(catalogPath, originalInventory);
             } catch (rollbackError) {
                 console.error('Не удалось восстановить остатки после ошибки сохранения заказа:', rollbackError);
             }
@@ -1180,12 +1168,12 @@ app.patch('/orders/:id', authenticate, (req, res) => {
     return res.json(orders[index]);
 });
 
-app.delete('/orders/:id', authenticate, (req, res) => {
+app.delete('/orders/:id', authenticate, async (req, res) => {
     if (!isAdmin(req.user)) return res.status(403).json({ message: 'Только admin может удалять заказы' });
     const orders = readJson(ordersPath);
     const filtered = orders.filter((order) => order.id !== req.params.id);
     if (filtered.length === orders.length) return res.status(404).json({ message: 'Заказ не найден' });
-    writeJson(ordersPath, filtered);
+    await writeJson(ordersPath, filtered);
     res.status(204).end();
 });
 
@@ -1194,7 +1182,7 @@ app.get('/cart', authenticate, requirePermission('cart:read'), (req, res) => {
     res.json({ items: queryCollection(cart, req.query), totalAmount: getCartTotal(cart) });
 });
 
-app.post('/cart/items', authenticate, requirePermission('cart:write'), (req, res) => {
+app.post('/cart/items', authenticate, requirePermission('cart:write'), async (req, res) => {
     const catalog = readCatalog();
     const product = catalog.find((item) => String(item.id) === String(req.body.productId) && !item.hidden);
     if (!product) return res.status(404).json({ message: 'Товар не найден' });
@@ -1231,11 +1219,11 @@ app.post('/cart/items', authenticate, requirePermission('cart:write'), (req, res
     }
 
     const cartTotal = getCartTotal(cart);
-    writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, cart, cartTotal } : user));
+    await writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, cart, cartTotal } : user));
     res.status(201).json(cartResponse(cart));
 });
 
-app.patch('/cart/items/:productId', authenticate, requirePermission('cart:write'), (req, res) => {
+app.patch('/cart/items/:productId', authenticate, requirePermission('cart:write'), async (req, res) => {
     const quantity = Number(req.body.quantity);
     if (!Number.isInteger(quantity) || quantity < 1) {
         return res.status(400).json({ message: 'Количество должно быть целым числом больше нуля' });
@@ -1261,19 +1249,19 @@ app.patch('/cart/items/:productId', authenticate, requirePermission('cart:write'
     item.quantity = quantity;
     item.totalAmount = roundMoney(quantity * Number(item.unitPrice));
     const cartTotal = getCartTotal(cart);
-    writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, cart, cartTotal } : user));
+    await writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, cart, cartTotal } : user));
     res.json(cartResponse(cart));
 });
 
-app.delete('/cart/items/:productId', authenticate, requirePermission('cart:write'), (req, res) => {
+app.delete('/cart/items/:productId', authenticate, requirePermission('cart:write'), async (req, res) => {
     const cart = (req.user.cart || []).filter((item) => String(item.productId) !== req.params.productId);
     const cartTotal = getCartTotal(cart);
-    writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, cart, cartTotal } : user));
+    await writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, cart, cartTotal } : user));
     res.json(cartResponse(cart));
 });
 
-app.delete('/cart', authenticate, requirePermission('cart:write'), (req, res) => {
-    writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, cart: [], cartTotal: 0 } : user));
+app.delete('/cart', authenticate, requirePermission('cart:write'), async (req, res) => {
+    await writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, cart: [], cartTotal: 0 } : user));
     res.json(cartResponse([]));
 });
 
@@ -1282,25 +1270,25 @@ app.get('/users', authenticate, (req, res) => {
     res.json(queryCollection(readUsers().map(publicUser), req.query));
 });
 
-app.patch('/users/:id/status', authenticate, (req, res) => {
+app.patch('/users/:id/status', authenticate, async (req, res) => {
     if (!isAdmin(req.user)) return res.status(403).json({ message: 'Только admin может блокировать пользователей' });
     if (!['active', 'blocked'].includes(req.body.status)) return res.status(400).json({ message: 'Статус должен быть active или blocked' });
     const users = readUsers();
     const index = users.findIndex((user) => user.id === req.params.id);
     if (index === -1) return res.status(404).json({ message: 'Пользователь не найден' });
     users[index].status = req.body.status;
-    writeUsers(users);
+    await writeUsers(users);
     res.json(publicUser(users[index]));
 });
 
-app.patch('/users/:id/role', authenticate, (req, res) => {
+app.patch('/users/:id/role', authenticate, async (req, res) => {
     if (!isAdmin(req.user)) return res.status(403).json({ message: 'Только admin может менять роли' });
     if (!['user', 'seller', 'admin'].includes(req.body.role)) return res.status(400).json({ message: 'Неизвестная роль' });
     const users = readUsers();
     const index = users.findIndex((user) => user.id === req.params.id);
     if (index === -1) return res.status(404).json({ message: 'Пользователь не найден' });
     users[index].role = req.body.role;
-    writeUsers(users);
+    await writeUsers(users);
     res.json(publicUser(users[index]));
 });
 
@@ -1314,11 +1302,18 @@ app.post('/auth/logout', (req, res) => {
     res.status(204).end();
 });
 
-if (require.main === module) {
-    initializeUserStore();
-    initializeEmptyJsonFile(ordersPath);
+async function startServer() {
+    const seedCatalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
+    await appStateStore.initialize(seedCatalog);
     app.listen(PORT, '0.0.0.0', () => {
         console.log(`Backend запущен на порту ${PORT}`);
+    });
+}
+
+if (require.main === module) {
+    startServer().catch((error) => {
+        console.error('Не удалось подключить Supabase app_state:', error);
+        process.exitCode = 1;
     });
 }
 

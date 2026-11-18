@@ -1,24 +1,11 @@
-const fs = require('fs');
-const path = require('path');
-
-const usersPath = path.join(__dirname, '..', 'userData.json');
-
-function initializeUserStore(filePath = usersPath) {
-    try {
-        fs.writeFileSync(filePath, '[]\n', { flag: 'wx' });
-        console.warn(`User store was missing; initialized an empty file at ${filePath}`);
-    } catch (error) {
-        if (error.code !== 'EEXIST') throw error;
-    }
-}
+const { appStateStore } = require('../appStateStore');
 
 function readUsers() {
-    initializeUserStore();
-    return JSON.parse(fs.readFileSync(usersPath, 'utf8'));
+    return appStateStore.get('users');
 }
 
 function writeUsers(users) {
-    fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
+    return appStateStore.set('users', users);
 }
 
 function findById(id) {
@@ -30,7 +17,7 @@ function findByLogin(login) {
     return readUsers().find((user) => user.login.toLowerCase() === normalizedLogin);
 }
 
-function updateById(id, update) {
+async function updateById(id, update) {
     const users = readUsers();
     const index = users.findIndex((user) => user.id === id);
 
@@ -39,15 +26,8 @@ function updateById(id, update) {
     }
 
     users[index] = { ...users[index], ...update };
-    writeUsers(users);
+    await writeUsers(users);
     return users[index];
 }
 
-module.exports = {
-    initializeUserStore,
-    readUsers,
-    writeUsers,
-    findById,
-    findByLogin,
-    updateById
-};
+module.exports = { readUsers, writeUsers, findById, findByLogin, updateById };

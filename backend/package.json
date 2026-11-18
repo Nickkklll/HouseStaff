@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "test": "node --test",
+    "migrate:supabase": "node migrateJsonToSupabase.js",
     "migrate:product-images": "node migrateProductImages.js",
     "migrate:product-ids": "node migrateProductIds.js",
     "migrate:legacy-order-sellers": "node migrateLegacyOrderSellers.js",
