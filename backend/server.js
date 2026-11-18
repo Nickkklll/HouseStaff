@@ -7,7 +7,7 @@ require('dotenv').config({ path: path.join(__dirname, '.env') });
 const multer = require('multer');
 const sharp = require('sharp');
 const { register, login, changePassword, publicUser } = require('./auth/authService');
-const { readUsers, writeUsers } = require('./auth/userStore');
+const { initializeUserStore, readUsers, writeUsers } = require('./auth/userStore');
 const { authenticate, requirePermission } = require('./middleware/authMiddleware');
 const { csrfProtection } = require('./middleware/csrfMiddleware');
 const { secondsUntilMidnight } = require('./auth/jwt');
@@ -127,6 +127,15 @@ function writeJson(filePath, data) {
     } catch (error) {
         if (fs.existsSync(temporaryPath)) fs.unlinkSync(temporaryPath);
         throw error;
+    }
+}
+
+function initializeEmptyJsonFile(filePath) {
+    try {
+        fs.writeFileSync(filePath, '[]\n', { flag: 'wx' });
+        console.warn(`Data file was missing; initialized an empty file at ${filePath}`);
+    } catch (error) {
+        if (error.code !== 'EEXIST') throw error;
     }
 }
 
@@ -1306,6 +1315,8 @@ app.post('/auth/logout', (req, res) => {
 });
 
 if (require.main === module) {
+    initializeUserStore();
+    initializeEmptyJsonFile(ordersPath);
     app.listen(PORT, '0.0.0.0', () => {
         console.log(`Backend запущен на порту ${PORT}`);
     });

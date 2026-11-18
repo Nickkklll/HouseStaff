@@ -3,7 +3,17 @@ const path = require('path');
 
 const usersPath = path.join(__dirname, '..', 'userData.json');
 
+function initializeUserStore(filePath = usersPath) {
+    try {
+        fs.writeFileSync(filePath, '[]\n', { flag: 'wx' });
+        console.warn(`User store was missing; initialized an empty file at ${filePath}`);
+    } catch (error) {
+        if (error.code !== 'EEXIST') throw error;
+    }
+}
+
 function readUsers() {
+    initializeUserStore();
     return JSON.parse(fs.readFileSync(usersPath, 'utf8'));
 }
 
@@ -33,4 +43,11 @@ function updateById(id, update) {
     return users[index];
 }
 
-module.exports = { readUsers, writeUsers, findById, findByLogin, updateById };
+module.exports = {
+    initializeUserStore,
+    readUsers,
+    writeUsers,
+    findById,
+    findByLogin,
+    updateById
+};
