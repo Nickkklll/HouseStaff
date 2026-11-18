@@ -1,10 +1,9 @@
 const fs = require('node:fs');
 const path = require('node:path');
-require('dotenv').config({ path: path.join(__dirname, '.env') });
-const { appStateStore } = require('./appStateStore');
 
 const confirmationFlag = '--confirm-sensitive-data-transfer';
 const overwriteFlag = '--overwrite';
+const overwriteCatalogFlag = '--overwrite-catalog';
 
 function readArray(filePath) {
     const value = JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -25,11 +24,41 @@ function validateSellerAccounts(catalog, users) {
     }
 }
 
+function buildMigrationPlan(localState, remoteState, args) {
+    const overwriteAll = args.includes(overwriteFlag);
+    const overwriteCatalog = args.includes(overwriteCatalogFlag);
+    const conflicts = Object.keys(localState).filter((key) =>
+        remoteState[key].length > 0 &&
+        JSON.stringify(remoteState[key]) !== JSON.stringify(localState[key])
+    );
+    const unresolvedConflicts = conflicts.filter((key) =>
+        !overwriteAll && !(key === 'catalog' && overwriteCatalog)
+    );
+
+    if (unresolvedConflicts.length > 0) {
+        const requiredFlags = [...new Set(unresolvedConflicts.map((key) =>
+            key === 'catalog' ? overwriteCatalogFlag : overwriteFlag
+        ))];
+        throw new Error(
+            `Remote app_state contains different data for: ${unresolvedConflicts.join(', ')}; ` +
+            `add ${requiredFlags.join(' or ')} only if you intend to replace it`
+        );
+    }
+
+    return Object.fromEntries(Object.keys(localState)
+        .filter((key) =>
+            JSON.stringify(remoteState[key]) !== JSON.stringify(localState[key])
+        )
+        .map((key) => [key, localState[key]]));
+}
+
 async function main() {
     if (!process.argv.includes(confirmationFlag)) {
         throw new Error(`Add ${confirmationFlag} to explicitly upload local user and order data`);
     }
 
+    require('dotenv').config({ path: path.join(__dirname, '.env') });
+    const { appStateStore } = require('./appStateStore');
     const catalogPath = path.join(__dirname, 'catalog.json');
     const ordersPath = path.join(__dirname, 'orders.json');
     const usersPath = path.join(__dirname, 'userData.json');
@@ -48,22 +77,23 @@ async function main() {
     validateSellerAccounts(localState.catalog, localState.users);
 
     await appStateStore.initialize();
-    const conflictingKeys = Object.keys(localState).filter((key) => {
-        const remoteValue = appStateStore.get(key);
-        return remoteValue.length > 0 &&
-            JSON.stringify(remoteValue) !== JSON.stringify(localState[key]);
-    });
-    if (!process.argv.includes(overwriteFlag) && conflictingKeys.length > 0) {
-        throw new Error(`Remote app_state contains different data for: ${conflictingKeys.join(', ')}; add ${overwriteFlag} only if you intend to replace it`);
+    const remoteState = Object.fromEntries(
+        Object.keys(localState).map((key) => [key, appStateStore.get(key)])
+    );
+    const migrationPlan = buildMigrationPlan(localState, remoteState, process.argv);
+    if (Object.keys(migrationPlan).length > 0) {
+        await appStateStore.setMany(migrationPlan);
     }
-
-    await appStateStore.setMany(localState);
     console.log(`Migrated app_state arrays: ${JSON.stringify(
-        Object.fromEntries(Object.entries(localState).map(([key, value]) => [key, value.length]))
+        Object.fromEntries(Object.entries(migrationPlan).map(([key, value]) => [key, value.length]))
     )}`);
 }
 
-main().catch((error) => {
-    console.error('Supabase JSON migration failed:', error.message);
-    process.exitCode = 1;
-});
+if (require.main === module) {
+    main().catch((error) => {
+        console.error('Supabase JSON migration failed:', error.message);
+        process.exitCode = 1;
+    });
+}
+
+module.exports = { buildMigrationPlan, validateSellerAccounts };
