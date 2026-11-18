@@ -11,7 +11,7 @@ Backend интернет-магазина на Node.js и Express. Рабоче�
 ```powershell
 cd "d:\STProjects\Ранние работы\market-place\backend"
 npm install
-Copy-Item .env.example .env
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 npm start
 ```
 
