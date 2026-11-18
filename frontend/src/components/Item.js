@@ -57,7 +57,7 @@ export function Item({item,isFav,setIsFullItemModalOpen,setSelectItem,setMode,de
           +
         </div>
       )}
-      {user.role !== "seller" && (
+      {user?.role !== "seller" && (
         <div
           className="product-card__favorite"
           onClick={
