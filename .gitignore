@@ -12,8 +12,6 @@ DEVELOPMENT_IDEAS.md
 # Локальные данные пользователей, заказы и резервные копии
 backend/userData.json
 backend/orders.json
-backend/catalog.json
-backend/uploads/
 backend/.upload-tmp/
 backend/trash/
 backend/*.bak
