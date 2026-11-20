@@ -19,6 +19,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: github-pages
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,11 +35,20 @@ jobs:
         run: npm ci
         working-directory: frontend
 
+      - name: Validate backend URL
+        run: |
+          if [ -z "$REACT_APP_API_ORIGIN" ]; then
+            echo "::error::Set the BACKEND_ORIGIN variable in the github-pages environment."
+            exit 1
+          fi
+        env:
+          REACT_APP_API_ORIGIN: ${{ vars.BACKEND_ORIGIN }}
+
       - name: Build frontend
         run: npm run build
         working-directory: frontend
         env:
-          REACT_APP_API_ORIGIN: https://housestaff-backend.onrender.com
+          REACT_APP_API_ORIGIN: ${{ vars.BACKEND_ORIGIN }}
 
       - name: Add GitHub Pages SPA fallback
         run: cp build/index.html build/404.html

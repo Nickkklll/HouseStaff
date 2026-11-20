@@ -1,5 +1,14 @@
+const configuredApiOrigin = process.env.REACT_APP_API_ORIGIN;
+const isDevelopment = process.env.NODE_ENV === "development";
+
+if (process.env.NODE_ENV === "production" && !configuredApiOrigin) {
+  throw new Error("REACT_APP_API_ORIGIN must be set for production builds.");
+}
+
 const API_ORIGIN = (
-  process.env.REACT_APP_API_ORIGIN || "http://localhost:3000"
+  isDevelopment
+    ? "http://localhost:3000"
+    : configuredApiOrigin || "http://localhost:3000"
 ).replace(/\/+$/, "");
 
 export function apiUrl(path) {

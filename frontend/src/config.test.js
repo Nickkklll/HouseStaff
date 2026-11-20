@@ -1,5 +1,6 @@
 describe("backend URL helpers", () => {
   const originalApiOrigin = process.env.REACT_APP_API_ORIGIN;
+  const originalNodeEnv = process.env.NODE_ENV;
 
   afterEach(() => {
     if (originalApiOrigin === undefined) {
@@ -7,6 +8,36 @@ describe("backend URL helpers", () => {
     } else {
       process.env.REACT_APP_API_ORIGIN = originalApiOrigin;
     }
+    process.env.NODE_ENV = originalNodeEnv;
+  });
+
+  test("defaults to the local backend when no origin is configured", () => {
+    delete process.env.REACT_APP_API_ORIGIN;
+    process.env.NODE_ENV = "development";
+
+    jest.isolateModules(() => {
+      const { apiUrl } = require("./config");
+      expect(apiUrl("/catalog")).toBe("http://localhost:3000/catalog");
+    });
+  });
+
+  test("keeps development requests on the local backend", () => {
+    process.env.REACT_APP_API_ORIGIN = "https://api.example.test";
+    process.env.NODE_ENV = "development";
+
+    jest.isolateModules(() => {
+      const { apiUrl } = require("./config");
+      expect(apiUrl("/catalog")).toBe("http://localhost:3000/catalog");
+    });
+  });
+
+  test("requires an API origin in production", () => {
+    delete process.env.REACT_APP_API_ORIGIN;
+    process.env.NODE_ENV = "production";
+
+    expect(() => {
+      jest.isolateModules(() => require("./config"));
+    }).toThrow("REACT_APP_API_ORIGIN must be set for production builds.");
   });
 
   test("uses the configured backend origin for API URLs", () => {
