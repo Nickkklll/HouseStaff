@@ -1,6 +1,7 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaHome } from 'react-icons/fa';
+import { apiUrl } from '../config';
 
 function Registration() {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ function Registration() {
     const registrationData = Object.fromEntries(formData.entries());
 
     const csrfResponse = await fetch(
-      'http://localhost:3000/auth/csrf',
+      apiUrl('/auth/csrf'),
       {
         credentials: 'include'
       }
@@ -21,7 +22,7 @@ function Registration() {
 
     const { csrfToken } = await csrfResponse.json();
 
-    const response = await fetch('http://localhost:3000/auth/register', {
+    const response = await fetch(apiUrl('/auth/register'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -70,7 +71,7 @@ function Registration() {
           </label>
         </div>
         <input type="submit" value="Регистрация" />
-        <a href="/login">Уже есть уч.запись?</a>
+        <Link to="/login">Уже есть уч.запись?</Link>
       </form>
     </div>
   );

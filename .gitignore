@@ -2,6 +2,7 @@
 node_modules/
 frontend/build/
 coverage/
+DEVELOPMENT_IDEAS.md
 
 #Локальные секреты 
 .env
@@ -11,6 +12,8 @@ coverage/
 # Локальные данные пользователей, заказы и резервные копии
 backend/userData.json
 backend/orders.json
+backend/.upload-tmp/
+backend/trash/
 backend/*.bak
 backend/userData.json.corrupt-*
 

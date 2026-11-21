@@ -2,6 +2,16 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Backend host
+
+The frontend uses `REACT_APP_API_ORIGIN` as the single base URL for API requests
+and backend-hosted product images. In development, it always uses the local
+backend at `http://localhost:3000`. For GitHub Pages deployments, set the
+repository Actions variable `BACKEND_ORIGIN` to the backend's current public
+URL. The workflow uses that value and fails if it is missing, rather than
+producing a deployed frontend that calls localhost. Images hosted in Supabase
+Storage use their own public URLs and are not rewritten to the API host.
+
 ## Available Scripts
 
 In the project directory, you can run:

@@ -1,53 +1,96 @@
 import React, { useState, useContext } from "react";
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import { AppContext } from "../context";
-import '../Style/components/Item.scss'
+import { useLocation } from "react-router-dom";
+import "../Style/components/Item.scss";
+import { assetUrl } from "../config";
 
-export function Item(props) {
-  const { addToFavorites, delFromFavorites } = useContext(AppContext);
-  const [isFav, setIsFav] = useState(props.isFav);
+export function Item({item,isFav,setIsFullItemModalOpen,setSelectItem,setMode,deleteItem, onAdd, reloadList}) {
+  const location = useLocation();
+  const { addToFavorites, delFromFavorites, user, loading} = useContext(AppContext);
+  const [isItFav, setIsItFav] = useState(isFav);
 
+
+  function onShowItem() {
+    
+    setIsFullItemModalOpen(true);
+    setSelectItem(item)
+  }
+ 
   return (
-    <div className={'item'}>
+    <article className="product-card"  onClick={() =>
+          !location.pathname.toLowerCase().endsWith("/myproduct") &&
+          onShowItem()
+        }>
       <img
-        src={"/img/" + props.item.img}
+        className="product-card__image"
+        src={assetUrl(item.img)}
         alt=""
-        onClick={() => props.onShowItem(props.item)}
+        onError={(event) => {
+          const fallbackUrl = assetUrl("/uploads/img/system/Image-placeholder.jpg");
+          if (event.currentTarget.getAttribute("src") !== fallbackUrl) {
+            event.currentTarget.setAttribute("src", fallbackUrl);
+          }
+        }}
+       
       />
-      <h2>{props.item.title}</h2>
-      <p>{props.item.desc}</p>
-      <b>{props.item.price}$</b>
-      {props.onAdd && (
+      <h2 className="product-card__title">{item.title}</h2>
+      <p className="product-card__description">{item.desc}</p>
+      <b className="product-card__price">${item.price}</b>
+      {location.pathname.toLowerCase().endsWith("/myproduct")
+      ?(
+        <>
+          <p className="product-card__quantity">Количество: {item.quantity} ед.</p>
+          <div className="item-buttons">
+            <button type="button" className="action-button editProduct-button" onClick={()=>{setMode('edit'); onShowItem()}}> Редактиворать</button>
+            <button type="button" className="action-button deletProduct-button white-button" onClick={()=>deleteItem(item.id)} >Удалить</button>
+
+          </div>
+        </>
+      ):location.pathname.toLowerCase().endsWith("/sellerorders")
+      ?(
+       <p className="product-card__quantity">Количество: {item.quantity} ед.</p>
+      )
+      :null}
+      {!loading && user?.role !== "seller" && onAdd && (
         <div
-          className={'addToCart'}
-          onClick={() => props.onAdd(props.item)}
+          className="product-card__add"
+          onClick={(event) => {
+            event.stopPropagation();
+            onAdd(item);
+          }}
         >
           +
         </div>
       )}
+      {user?.role !== "seller" && (
+        <div
+          className="product-card__favorite"
+          onClick={(event) => {
+            event.stopPropagation();
+            if (!isItFav) {
+              setIsItFav(!isItFav);
+              addToFavorites(item.id);
+            } else {
+              delFromFavorites(item.id);
+              setIsItFav(!isItFav);
+              reloadList && reloadList();
+            }
+          }}
+        >
+          {!isItFav ? <MdFavoriteBorder /> : <MdFavorite />}
+        </div>
+      )}
 
-      <div
-        className={'addToFavorites'}
-        onClick={
-          !isFav
-            ? () => {
-                setIsFav(!isFav);
-                addToFavorites(props.item.id);
-              }
-            : () => {
-              delFromFavorites(props.item.id);
-                setIsFav(!isFav);
-              props.reloadList&&props.reloadList()          
-              
-              
-              
-              }
-            
-        }
-      >
-        {!isFav ? <MdFavoriteBorder /> : <MdFavorite />}
-      </div>
-    </div>
+      {/* {isFullItemModalOpen && (
+        <ShowFullItem
+          item={props.item}
+          onAdd={props.onAdd}
+          onClose={() => setIsFullItemModalOpen(false)}
+          mode={edit&&"edit"}
+        />
+      )} */}
+    </article>
   );
 }
 

@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: housestaff-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /catalog
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: NODE_ENV
+        value: production
+      - key: BACKEND_ORIGIN
+        sync: false
+      - key: FRONTEND_ORIGIN
+        value: https://nickkklll.github.io

@@ -43,7 +43,7 @@ function validateCredentials(login, password, email, name, lastName, role, birth
     }
 }
 
-function register({ login, password, email, name, lastName, role, birthDate }) {
+async function register({ login, password, email, name, lastName, role, birthDate }) {
     validateCredentials(login, password, email, name, lastName, role, birthDate);
 
     if (findByLogin(login)) {
@@ -69,7 +69,7 @@ function register({ login, password, email, name, lastName, role, birthDate }) {
         createdAt: new Date().toISOString()
     };
 
-    writeUsers([...readUsers(), user]);
+    await writeUsers([...readUsers(), user]);
     return { user: publicUser(user), token: generateToken(user) };
 }
 
@@ -89,7 +89,7 @@ function login({ login, password }) {
     return { user: publicUser(user), token: generateToken(user) };
 }
 
-function changePassword(userId, newPassword) {
+async function changePassword(userId, newPassword) {
     return updateById(userId, {
         passwordHash: bcrypt.hashSync(newPassword, 12)
     });

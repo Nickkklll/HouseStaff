@@ -3,20 +3,93 @@ const cors = require('cors');
 const fs = require('fs');
 const crypto = require('crypto');
 const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+const multer = require('multer');
+const sharp = require('sharp');
 const { register, login, changePassword, publicUser } = require('./auth/authService');
 const { readUsers, writeUsers } = require('./auth/userStore');
+const { appStateStore } = require('./appStateStore');
 const { authenticate, requirePermission } = require('./middleware/authMiddleware');
 const { csrfProtection } = require('./middleware/csrfMiddleware');
 const { secondsUntilMidnight } = require('./auth/jwt');
 const { setAuthCookie, setCsrfCookie, clearAuthCookie, clearCsrfCookie } = require('./auth/cookies');
 const { queryCollection } = require('./query');
+const { getProductCategories, isKnownProductCategory } = require('./productCategories');
+const {
+    validateReviewInput,
+    createReview,
+    removeReview,
+    getSellerReviews,
+    getSellerReviewStats
+} = require('./productReviews');
+const {
+    getSellerOrderItems,
+    sellerOrderResponse,
+    buyerOrderResponse,
+    updateSellerOrder
+} = require('./orderOwnership');
+const {
+    resolvePeriod,
+    summarizeSales,
+    getTopProducts,
+    getMonthlyCategoryRevenue,
+    getTopSellers
+} = require('./analytics');
+const { TOKEN_TTL_SECONDS }= require ('./auth/jwt')
 const app = express();
 
-const PORT = 3000;
-const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'http://localhost:3001';
+
+const PORT = Number(process.env.PORT) || 3000;
+const BACKEND_ORIGIN = (
+    process.env.BACKEND_ORIGIN ||
+    process.env.RENDER_EXTERNAL_URL ||
+    `http://localhost:${PORT}`
+).replace(/\/+$/, '');
+const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'https://nickkklll.github.io';
+const SUPABASE_STORAGE_BUCKET = process.env.SUPABASE_STORAGE_BUCKET || 'product-images';
+const SUPABASE_URL = (process.env.SUPABASE_URL || '').replace(/\/+$/, '');
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 const ordersPath = path.join(__dirname, 'orders.json');
 const catalogPath = path.join(__dirname, 'catalog.json');
+const uploadsPath = path.join(__dirname, 'uploads');
+const productUploadsPath = path.join(uploadsPath, 'img', 'product');
+const uploadTempPath = path.join(__dirname, '.upload-tmp');
+const trashPath = path.join(__dirname, 'trash');
+const trashImagesPath = path.join(trashPath, 'img');
+const trashProductsPath = path.join(trashPath, 'products.json');
+const stateKeyByPath = new Map([
+    [catalogPath, 'catalog'],
+    [ordersPath, 'orders'],
+    [trashProductsPath, 'trash-products']
+]);
 const FAVORITE_UPDATE_DELAY_MS = 1_000;
+const productImageTypes = {
+    'image/jpeg': '.jpg',
+    'image/png': '.png',
+    'image/webp': '.webp',
+    'image/gif': '.gif'
+};
+
+fs.mkdirSync(uploadsPath, { recursive: true });
+fs.mkdirSync(productUploadsPath, { recursive: true });
+fs.mkdirSync(uploadTempPath, { recursive: true });
+fs.mkdirSync(trashImagesPath, { recursive: true });
+
+const productImageUpload = multer({
+    storage: multer.diskStorage({
+        destination: uploadTempPath,
+        filename: (req, file, callback) => {
+            callback(null, `${crypto.randomUUID()}${productImageTypes[file.mimetype]}`);
+        }
+    }),
+    limits: { fileSize: 10 * 1024 * 1024, files: 1 },
+    fileFilter: (req, file, callback) => {
+        if (!productImageTypes[file.mimetype]) {
+            return callback(new Error('Допустимы изображения JPEG, PNG, WebP или GIF'));
+        }
+        return callback(null, true);
+    }
+});
 
 app.use((req, res, next) => {
     const startedAt = Date.now();
@@ -38,6 +111,7 @@ app.use((req, res, next) => {
 
 app.use(cors({ origin: FRONTEND_ORIGIN, credentials: true }));
 app.use(express.json());
+app.use('/uploads', express.static(uploadsPath));
 
 function originProtection(req, res, next) {
     if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) return next();
@@ -50,28 +124,22 @@ function originProtection(req, res, next) {
 app.use(originProtection);
 app.use(csrfProtection);
 
+function getStateKey(filePath) {
+    const stateKey = stateKeyByPath.get(filePath);
+    if (!stateKey) throw new Error(`Unknown application state file: ${filePath}`);
+    return stateKey;
+}
+
 function readJson(filePath) {
-    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    return appStateStore.get(getStateKey(filePath));
 }
 
 function writeJson(filePath, data) {
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+    return appStateStore.set(getStateKey(filePath), data);
 }
 
 function readCatalog() {
-    const catalog = readJson(catalogPath);
-    let needsWrite = false;
-    const normalizedCatalog = catalog.map((product) => {
-        if (Number.isInteger(product.favoritesCount) && product.favoritesCount >= 0) {
-            return product;
-        }
-
-        needsWrite = true;
-        return { ...product, favoritesCount: 0 };
-    });
-
-    if (needsWrite) writeJson(catalogPath, normalizedCatalog);
-    return normalizedCatalog;
+    return readJson(catalogPath);
 }
 
 function delay(milliseconds) {
@@ -116,8 +184,8 @@ async function updateFavorite(req, res, shouldAdd) {
             .some((favorite) => String(getFavoriteProductId(favorite)) === String(product.id))
     ).length;
 
-    writeUsers(updatedUsers);
-    writeJson(catalogPath, catalog);
+    await writeUsers(updatedUsers);
+    await writeJson(catalogPath, catalog);
     return res.json({
         favorites: updatedFavorites,
         productId: product.id,
@@ -129,12 +197,211 @@ function isAdmin(user) {
     return user.role === 'admin';
 }
 
-function orderBelongsToSeller(order, sellerId) {
-    return order.sellerIds?.includes(sellerId) || order.sellerId === sellerId;
-}
-
 function roundMoney(value) {
     return Math.round((value + Number.EPSILON) * 100) / 100;
+}
+
+function getProductImageUrl(filename) {
+    return `${BACKEND_ORIGIN}/uploads/img/product/${encodeURIComponent(filename)}`;
+}
+
+async function persistProductImage(reqFile) {
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) return getProductImageUrl(reqFile.filename);
+
+    const objectPath = encodeURIComponent(reqFile.filename);
+    const response = await fetch(
+        `${SUPABASE_URL}/storage/v1/object/${encodeURIComponent(SUPABASE_STORAGE_BUCKET)}/${objectPath}`,
+        {
+            method: 'POST',
+            headers: {
+                apikey: SUPABASE_SERVICE_ROLE_KEY,
+                Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+                'Content-Type': 'image/webp',
+                'x-upsert': 'true'
+            },
+            body: fs.readFileSync(reqFile.path)
+        }
+    );
+    if (!response.ok) {
+        throw new Error(`Не удалось сохранить изображение в Supabase (${response.status})`);
+    }
+
+    return `${SUPABASE_URL}/storage/v1/object/public/${encodeURIComponent(SUPABASE_STORAGE_BUCKET)}/${objectPath}`;
+}
+
+function getLocalUploadedImagePath(imageUrl) {
+    if (typeof imageUrl !== 'string' || !imageUrl) return null;
+
+    let parsedUrl;
+    try {
+        parsedUrl = new URL(imageUrl, `${BACKEND_ORIGIN}/`);
+    } catch {
+        return null;
+    }
+
+    if (parsedUrl.origin !== new URL(BACKEND_ORIGIN).origin ||
+        !parsedUrl.pathname.startsWith('/uploads/')) {
+        return null;
+    }
+
+    let relativePath;
+    try {
+        relativePath = decodeURIComponent(parsedUrl.pathname.slice('/uploads/'.length));
+    } catch {
+        return null;
+    }
+
+    const imagePath = path.resolve(uploadsPath, relativePath);
+    const pathFromUploads = path.relative(uploadsPath, imagePath);
+    if (!pathFromUploads || pathFromUploads === '..' ||
+        pathFromUploads.startsWith(`..${path.sep}`) || path.isAbsolute(pathFromUploads)) {
+        return null;
+    }
+
+    return imagePath;
+}
+
+async function unlinkUploadFile(filePath) {
+    const retryableCodes = new Set(['EPERM', 'EBUSY', 'EACCES']);
+
+    for (let attempt = 0; attempt < 4; attempt += 1) {
+        try {
+            await fs.promises.unlink(filePath);
+            return;
+        } catch (error) {
+            if (error.code === 'ENOENT') return;
+            if (!retryableCodes.has(error.code) || attempt === 3) throw error;
+            await new Promise((resolve) => setTimeout(resolve, 50 * (attempt + 1)));
+        }
+    }
+}
+
+function uploadProductImage(req, res, next) {
+    productImageUpload.single('photo')(req, res, (error) => {
+        if (error) {
+            return res.status(400).json({ message: error.message });
+        }
+        if (!req.file) return next();
+
+        const temporaryPath = req.file.path;
+        let destination;
+        (async () => {
+            try {
+                const image = fs.readFileSync(temporaryPath);
+                const isJpeg = image[0] === 0xff && image[1] === 0xd8 && image[2] === 0xff;
+                const isPng = image.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
+                const isGif = image.subarray(0, 6).toString('ascii').startsWith('GIF8');
+                const isWebp = image.subarray(0, 4).toString('ascii') === 'RIFF' &&
+                    image.subarray(8, 12).toString('ascii') === 'WEBP';
+                const validImageType = {
+                    'image/jpeg': isJpeg,
+                    'image/png': isPng,
+                    'image/gif': isGif,
+                    'image/webp': isWebp
+                }[req.file.mimetype];
+                if (!validImageType) {
+                    await unlinkUploadFile(temporaryPath).catch((cleanupError) => {
+                        console.error('Не удалось удалить временный файл изображения:', cleanupError);
+                    });
+                    return res.status(400).json({ message: 'Файл не является допустимым изображением' });
+                }
+
+                destination = path.join(productUploadsPath, `${path.parse(req.file.filename).name}.webp`);
+                const output = await sharp(temporaryPath, { animated: true })
+                    .rotate()
+                    .webp({ quality: 80 })
+                    .toFile(destination);
+                req.file.path = destination;
+                req.file.filename = path.basename(destination);
+                req.file.mimetype = 'image/webp';
+                req.file.size = output.size;
+                await unlinkUploadFile(temporaryPath).catch((cleanupError) => {
+                    console.error('Не удалось удалить временный файл изображения:', cleanupError);
+                });
+                return next();
+            } catch (imageError) {
+                const cleanupErrors = [];
+                for (const filePath of [temporaryPath, destination]) {
+                    if (!filePath || !fs.existsSync(filePath)) continue;
+                    try {
+                        await unlinkUploadFile(filePath);
+                    } catch (cleanupError) {
+                        cleanupErrors.push(cleanupError);
+                    }
+                }
+                if (cleanupErrors.length) {
+                    console.error('Не удалось очистить файлы после ошибки обработки изображения:', cleanupErrors);
+                }
+                return next(imageError);
+            }
+        })();
+    });
+}
+
+function validateProductFields(body, requirePhoto, hasPhoto) {
+    const title = typeof body.title === 'string' ? body.title.trim() : '';
+    const desc = typeof body.desc === 'string' ? body.desc.trim() : '';
+    const category = typeof body.category === 'string' ? body.category.trim() : '';
+    const price = Number(body.price);
+    const quantity = Number(body.quantity);
+
+    if (!title || !desc || !category) {
+        return 'Укажите название, описание и категорию товара';
+    }
+    if ((title.match(/\p{L}/gu) || []).length < 3) {
+        return 'Название товара должно содержать не менее 3 букв';
+    }
+    if (desc.split(/\s+/).length < 3) {
+        return 'Описание должно содержать не менее 3 слов';
+    }
+    if (body.price === undefined || String(body.price).trim() === '' ||
+        !Number.isFinite(price) || price < 0) {
+        return 'Цена должна быть числом не меньше нуля';
+    }
+    if (body.quantity === undefined || String(body.quantity).trim() === '' ||
+        !Number.isInteger(quantity) || quantity < 0) {
+        return 'Количество должно быть целым числом не меньше нуля';
+    }
+    if (requirePhoto && !hasPhoto) {
+        return 'Загрузите фотографию товара в поле photo';
+    }
+    return null;
+}
+
+function capitalizeFirstLetter(value) {
+    return value.replace(/^(\s*)(\p{L})/u, (_, whitespace, letter) =>
+        `${whitespace}${letter.toLocaleUpperCase('ru-RU')}`
+    );
+}
+
+function parseAnalyticsLimit(value) {
+    const limit = value === undefined ? 10 : Number(value);
+    return Number.isInteger(limit) && limit >= 1 && limit <= 100 ? limit : null;
+}
+
+function resolveAnalyticsPeriod(query, fallbackDays, fallbackMonths) {
+    if (query.from) return resolvePeriod({ from: query.from, to: query.to });
+
+    const to = query.to ? new Date(query.to) : new Date();
+    if (Number.isNaN(to.getTime())) {
+        throw new Error('Параметр to должен быть корректной датой');
+    }
+    const from = new Date(to);
+    if (fallbackMonths) from.setMonth(from.getMonth() - fallbackMonths);
+    else from.setDate(from.getDate() - fallbackDays);
+
+    return resolvePeriod({ from: from.toISOString(), to: to.toISOString() });
+}
+
+function resolveMonthlyAnalyticsPeriod(query) {
+    if (query.from) return resolvePeriod({ from: query.from, to: query.to });
+
+    const to = query.to ? new Date(query.to) : new Date();
+    if (Number.isNaN(to.getTime())) {
+        throw new Error('Параметр to должен быть корректной датой');
+    }
+    const from = new Date(Date.UTC(to.getUTCFullYear(), to.getUTCMonth() - 5, 1));
+    return resolvePeriod({ from: from.toISOString(), to: to.toISOString() });
 }
 
 function getCartTotal(cart) {
@@ -178,13 +445,18 @@ function sameAddressValue(left, right) {
     return normalizeAddressToken(left) === normalizeAddressToken(right);
 }
 
-app.post('/auth/register', (req, res) => {
+app.post('/auth/register', async (req, res) => {
     try {
-        const result = register(req.body);
-        setAuthCookie(res, result.token, secondsUntilMidnight());
+        const result = await register(req.body);
+        setAuthCookie(res, result.token, TOKEN_TTL_SECONDS);
+        // setAuthCookie(res, result.token, secondsUntilMidnight());
         setCsrfCookie(res);
         res.status(201).json({ user: result.user });
     } catch (error) {
+        if (error.code === 'SUPABASE_APP_STATE_ERROR') {
+            console.error('Registration could not be saved to Supabase:', error.message);
+            return res.status(503).json({ message: 'Регистрация временно недоступна' });
+        }
         res.status(400).json({ message: error.message });
     }
 });
@@ -192,7 +464,8 @@ app.post('/auth/register', (req, res) => {
 app.post('/auth/login', (req, res) => {
     try {
         const result = login(req.body);
-        setAuthCookie(res, result.token, secondsUntilMidnight());
+        setAuthCookie(res, result.token, TOKEN_TTL_SECONDS);
+        // setAuthCookie(res, result.token, secondsUntilMidnight());
         setCsrfCookie(res);
         res.json({ user: result.user });
     } catch (error) {
@@ -204,7 +477,7 @@ app.get('/me', authenticate, (req, res) => {
     res.json(publicUser(req.user));
 });
 
-app.patch('/me', authenticate, (req, res) => {
+app.patch('/me', authenticate, async (req, res) => {
     if (!req.body || typeof req.body !== 'object' || Array.isArray(req.body)) {
         return res.status(400).json({ message: 'Передайте данные профиля в JSON-объекте' });
     }
@@ -283,11 +556,11 @@ app.patch('/me', authenticate, (req, res) => {
     }
 
     users[userIndex] = { ...users[userIndex], ...changes };
-    writeUsers(users);
+    await writeUsers(users);
     return res.json({ user: publicUser(users[userIndex]) });
 });
 
-app.patch('/me/password', authenticate, (req, res) => {
+app.patch('/me/password', authenticate, async (req, res) => {
     if (!req.body || typeof req.body !== 'object' || Array.isArray(req.body)) {
         return res.status(400).json({ message: 'Передайте данные пароля в JSON-объекте' });
     }
@@ -297,7 +570,7 @@ app.patch('/me/password', authenticate, (req, res) => {
         return res.status(400).json({ message: 'Новый пароль должен содержать минимум 6 символов' });
     }
 
-    if (changePassword(req.user.id, newPassword) === null) {
+    if (await changePassword(req.user.id, newPassword) === null) {
         return res.status(404).json({ message: 'Пользователь не найден' });
     }
 
@@ -308,7 +581,7 @@ app.get('/addresses', authenticate, (req, res) => {
     res.json(req.user.addresses || []);
 });
 
-app.post('/addresses', authenticate, (req, res) => {
+app.post('/addresses', authenticate, async (req, res) => {
     if (!req.body || typeof req.body !== 'object' || Array.isArray(req.body)) {
         return res.status(400).json({ message: 'Передайте данные адреса в JSON-объекте' });
     }
@@ -335,11 +608,11 @@ app.post('/addresses', authenticate, (req, res) => {
     address.id = crypto.randomUUID();
 
     const addresses = [...(req.user.addresses || []), address];
-    writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, addresses } : user));
+    await writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, addresses } : user));
     res.status(201).json(address);
 });
 
-app.delete('/addresses/:addressId', authenticate, (req, res) => {
+app.delete('/addresses/:addressId', authenticate, async (req, res) => {
     const addresses = req.user.addresses || [];
     const filteredAddresses = addresses.filter((address) => address.id !== req.params.addressId);
 
@@ -347,13 +620,71 @@ app.delete('/addresses/:addressId', authenticate, (req, res) => {
         return res.status(404).json({ message: 'Адрес не найден' });
     }
 
-    writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, addresses: filteredAddresses } : user));
+    await writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, addresses: filteredAddresses } : user));
     res.status(204).end();
 });
 
 app.get('/catalog', (req, res) => {
     const catalog = readCatalog();
     res.json(queryCollection(catalog.filter((product) => !product.hidden), req.query));
+});
+
+app.get('/seller/reviews', authenticate, (req, res) => {
+    if (req.user.role !== 'seller') {
+        return res.status(403).json({ message: 'Отзывы продавца доступны только продавцу' });
+    }
+
+    const catalog = readCatalog();
+    if (req.query.analytics === 'true') {
+        return res.json(getSellerReviewStats(catalog, req.user.id));
+    }
+
+    return res.json(getSellerReviews(catalog, req.user.id));
+});
+
+app.get('/products/:id/reviews', authenticate, requirePermission('reviews:read'), (req, res) => {
+    const product = readCatalog().find((item) => String(item.id) === req.params.id);
+    if (!product) return res.status(404).json({ message: 'Товар не найден' });
+    return res.json(Array.isArray(product.reviews) ? product.reviews : []);
+});
+
+app.post('/products/:id/reviews', authenticate, requirePermission('reviews:create'), async (req, res) => {
+    if (req.user.role !== 'user') {
+        return res.status(403).json({ message: 'Оставлять отзывы может только пользователь' });
+    }
+
+    const validation = validateReviewInput(req.body);
+    if (validation.error) return res.status(400).json({ message: validation.error });
+
+    const catalog = readCatalog();
+    const index = catalog.findIndex((item) => String(item.id) === req.params.id);
+    if (index === -1) return res.status(404).json({ message: 'Товар не найден' });
+
+    const review = createReview(validation.value);
+    const product = catalog[index];
+    catalog[index] = {
+        ...product,
+        reviews: [...(Array.isArray(product.reviews) ? product.reviews : []), review]
+    };
+    await writeJson(catalogPath, catalog);
+    return res.status(201).json(review);
+});
+
+app.delete('/products/:id/reviews/:reviewId', authenticate, requirePermission('reviews:delete'), async (req, res) => {
+    const catalog = readCatalog();
+    const index = catalog.findIndex((item) => String(item.id) === req.params.id);
+    if (index === -1) return res.status(404).json({ message: 'Товар не найден' });
+
+    const reviews = removeReview(catalog[index].reviews, req.params.reviewId);
+    if (!reviews) return res.status(404).json({ message: 'Отзыв не найден' });
+
+    catalog[index] = { ...catalog[index], reviews };
+    await writeJson(catalogPath, catalog);
+    return res.status(204).end();
+});
+
+app.get('/categories', (req, res) => {
+    res.json(getProductCategories(readCatalog()));
 });
 
 app.get('/favorites', authenticate, (req, res) => {
@@ -376,98 +707,534 @@ app.post('/favorites/:productId', authenticate, (req, res) => updateFavorite(req
 
 app.delete('/favorites/:productId', authenticate, (req, res) => updateFavorite(req, res, false));
 
-app.post('/products', authenticate, requirePermission('products:create'), (req, res) => {
+app.get('/analytics/sales', authenticate, (req, res) => {
+    if (!['admin', 'seller'].includes(req.user.role)) {
+        return res.status(403).json({ message: 'Аналитика доступна только продавцу и администратору' });
+    }
+
+    let period;
+    try {
+        period = resolveAnalyticsPeriod(req.query, 30);
+    } catch (error) {
+        return res.status(400).json({ message: error.message });
+    }
     const catalog = readCatalog();
+    const orders = readJson(ordersPath);
+    const sellerId = req.user.role === 'seller' ? req.user.id : null;
+    return res.json({
+        period: { from: period.from.toISOString(), to: period.to.toISOString() },
+        metricDefinitions: {
+            purchases: 'orders_placed',
+            processedPurchases: 'processed_orders',
+            ordersAmount: 'placed_order_value',
+            revenue: 'processed_sales'
+        },
+        ...summarizeSales(orders, catalog, period.from, period.to, sellerId)
+    });
+});
+
+app.get('/analytics/categories/monthly', authenticate, (req, res) => {
+    if (!['admin', 'seller'].includes(req.user.role)) {
+        return res.status(403).json({ message: 'Аналитика доступна только продавцу и администратору' });
+    }
+
+    let period;
+    try {
+        period = resolveMonthlyAnalyticsPeriod(req.query);
+    } catch (error) {
+        return res.status(400).json({ message: error.message });
+    }
+    const sellerId = req.user.role === 'seller' ? req.user.id : req.query.sellerId || null;
+    const { months, categories } = getMonthlyCategoryRevenue(
+        readJson(ordersPath),
+        readCatalog(),
+        period.from,
+        period.to,
+        sellerId
+    );
+
+    return res.json({
+        period: { from: period.from.toISOString(), to: period.to.toISOString() },
+        metric: 'processed_sales',
+        months,
+        categories
+    });
+});
+
+app.get('/analytics/products/top', authenticate, (req, res) => {
+    if (!['admin', 'seller'].includes(req.user.role)) {
+        return res.status(403).json({ message: 'Аналитика доступна только продавцу и администратору' });
+    }
+    const limit = parseAnalyticsLimit(req.query.limit);
+    if (!limit) return res.status(400).json({ message: 'Параметр limit должен быть от 1 до 100' });
+
+    let period;
+    try {
+        period = resolveAnalyticsPeriod(req.query, 0, 6);
+    } catch (error) {
+        return res.status(400).json({ message: error.message });
+    }
+    const sellerId = req.user.role === 'seller' ? req.user.id : req.query.sellerId || null;
+    return res.json({
+        period: { from: period.from.toISOString(), to: period.to.toISOString() },
+        products: getTopProducts(
+            readJson(ordersPath),
+            readCatalog(),
+            period.from,
+            period.to,
+            sellerId,
+            limit
+        )
+    });
+});
+
+app.get('/analytics/sellers/top', authenticate, (req, res) => {
+    if (!isAdmin(req.user)) {
+        return res.status(403).json({ message: 'Только администратор может видеть рейтинг продавцов' });
+    }
+    const limit = parseAnalyticsLimit(req.query.limit);
+    if (!limit) return res.status(400).json({ message: 'Параметр limit должен быть от 1 до 100' });
+
+    let period;
+    try {
+        period = resolveAnalyticsPeriod(req.query, 0, 6);
+    } catch (error) {
+        return res.status(400).json({ message: error.message });
+    }
+    const usersById = new Map(readUsers().map((user) => [user.id, user]));
+    const sellers = getTopSellers(readJson(ordersPath), readCatalog(), period.from, period.to, limit)
+        .map((seller) => {
+            const user = usersById.get(seller.sellerId);
+            return {
+                ...seller,
+                sellerName: user ? [user.name, user.lastName].filter(Boolean).join(' ') || user.login : null
+            };
+        });
+    return res.json({
+        period: { from: period.from.toISOString(), to: period.to.toISOString() },
+        sellers
+    });
+});
+
+app.post('/products', authenticate, requirePermission('products:create'), uploadProductImage, async (req, res) => {
+    const catalog = readCatalog();
+    const category = typeof req.body.category === 'string' ? req.body.category.trim() : '';
+    const validationError = validateProductFields(req.body, true, Boolean(req.file));
+    if (validationError) {
+        if (req.file) fs.unlinkSync(req.file.path);
+        return res.status(400).json({ message: validationError });
+    }
+    if (!isKnownProductCategory(category, catalog)) {
+        if (req.file) fs.unlinkSync(req.file.path);
+        return res.status(400).json({
+            message: 'Неизвестная категория. Получите список доступных категорий через GET /categories'
+        });
+    }
+
+    let imageUrl;
+    try {
+        imageUrl = await persistProductImage(req.file);
+    } catch (error) {
+        fs.unlinkSync(req.file.path);
+        return res.status(502).json({ message: error.message });
+    }
     const product = {
-        ...req.body,
-        id: Math.max(0, ...catalog.map((item) => Number(item.id) || 0)) + 1,
+        id: crypto.randomUUID(),
         sellerId: req.user.id,
+        title: capitalizeFirstLetter(req.body.title.trim()),
+        desc: capitalizeFirstLetter(req.body.desc.trim()),
+        category: req.body.category.trim(),
+        price: Number(req.body.price),
+        quantity: Number(req.body.quantity),
+        img: imageUrl,
         favoritesCount: 0,
+        reviews: [],
         hidden: false,
         createdAt: new Date().toISOString()
     };
-    writeJson(catalogPath, [...catalog, product]);
+    try {
+        await writeJson(catalogPath, [...catalog, product]);
+    } catch (error) {
+        fs.unlinkSync(req.file.path);
+        throw error;
+    }
     res.status(201).json(product);
 });
 
-app.patch('/products/:id', authenticate, (req, res) => {
+app.patch('/products/:id', authenticate, uploadProductImage, async (req, res) => {
     const catalog = readCatalog();
     const index = catalog.findIndex((product) => String(product.id) === req.params.id);
     const product = catalog[index];
 
+    if (!product) {
+        if (req.file) fs.unlinkSync(req.file.path);
+        return res.status(404).json({ message: 'Товар не найден' });
+    }
+    if (!isAdmin(req.user) && !(req.user.role === 'seller' && product.sellerId === req.user.id)) {
+        if (req.file) fs.unlinkSync(req.file.path);
+        return res.status(403).json({ message: 'Недостаточно прав' });
+    }
+
+    const changes = {};
+    for (const field of ['title', 'desc', 'category']) {
+        if (req.body[field] !== undefined) {
+            if (typeof req.body[field] !== 'string' || !req.body[field].trim()) {
+                if (req.file) fs.unlinkSync(req.file.path);
+                return res.status(400).json({ message: `${field} не может быть пустым` });
+            }
+            const value = req.body[field].trim();
+            if (field === 'category' && !isKnownProductCategory(value, catalog)) {
+                if (req.file) fs.unlinkSync(req.file.path);
+                return res.status(400).json({
+                    message: 'Неизвестная категория. Получите список доступных категорий через GET /categories'
+                });
+            }
+            if (field === 'title' && (value.match(/\p{L}/gu) || []).length < 3) {
+                if (req.file) fs.unlinkSync(req.file.path);
+                return res.status(400).json({ message: 'Название товара должно содержать не менее 3 букв' });
+            }
+            if (field === 'desc' && value.split(/\s+/).length < 3) {
+                if (req.file) fs.unlinkSync(req.file.path);
+                return res.status(400).json({ message: 'Описание должно содержать не менее 3 слов' });
+            }
+            changes[field] = ['title', 'desc'].includes(field)
+                ? capitalizeFirstLetter(value)
+                : value;
+        }
+    }
+    for (const field of ['price', 'quantity']) {
+        if (req.body[field] !== undefined) {
+            const value = Number(req.body[field]);
+            if (String(req.body[field]).trim() === '' || !Number.isFinite(value) || value < 0 ||
+                (field === 'quantity' && !Number.isInteger(value))) {
+                if (req.file) fs.unlinkSync(req.file.path);
+                return res.status(400).json({
+                    message: field === 'quantity'
+                        ? 'Количество должно быть целым числом не меньше нуля'
+                        : 'Цена должна быть числом не меньше нуля'
+                });
+            }
+            changes[field] = value;
+        }
+    }
+    if (req.file) {
+        try {
+            changes.img = await persistProductImage(req.file);
+        } catch (error) {
+            fs.unlinkSync(req.file.path);
+            return res.status(502).json({ message: error.message });
+        }
+    }
+    if (isAdmin(req.user)) {
+        for (const field of ['hidden', 'favoritesCount']) {
+            if (req.body[field] !== undefined) changes[field] = req.body[field];
+        }
+    }
+    catalog[index] = {
+        ...product,
+        ...changes,
+        id: product.id,
+        sellerId: product.sellerId,
+        favoritesCount: changes.favoritesCount ?? product.favoritesCount
+    };
+    try {
+        await writeJson(catalogPath, catalog);
+    } catch (error) {
+        if (req.file) fs.unlinkSync(req.file.path);
+        if (error.code === 'SUPABASE_APP_STATE_ERROR') {
+            return res.status(503).json({ message: 'Сохранение товара временно недоступно' });
+        }
+        console.error('Не удалось сохранить редактирование товара:', error);
+        return res.status(500).json({ message: 'Не удалось сохранить товар' });
+    }
+    res.json(catalog[index]);
+});
+
+app.post('/products/:id/restock', authenticate, async (req, res) => {
+    const quantityToAdd = req.body.quantity;
+    if (!Number.isSafeInteger(quantityToAdd) || quantityToAdd <= 0) {
+        return res.status(400).json({
+            message: 'Добавляемое количество должно быть целым числом больше нуля'
+        });
+    }
+
+    const catalog = readCatalog();
+    const index = catalog.findIndex((product) => String(product.id) === req.params.id);
+    const product = catalog[index];
+
+    if (!product) {
+        return res.status(404).json({ message: 'Товар не найден' });
+    }
+    if (!isAdmin(req.user) && !(req.user.role === 'seller' && product.sellerId === req.user.id)) {
+        return res.status(403).json({ message: 'Недостаточно прав' });
+    }
+
+    const updatedQuantity = Number(product.quantity) + quantityToAdd;
+    if (!Number.isSafeInteger(updatedQuantity)) {
+        return res.status(400).json({
+            message: 'Итоговое количество выходит за допустимый диапазон'
+        });
+    }
+
+    catalog[index] = { ...product, quantity: updatedQuantity };
+    await writeJson(catalogPath, catalog);
+    return res.json(catalog[index]);
+});
+
+app.delete('/products/:id', authenticate, async (req, res) => {
+    const catalog = readCatalog();
+    const index = catalog.findIndex((product) => String(product.id) === req.params.id);
+    const product = catalog[index];
     if (!product) return res.status(404).json({ message: 'Товар не найден' });
     if (!isAdmin(req.user) && !(req.user.role === 'seller' && product.sellerId === req.user.id)) {
         return res.status(403).json({ message: 'Недостаточно прав' });
     }
 
-    const changes = isAdmin(req.user) ? req.body : { title: req.body.title, desc: req.body.desc, category: req.body.category, price: req.body.price, img: req.body.img };
-    catalog[index] = { ...product, ...changes, id: product.id, sellerId: product.sellerId, favoritesCount: product.favoritesCount };
-    writeJson(catalogPath, catalog);
-    res.json(catalog[index]);
-});
+    const remainingCatalog = catalog.filter((_, productIndex) => productIndex !== index);
+    const existingTrash = readJson(trashProductsPath);
+    if (!Array.isArray(existingTrash)) {
+        throw new Error('Файл корзины товаров должен содержать массив');
+    }
 
-app.delete('/products/:id', authenticate, (req, res) => {
-    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Только admin может удалять товары' });
-    const catalog = readCatalog();
-    const filtered = catalog.filter((product) => String(product.id) !== req.params.id);
-    if (filtered.length === catalog.length) return res.status(404).json({ message: 'Товар не найден' });
-    writeJson(catalogPath, filtered);
+    const imageSource = getLocalUploadedImagePath(product.img);
+    const imageIsStillUsed = imageSource && (
+        remainingCatalog.some((catalogProduct) =>
+            getLocalUploadedImagePath(catalogProduct.img) === imageSource
+        ) ||
+        readJson(ordersPath).some((order) =>
+            Array.isArray(order.items) && order.items.some((item) =>
+                item && getLocalUploadedImagePath(item.img) === imageSource
+            )
+        )
+    );
+    let imageDestination = null;
+    if (imageSource && !imageIsStillUsed && fs.existsSync(imageSource)) {
+        imageDestination = path.join(trashImagesPath, `${crypto.randomUUID()}${path.extname(imageSource)}`);
+        fs.renameSync(imageSource, imageDestination);
+    }
+
+    const archivedProduct = {
+        ...product,
+        deletedAt: new Date().toISOString(),
+        trashImage: imageDestination ? path.relative(trashPath, imageDestination) : null
+    };
+
+    try {
+        await writeJson(trashProductsPath, [...existingTrash, archivedProduct]);
+        await writeJson(catalogPath, remainingCatalog);
+    } catch (error) {
+        const rollbackErrors = [];
+        try {
+            await writeJson(trashProductsPath, existingTrash);
+        } catch (rollbackError) {
+            rollbackErrors.push(rollbackError);
+        }
+        try {
+            if (imageDestination && fs.existsSync(imageDestination)) {
+                fs.renameSync(imageDestination, imageSource);
+            }
+        } catch (rollbackError) {
+            rollbackErrors.push(rollbackError);
+        }
+        if (rollbackErrors.length) {
+            throw new AggregateError([error, ...rollbackErrors], 'Не удалось завершить удаление товара и откатить изменения');
+        }
+        throw error;
+    }
+
     res.status(204).end();
 });
 
-app.patch('/products/:id/hide', authenticate, (req, res) => {
+app.patch('/products/:id/hide', authenticate, async (req, res) => {
     if (!isAdmin(req.user)) return res.status(403).json({ message: 'Только admin может скрывать товары' });
     const catalog = readCatalog();
     const product = catalog.find((item) => String(item.id) === req.params.id);
     if (!product) return res.status(404).json({ message: 'Товар не найден' });
     product.hidden = req.body.hidden !== false;
-    writeJson(catalogPath, catalog);
+    await writeJson(catalogPath, catalog);
     res.json(product);
 });
 
-app.post('/orders', authenticate, requirePermission('orders:create'), (req, res) => {
+app.post('/orders', authenticate, requirePermission('orders:create'), async (req, res) => {
     const orders = readJson(ordersPath);
     const catalog = readCatalog();
-    const sellerIds = [...new Set((req.body.items || []).map((item) => {
-        const product = catalog.find((catalogItem) => String(catalogItem.id) === String(item.productId));
-        return product?.sellerId;
-    }).filter(Boolean))];
+    if (!Array.isArray(req.body.items) || req.body.items.length === 0) {
+        return res.status(400).json({ message: 'Заказ должен содержать хотя бы один товар' });
+    }
+
+    const orderItems = req.body.items.map((item) => {
+        if (!item || typeof item !== 'object' || Array.isArray(item)) return null;
+        const product = catalog.find((catalogItem) =>
+            String(catalogItem.id) === String(item.productId) && !catalogItem.hidden
+        );
+        if (!product) return null;
+        const quantity = Number(item.quantity);
+        const price = Number(product.price);
+        if (!Number.isInteger(quantity) || quantity < 1 ||
+            !Number.isFinite(price) || price < 0) return null;
+        return {
+            productId: product.id,
+            name: product.title,
+            desc: typeof product.desc === 'string' ? product.desc : '',
+            img: product.img,
+            quantity,
+            pricePerUnit: price,
+            totalForItem: roundMoney(quantity * price),
+            sellerId: product.sellerId || null
+        };
+    });
+
+    if (orderItems.some((item) => item === null)) {
+        return res.status(400).json({ message: 'В заказе есть недоступный товар или неверное количество' });
+    }
+
+    const requestedByProduct = new Map();
+    for (const item of orderItems) {
+        requestedByProduct.set(
+            String(item.productId),
+            (requestedByProduct.get(String(item.productId)) || 0) + item.quantity
+        );
+    }
+    for (const [productId, requestedQuantity] of requestedByProduct) {
+        const product = catalog.find((item) => String(item.id) === productId);
+        if (Number.isInteger(product.quantity) && requestedQuantity > product.quantity) {
+            return res.status(409).json({
+                message: `Недостаточно товара «${product.title}» на складе`,
+                available: product.quantity
+            });
+        }
+    }
+
+    const sellerIds = [...new Set(orderItems.map((item) => item.sellerId).filter(Boolean))];
     const order = {
-        ...req.body,
-        id: req.body.id || `order_${Date.now()}`,
+        items: orderItems,
+        id: String(Date.now()),
         userId: req.user.id,
+        status: 'Ожидает обработки',
         sellerIds,
-        createdAt: req.body.createdAt || new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        totalQuantity: orderItems.reduce((total, item) => total + item.quantity, 0),
+        totalAmount: roundMoney(orderItems.reduce((total, item) => total + item.totalForItem, 0))
     };
-    writeJson(ordersPath, [...orders, order]);
+    await writeJson(ordersPath, [...orders, order]);
     res.status(201).json({ message: 'Заказ создан', order });
 });
 
 app.get('/orders', authenticate, (req, res) => {
     const orders = readJson(ordersPath);
-    return res.json(queryCollection(orders.filter((order) => order.userId === req.user.id), req.query));
+    const hasCustomOrder = req.query._sort !== undefined || req.query._order !== undefined;
+    const sortOrdersByStatusAndDate = (orderList) => orderList.sort((left, right) => {
+        const leftProcessed = left.status === 'Обработано' ? 1 : 0;
+        const rightProcessed = right.status === 'Обработано' ? 1 : 0;
+        if (leftProcessed !== rightProcessed) return leftProcessed - rightProcessed;
+
+        const leftCreatedAt = Date.parse(left.createdAt);
+        const rightCreatedAt = Date.parse(right.createdAt);
+        return (Number.isNaN(rightCreatedAt) ? 0 : rightCreatedAt) -
+            (Number.isNaN(leftCreatedAt) ? 0 : leftCreatedAt);
+    });
+    const orderQuery = req.query;
+    if (isAdmin(req.user)) {
+        return res.json(queryCollection(
+            hasCustomOrder ? orders : sortOrdersByStatusAndDate(orders),
+            orderQuery
+        ));
+    }
+    if (req.user.role === 'seller') {
+        const catalog = readCatalog();
+        const sellerOrders = orders.flatMap((order) => {
+            const items = getSellerOrderItems(order, req.user.id, catalog);
+            return items.length > 0 ? [sellerOrderResponse(order, items, req.user.id)] : [];
+        });
+        return res.json(queryCollection(
+            hasCustomOrder ? sellerOrders : sortOrdersByStatusAndDate(sellerOrders),
+            orderQuery
+        ));
+    }
+    const catalog = readCatalog();
+    const buyerOrders = orders
+        .filter((order) => order.userId === req.user.id)
+        .map((order) => buyerOrderResponse(order, catalog));
+    return res.json(queryCollection(
+        hasCustomOrder ? buyerOrders : sortOrdersByStatusAndDate(buyerOrders),
+        orderQuery
+    ));
 });
 
-app.patch('/orders/:id', authenticate, (req, res) => {
+app.patch('/orders/:id', authenticate, async (req, res) => {
     const orders = readJson(ordersPath);
     const index = orders.findIndex((order) => order.id === req.params.id);
     const order = orders[index];
     if (!order) return res.status(404).json({ message: 'Заказ не найден' });
-    if (!isAdmin(req.user) && !(req.user.role === 'seller' && orderBelongsToSeller(order, req.user.id))) {
+    const catalog = req.user.role === 'seller' ? readCatalog() : [];
+    const sellerItems = req.user.role === 'seller'
+        ? getSellerOrderItems(order, req.user.id, catalog)
+        : [];
+    if (!isAdmin(req.user) && sellerItems.length === 0) {
         return res.status(403).json({ message: 'Нельзя изменять этот заказ' });
     }
-    const changes = isAdmin(req.user) ? req.body : { status: req.body.status, comment: req.body.comment };
-    orders[index] = { ...order, ...changes, id: order.id, userId: order.userId };
-    writeJson(ordersPath, orders);
-    res.json(orders[index]);
+    if (req.user.role === 'seller' && req.body.status !== undefined &&
+        (typeof req.body.status !== 'string' || !req.body.status.trim())) {
+        return res.status(400).json({ message: 'Укажите корректный статус заказа' });
+    }
+    if (req.user.role === 'seller' && req.body.comment !== undefined &&
+        typeof req.body.comment !== 'string') {
+        return res.status(400).json({ message: 'Комментарий должен быть строкой' });
+    }
+
+    const changes = isAdmin(req.user) ? req.body : {
+        ...(req.body.status !== undefined ? { status: req.body.status.trim() } : {}),
+        ...(req.body.comment !== undefined ? { comment: req.body.comment } : {})
+    };
+
+    let originalInventory = null;
+    let updatedInventory = null;
+    if (req.user.role === 'seller') {
+        try {
+            const update = updateSellerOrder(order, req.user.id, changes, catalog);
+            orders[index] = update.order;
+            if (update.inventoryDeducted) {
+                originalInventory = catalog;
+                updatedInventory = update.catalog;
+            }
+        } catch (error) {
+            if (error.statusCode === 409) {
+                return res.status(409).json({
+                    message: error.message,
+                    ...(error.available !== undefined ? { available: error.available } : {}),
+                    ...(error.requested !== undefined ? { requested: error.requested } : {})
+                });
+            }
+            return res.status(400).json({ message: error.message });
+        }
+    } else {
+        orders[index] = { ...order, ...changes, id: order.id, userId: order.userId };
+    }
+    try {
+        if (updatedInventory) await writeJson(catalogPath, updatedInventory);
+        await writeJson(ordersPath, orders);
+    } catch (error) {
+        if (originalInventory) {
+            try {
+                await writeJson(catalogPath, originalInventory);
+            } catch (rollbackError) {
+                console.error('Не удалось восстановить остатки после ошибки сохранения заказа:', rollbackError);
+            }
+        }
+        throw error;
+    }
+    if (req.user.role === 'seller') {
+        return res.json(sellerOrderResponse(orders[index], sellerItems, req.user.id));
+    }
+    return res.json(orders[index]);
 });
 
-app.delete('/orders/:id', authenticate, (req, res) => {
+app.delete('/orders/:id', authenticate, async (req, res) => {
     if (!isAdmin(req.user)) return res.status(403).json({ message: 'Только admin может удалять заказы' });
     const orders = readJson(ordersPath);
     const filtered = orders.filter((order) => order.id !== req.params.id);
     if (filtered.length === orders.length) return res.status(404).json({ message: 'Заказ не найден' });
-    writeJson(ordersPath, filtered);
+    await writeJson(ordersPath, filtered);
     res.status(204).end();
 });
 
@@ -476,7 +1243,7 @@ app.get('/cart', authenticate, requirePermission('cart:read'), (req, res) => {
     res.json({ items: queryCollection(cart, req.query), totalAmount: getCartTotal(cart) });
 });
 
-app.post('/cart/items', authenticate, requirePermission('cart:write'), (req, res) => {
+app.post('/cart/items', authenticate, requirePermission('cart:write'), async (req, res) => {
     const catalog = readCatalog();
     const product = catalog.find((item) => String(item.id) === String(req.body.productId) && !item.hidden);
     if (!product) return res.status(404).json({ message: 'Товар не найден' });
@@ -488,6 +1255,13 @@ app.post('/cart/items', authenticate, requirePermission('cart:write'), (req, res
 
     const cart = [...(req.user.cart || [])];
     const existing = cart.find((item) => String(item.productId) === String(product.id));
+    const requestedQuantity = (Number(existing?.quantity) || 0) + quantity;
+    if (Number.isInteger(product.quantity) && requestedQuantity > product.quantity) {
+        return res.status(409).json({
+            message: `Недостаточно товара «${product.title}» на складе`,
+            available: product.quantity
+        });
+    }
     if (existing) {
         existing.product = product;
         existing.unitPrice = Number(product.price);
@@ -506,11 +1280,11 @@ app.post('/cart/items', authenticate, requirePermission('cart:write'), (req, res
     }
 
     const cartTotal = getCartTotal(cart);
-    writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, cart, cartTotal } : user));
+    await writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, cart, cartTotal } : user));
     res.status(201).json(cartResponse(cart));
 });
 
-app.patch('/cart/items/:productId', authenticate, requirePermission('cart:write'), (req, res) => {
+app.patch('/cart/items/:productId', authenticate, requirePermission('cart:write'), async (req, res) => {
     const quantity = Number(req.body.quantity);
     if (!Number.isInteger(quantity) || quantity < 1) {
         return res.status(400).json({ message: 'Количество должно быть целым числом больше нуля' });
@@ -520,22 +1294,35 @@ app.patch('/cart/items/:productId', authenticate, requirePermission('cart:write'
     const item = cart.find((cartItem) => String(cartItem.productId) === req.params.productId);
     if (!item) return res.status(404).json({ message: 'Товар отсутствует в корзине' });
 
+    const product = readCatalog().find((catalogItem) =>
+        String(catalogItem.id) === req.params.productId && !catalogItem.hidden
+    );
+    if (!product) return res.status(404).json({ message: 'Товар недоступен' });
+    if (Number.isInteger(product.quantity) && quantity > product.quantity) {
+        return res.status(409).json({
+            message: `Недостаточно товара «${product.title}» на складе`,
+            available: product.quantity
+        });
+    }
+
+    item.product = product;
+    item.unitPrice = Number(product.price);
     item.quantity = quantity;
     item.totalAmount = roundMoney(quantity * Number(item.unitPrice));
     const cartTotal = getCartTotal(cart);
-    writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, cart, cartTotal } : user));
+    await writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, cart, cartTotal } : user));
     res.json(cartResponse(cart));
 });
 
-app.delete('/cart/items/:productId', authenticate, requirePermission('cart:write'), (req, res) => {
+app.delete('/cart/items/:productId', authenticate, requirePermission('cart:write'), async (req, res) => {
     const cart = (req.user.cart || []).filter((item) => String(item.productId) !== req.params.productId);
     const cartTotal = getCartTotal(cart);
-    writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, cart, cartTotal } : user));
+    await writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, cart, cartTotal } : user));
     res.json(cartResponse(cart));
 });
 
-app.delete('/cart', authenticate, requirePermission('cart:write'), (req, res) => {
-    writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, cart: [], cartTotal: 0 } : user));
+app.delete('/cart', authenticate, requirePermission('cart:write'), async (req, res) => {
+    await writeUsers(readUsers().map((user) => user.id === req.user.id ? { ...user, cart: [], cartTotal: 0 } : user));
     res.json(cartResponse([]));
 });
 
@@ -544,25 +1331,25 @@ app.get('/users', authenticate, (req, res) => {
     res.json(queryCollection(readUsers().map(publicUser), req.query));
 });
 
-app.patch('/users/:id/status', authenticate, (req, res) => {
+app.patch('/users/:id/status', authenticate, async (req, res) => {
     if (!isAdmin(req.user)) return res.status(403).json({ message: 'Только admin может блокировать пользователей' });
     if (!['active', 'blocked'].includes(req.body.status)) return res.status(400).json({ message: 'Статус должен быть active или blocked' });
     const users = readUsers();
     const index = users.findIndex((user) => user.id === req.params.id);
     if (index === -1) return res.status(404).json({ message: 'Пользователь не найден' });
     users[index].status = req.body.status;
-    writeUsers(users);
+    await writeUsers(users);
     res.json(publicUser(users[index]));
 });
 
-app.patch('/users/:id/role', authenticate, (req, res) => {
+app.patch('/users/:id/role', authenticate, async (req, res) => {
     if (!isAdmin(req.user)) return res.status(403).json({ message: 'Только admin может менять роли' });
     if (!['user', 'seller', 'admin'].includes(req.body.role)) return res.status(400).json({ message: 'Неизвестная роль' });
     const users = readUsers();
     const index = users.findIndex((user) => user.id === req.params.id);
     if (index === -1) return res.status(404).json({ message: 'Пользователь не найден' });
     users[index].role = req.body.role;
-    writeUsers(users);
+    await writeUsers(users);
     res.json(publicUser(users[index]));
 });
 
@@ -576,6 +1363,28 @@ app.post('/auth/logout', (req, res) => {
     res.status(204).end();
 });
 
-app.listen(PORT, () => {
-    console.log(`Backend запущен: http://localhost:${PORT}`);
+app.use((error, req, res, next) => {
+    console.error(`Ошибка ${req.method} ${req.path}:`, error);
+    if (res.headersSent) return next(error);
+    if (error.code === 'SUPABASE_APP_STATE_ERROR') {
+        return res.status(503).json({ message: 'Сервис временно недоступен' });
+    }
+    return res.status(500).json({ message: 'Не удалось обработать запрос' });
 });
+
+async function startServer() {
+    const seedCatalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
+    await appStateStore.initialize(seedCatalog);
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Backend запущен на порту ${PORT}`);
+    });
+}
+
+if (require.main === module) {
+    startServer().catch((error) => {
+        console.error('Не удалось подключить Supabase app_state:', error);
+        process.exitCode = 1;
+    });
+}
+
+module.exports = app;

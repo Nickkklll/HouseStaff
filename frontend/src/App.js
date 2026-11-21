@@ -2,19 +2,20 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Items from "./components/Items";
 import Categories from "./components/Categories";
-import ShowFullItem from "./components/ShowFullItem";
 
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import Presentation from "./components/Presentation";
 import { AppContext } from './context';
+import { apiUrl } from "./config";
 
 
 
 
-async function itemsData(){
+async function itemsData(category = 'all', page = 1){
   let data;
-  
-  await fetch('http://localhost:3000/catalog')
+  const params = new URLSearchParams({_limit: '12', _page: String(page)});
+  if (category !== 'all') params.set('category', category);
+  await fetch(apiUrl(`/catalog?${params}`))
   .then(res=>{if(!res.ok){throw new Error('Ошибка загрузки каталога')} return res})
     .then(res => res.json())
     .then(res => data = res)
@@ -23,42 +24,56 @@ async function itemsData(){
 }
 
 export function App() {
-  // Полный каталог товаров с сервера.
-  const [catalogItems, setCatalogItems] = useState([]);
+  // Текущий список товаров, который отображается на главной странице.
   // Отфильтрованный/текущий список товаров, который отображается на главной странице.
   const [visibleItems, setVisibleItems] = useState([]);
-  // Открыт ли модальный просмотр карточки товара.
-  const [isFullItemModalOpen, setIsFullItemModalOpen] = useState(false);
-  // Выбранный товар, который открывается в полном просмотре.
-  const [selectedItem, setSelectedItem] = useState({});
+  const [isCatalogLoading, setIsCatalogLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [catalogPage, setCatalogPage] = useState(1);
+  const [hasMoreCatalog, setHasMoreCatalog] = useState(true);
   const {cartItems, onChangeCount, createOrder, onAddToOrder, onDeleteOrder } = useContext(AppContext);
 
-  useEffect(() => {
-    async function load() {
-      const loadedItems = await itemsData();
-      setCatalogItems(loadedItems);
-      setVisibleItems(loadedItems);
+  const loadCatalog = useCallback(async(category = 'all', page = 1)=>{
+    setIsCatalogLoading(true);
+    try {
+      const loadedItems = await itemsData(category, page);
+      const items = Array.isArray(loadedItems) ? loadedItems : [];
+      setVisibleItems(items);
+      setCatalogPage(page);
+      setHasMoreCatalog(items.length === 12);
+      setSelectedCategory(category);
+    } finally {
+      setIsCatalogLoading(false);
     }
+  },[])
+  useEffect(() => {
+   
 
-    load();
-  }, []);
+    loadCatalog();
+  }, [loadCatalog]);
 
 
 
   
 
-  function onShowItem(item) {
-    setSelectedItem(item);
-    setIsFullItemModalOpen(previousValue => !previousValue);
+  function chooseCategory(category) {
+    loadCatalog(category, 1);
   }
 
-  function chooseCategory(category) {
-    if (category === 'all') {
-      setVisibleItems(catalogItems);
-      return;
+  async function loadMoreCatalog() {
+    if (isLoadingMore || !hasMoreCatalog) return;
+    setIsLoadingMore(true);
+    try {
+      const nextPage = catalogPage + 1;
+      const loadedItems = await itemsData(selectedCategory, nextPage);
+      const items = Array.isArray(loadedItems) ? loadedItems : [];
+      setVisibleItems(previous => [...previous, ...items]);
+      setCatalogPage(nextPage);
+      setHasMoreCatalog(items.length === 12);
+    } finally {
+      setIsLoadingMore(false);
     }
-
-    setVisibleItems(catalogItems.filter(el => el.category === category));
   }
 
   return (
@@ -66,8 +81,12 @@ export function App() {
       <Header orders={cartItems} onDelete={onDeleteOrder} onChangeCount={onChangeCount} createOrder={createOrder}/>
       <Presentation/>
       <Categories chooseCategory={chooseCategory}/>
-      <Items onShowItem={onShowItem} items={visibleItems} onAdd={onAddToOrder}/>
-      {isFullItemModalOpen && <ShowFullItem item={selectedItem} onAdd={onAddToOrder} onShowItem={onShowItem}/>} 
+      <Items loadCatalog={loadCatalog} items={visibleItems} isLoading={isCatalogLoading} onAdd={onAddToOrder}/>
+      {hasMoreCatalog && (
+        <button type="button" className="action-button catalog-load-more" onClick={loadMoreCatalog} disabled={isLoadingMore}>
+          {isLoadingMore ? 'Загрузка...' : 'Показать ещё'}
+        </button>
+      )}
       <Footer />
     </div>
   );

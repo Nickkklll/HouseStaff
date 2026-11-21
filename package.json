@@ -1,0 +1,16 @@
+{
+    "name": "market-place",
+    "version": "1.0.0",
+    "private": "true",
+    "scripts": {
+        "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+        "dev:backend": "npm start --prefix backend",
+        "dev:frontend": "npm start --prefix frontend"
+    },
+    "devDependencies": {
+        "concurrently": "^10.0.6"
+    },
+    "dependencies": {
+        "react-chartjs-2": "^5.3.1"
+    }
+}

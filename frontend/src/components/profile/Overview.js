@@ -8,10 +8,13 @@ import { useOutletContext } from "react-router-dom";
 import { AppContext } from "../../context";
 import avatarImage from "../../img/system/man-avatar.png";
 import Order from "../Order";
+import { apiUrl } from "../../config";
+import LoadingPlaceholder from "../LoadingPlaceholder";
+import { getOrderStatusClass } from "./orderStatus";
 
 async function getOrders() {
   try {
-    const response = await fetch("http://localhost:3000/orders?_sort=id&_order=desc&_limit=5", {
+    const response = await fetch(apiUrl("/orders?_sort=createdAt&_order=desc&_limit=5"), {
       credentials: "include",
     });
     if (!response.ok) {
@@ -27,18 +30,24 @@ async function getOrders() {
 }
 
 export default function Overview( props) {
-  const {cartItems, onDeleteOrder, onChangeCount, createOrder} = useContext(AppContext);
+  const {cartItems, cartLoading, ordersRevision, onDeleteOrder, onChangeCount, createOrder} = useContext(AppContext);
   // История заказов текущего пользователя.
   const [ordersData, setOrdersData] = useState(null);
+  const [ordersLoading, setOrdersLoading] = useState(true);
   const [isFullCartModalOpen, setIsFullCartModalOpen] = useState(false);
   const { user } = useOutletContext();
   useEffect(() => {
     async function loadOrders() {
-      const orders = await getOrders();
-      setOrdersData(orders);
+      setOrdersLoading(true);
+      try {
+        const orders = await getOrders();
+        setOrdersData(orders);
+      } finally {
+        setOrdersLoading(false);
+      }
     }
     loadOrders();
-  }, []);
+  }, [ordersRevision]);
 
   useEffect(()=>{
     cartItems.length===0&&setIsFullCartModalOpen(false)
@@ -63,7 +72,7 @@ export default function Overview( props) {
               </div>
             </div>
           </div>
-          <div className="order-rows cabinet-block">
+          <div className="order-rows overview-order-rows cabinet-block">
             <h3>Последние заказы</h3>
             <div className="orders-desck">
               <table>
@@ -76,11 +85,15 @@ export default function Overview( props) {
                   </tr>
                 </thead>
                 <tbody>
-                  {ordersData ? (
+                  {ordersLoading ? (
+                    <tr>
+                      <td colSpan="4"><LoadingPlaceholder variant="rows" count={3} /></td>
+                    </tr>
+                  ) : ordersData?.length ? (
                     ordersData
                       .map((order) => (
                         <tr key={order.id}>
-                          <td>Заказ {order.id}</td>
+                          <td> {order.id}</td>
                           <td>
                             {new Date(order.createdAt).toLocaleString("uk-UA", {
                               day: "2-digit",
@@ -90,7 +103,7 @@ export default function Overview( props) {
                           </td>
                           <td>
                             <span
-                              className={`status-item ${order.status === "Ожидает" ? " status-grey" : ""}`}
+                              className={`status-item ${getOrderStatusClass(order.status)}`}
                             >
                               {order.status}
                             </span>
@@ -113,10 +126,10 @@ export default function Overview( props) {
             <h3>Ваша корзина</h3>
             <div className="cart-list">
             <ul>
-
-              {cartItems.map(el=>(
+              {cartLoading ? <li className="loading-list-item"><LoadingPlaceholder variant="rows" count={2} /></li>
+                : cartItems.length ? cartItems.map(el=>(
                   <Order key={el.id} item={el} onDelete={onDeleteOrder} onChangeCount={onChangeCount}/>
-              ))}
+              )) : <li>Корзина пуста</li>}
             </ul>
             </div>
             <div className="button-block">
@@ -126,7 +139,7 @@ export default function Overview( props) {
           </div>
         </div>
       </div>
-      {isFullCartModalOpen&&<ShowFullCart orders={cartItems} deleteOrder={onDeleteOrder} changeCount={onChangeCount} createOrder={createOrder} closeFullCart={()=>setIsFullCartModalOpen(!isFullCartModalOpen)} ></ShowFullCart>}
+      {isFullCartModalOpen&&<ShowFullCart orders={cartItems} deleteOrder={onDeleteOrder} changeCount={onChangeCount} createOrder={createOrder} closeFullCart={()=>{setIsFullCartModalOpen(!isFullCartModalOpen);document.body.style.overflow = 'auto';}} ></ShowFullCart>}
     </div>
   );
 }

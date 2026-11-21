@@ -1,6 +1,13 @@
 const roles = {
     user: {
-        permissions: ['catalog:read', 'orders:create', 'cart:read', 'cart:write']
+        permissions: [
+            'catalog:read',
+            'orders:create',
+            'cart:read',
+            'cart:write',
+            'reviews:read',
+            'reviews:create'
+        ]
     },
     seller: {
         permissions: [
@@ -8,7 +15,8 @@ const roles = {
             'orders:read:own',
             'orders:update:own',
             'products:create',
-            'products:update:own'
+            'products:update:own',
+            'reviews:read'
         ]
     },
     admin: {

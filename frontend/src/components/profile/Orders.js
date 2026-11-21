@@ -1,11 +1,15 @@
-import React,{useState, useEffect} from 'react';
+import React,{useState, useEffect, useCallback, useContext} from 'react';
+
 import '../../Style/profile/cabinet.scss'
 
 import OrderBlock from './OrderBlock';
+import { apiUrl } from '../../config';
+import LoadingPlaceholder from '../LoadingPlaceholder';
+import { AppContext } from '../../context';
 
 async function getOrders() {
   try {
-    const response = await fetch("http://localhost:3000/orders", {
+    const response = await fetch(apiUrl("/orders"), {
       credentials: "include",
     });
     if (!response.ok) {
@@ -20,20 +24,33 @@ async function getOrders() {
   }
 }
 
-export default function Orders() {
+
+export default function Orders({role, setSelectOrder,setIsFullItemModalOpen, setMode, setRefreshFunc}) {
+  const { ordersRevision } = useContext(AppContext);
   const [ordersData, setOrdersData] = useState(null); 
-   useEffect(() => {
-      async function loadOrders() {
-        const orders = await getOrders();
+  const [isLoading, setIsLoading] = useState(true);
+const loadOrders= useCallback(async()=>{
+        setIsLoading(true);
+        try {
+        const  orders= await getOrders()
         setOrdersData(orders);
-      }
+        } finally {
+          setIsLoading(false);
+        }
+},[]) 
+   useEffect(() => {
+      
       loadOrders();
-    }, []);
+      if(setSelectOrder!==undefined){
+        setRefreshFunc(()=>loadOrders)
+
+      }
+    }, [loadOrders, ordersRevision, setRefreshFunc, setSelectOrder]);
   return (
     <>
     <h2>История заказов</h2>
         <div className='cabinet-block  orders-block'>
-    <div className="order-rows">
+    <div className="order-rows order-history-rows">
             <div className="orders-desck">
               <table>
                 <thead>
@@ -46,14 +63,18 @@ export default function Orders() {
                   </tr>
                 </thead>
                 <tbody>
-                  {ordersData ? (
+                  {isLoading ? (
+                    <tr>
+                      <td colSpan="5"><LoadingPlaceholder variant="rows" count={3} /></td>
+                    </tr>
+                  ) : ordersData?.length ? (
                     ordersData
                       .map((order) => (
-                        <OrderBlock key={order.id} order={order}/>
+                        <OrderBlock key={order.id} order={order} clickable={Boolean(role)} setSelectOrder={setSelectOrder} setIsFullItemModalOpen={setIsFullItemModalOpen} setMode={setMode}/>
                       ))
                   ) : (
                     <tr>
-                      <td>
+                      <td colSpan="5">
                         <p>У вас пока нету заказов</p>
                       </td>
                     </tr>
