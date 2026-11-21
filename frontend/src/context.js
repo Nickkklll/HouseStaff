@@ -1,4 +1,4 @@
-import { createContext,useState, useEffect } from "react";
+import { createContext,useState, useEffect, useCallback } from "react";
 import { apiUrl } from "./config";
 
 export const AppContext = createContext(null);
@@ -54,12 +54,23 @@ async function getCartItems() {
 }
 
 export function AppProvider ({children}){
+    const [toast, setToast] = useState(null);
+    const notify = useCallback((message, type = 'success') => {
+        setToast({ id: Date.now(), message, type });
+    }, []);
+    useEffect(() => {
+        if (!toast) return undefined;
+        const timeout = window.setTimeout(() => setToast(null), 3500);
+        return () => window.clearTimeout(timeout);
+    }, [toast]);
     // Данные авторизованного пользователя. null, пока запрос /me ещё не завершён.
     const [user, setUser] = useState(null);
     // Флаг загрузки профиля пользователя на старте приложения.
     const [loading, setLoading] = useState(true);
     // Единое состояние корзины, используемое магазином и личным кабинетом.
     const [cartItems, setCartItems] = useState([]);
+    const [cartLoading, setCartLoading] = useState(true);
+    const [ordersRevision, setOrdersRevision] = useState(0);
 
 
     async function logout(){
@@ -78,6 +89,7 @@ export function AppProvider ({children}){
 
         setUser(null);
         setCartItems([]);
+        setCartLoading(false);
     }
 
     useEffect(()=>{
@@ -95,14 +107,26 @@ export function AppProvider ({children}){
 
         if (user?.role !== 'user' && user?.role !== 'admin') {
             setCartItems([]);
+            setCartLoading(false);
             return;
         }
 
+        let isMounted = true;
         async function loadCart() {
-            setCartItems(await getCartItems());
+            setCartLoading(true);
+            try {
+                const items = await getCartItems();
+                if (isMounted) setCartItems(items);
+            } finally {
+                if (isMounted) setCartLoading(false);
+            }
         }
 
         loadCart();
+
+        return () => {
+            isMounted = false;
+        };
     }, [loading, user]);
 
 
@@ -140,35 +164,42 @@ async function createOrder() {
       totalQuantity: cartItems.reduce((sum, el) => sum + el.count, 0),
       totalAmount: cartItems.reduce((sum, el) => sum + el.price * el.count, 0)
     };
-    const csrfResponse = await fetch(
-      apiUrl('/auth/csrf'),
-      {
-        credentials: 'include'
+    try {
+      const csrfToken = await getCsrfToken();
+      const response = await fetch(apiUrl('/orders'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken
+        },
+        credentials: 'include',
+        body: JSON.stringify(order)
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        notify(data.message || 'Не удалось оформить заказ', 'error');
+        return;
       }
-    );
-      const { csrfToken } = await csrfResponse.json();
-    const response = await fetch(apiUrl('/orders'), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': csrfToken
-      },
-      credentials: 'include',
-      body: JSON.stringify(order)
-    });
-    const userCartResponse = await fetch(apiUrl('/cart'),{
-      method:'DELETE',
-      headers:{
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': csrfToken        
-      },
-      credentials:'include'
-    })
-    const data = await response.json();
-    const userCartData= await userCartResponse.json();
-    setCartItems([])
-    console.log(userCartData);
-    console.log(data);
+
+      setOrdersRevision((revision) => revision + 1);
+      const userCartResponse = await fetch(apiUrl('/cart'), {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken
+        },
+        credentials: 'include'
+      });
+      if (!userCartResponse.ok) {
+        notify('Заказ оформлен, корзина не очищена', 'error');
+        return;
+      }
+      await userCartResponse.json();
+      setCartItems([]);
+      notify('Заказ оформлен');
+    } catch (error) {
+      notify(error.message || 'Не удалось оформить заказ', 'error');
+    }
   }
 
   async function onChangeCount(id, count) {
@@ -287,7 +318,11 @@ async function addToFavorites(id){
     });
 
      const data = await response.json();
-    console.log(data);
+     if (!response.ok) {
+       notify(data.message || 'Не удалось добавить товар в корзину', 'error');
+       return;
+     }
+     notify('Добавлено в корзину');
     setCartItems(previousCartItems => {
       const existingItem = previousCartItems.find(el => el.id === item.id);
 
@@ -305,7 +340,7 @@ async function addToFavorites(id){
     
   }
     return (
-        <AppContext.Provider value={{user,setUser,loading,logout,cartItems,onChangeCount, createOrder, onAddToOrder,onDeleteOrder, getCsrfToken, addToFavorites, delFromFavorites}}>
+        <AppContext.Provider value={{user,setUser,loading,cartItems,cartLoading,ordersRevision,logout,onChangeCount, createOrder, onAddToOrder,onDeleteOrder, getCsrfToken, addToFavorites, delFromFavorites, notify, toast, setToast}}>
             {children}
         </AppContext.Provider>
     )

@@ -134,6 +134,36 @@ class SupabaseAppStateStore {
         return JSON.parse(JSON.stringify(this.state.get(key)));
     }
 
+    async refresh(key) {
+        if (!this.initialized) {
+            throw new Error('Supabase app_state has not been initialized');
+        }
+        if (!STATE_KEYS.includes(key)) {
+            throw new Error(`Unknown Supabase app_state key: ${key}`);
+        }
+
+        const pendingWrite = this.writeQueues.get(key);
+        if (pendingWrite) await pendingWrite;
+
+        const query = new URLSearchParams({ select: 'key,value', key: `eq.${key}` });
+        const rows = await this.request(`?${query}`);
+        if (!Array.isArray(rows)) {
+            throw createStoreError('Supabase app_state refresh returned an invalid response');
+        }
+        const row = rows.find((entry) => entry.key === key);
+        if (!row) {
+            throw createStoreError(`Supabase app_state row "${key}" was not found`);
+        }
+        if (!Array.isArray(row.value)) {
+            throw createStoreError(`Supabase app_state value for "${key}" must be a JSON array`);
+        }
+
+        const snapshot = JSON.parse(JSON.stringify(row.value));
+        this.state.set(key, snapshot);
+        this.persistedState.set(key, snapshot);
+        return JSON.parse(JSON.stringify(snapshot));
+    }
+
     set(key, value) {
         if (!this.initialized) {
             throw new Error('Supabase app_state has not been initialized');

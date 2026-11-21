@@ -7,10 +7,12 @@ import ShowFullItem from '../../ShowFullItem/ShowFullItem'
 import { FaStar } from "react-icons/fa";
 import { useMatch } from 'react-router-dom';
 import { apiUrl } from '../../../config';
+import LoadingPlaceholder from '../../LoadingPlaceholder';
 export default function Reviews() {
 
   const isReviewRoute = useMatch('/cabinet/review');
   const[isFullItemModalOpen, setIsFullItemModalOpen]= useState(false)
+  const [isLoading, setIsLoading] = useState(true);
 
   const [reviewStats, setReviewStats] = useState({
     totalReviews: 0,
@@ -40,6 +42,7 @@ export default function Reviews() {
       return data
 },[])
 const loadReviews =useCallback(async()=>{
+  setIsLoading(true);
   try {
     const allReviewsData = await getReviews();
     const analyticsData = await getReviewsAnalytics();
@@ -47,6 +50,8 @@ const loadReviews =useCallback(async()=>{
     setReviews(allReviewsData);
   } catch (error) {
     alert(error.message);
+  } finally {
+    setIsLoading(false);
   }
 },[getReviewsAnalytics, getReviews])
 useEffect(()=>{
@@ -58,6 +63,10 @@ loadReviews()
     <div>
       <h2>Отзывы и оценки</h2>
       <div className="category-reviews-block">
+        {isLoading ? (
+          <LoadingPlaceholder variant="panels" count={4} />
+        ) : (
+          <>
         <div className="cabinet-block all-rating">
           <h3>Общий рейтинг</h3>
           <div className="all-rating-block">
@@ -131,6 +140,8 @@ loadReviews()
            onClose={() =>{ setIsFullItemModalOpen(false);document.body.style.overflow = 'auto';}}
            ReviewItem={ReviewItem}
         />
+        )}
+          </>
         )}
       </div>
       

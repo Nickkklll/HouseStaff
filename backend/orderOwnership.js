@@ -70,10 +70,14 @@ function buyerOrderResponse(order, catalog) {
         const allSellersProcessed = [...sellerIds].every((sellerId) =>
             updates[sellerId]?.status === 'Обработано'
         );
-        orderDetails.status = allSellersProcessed ? 'Обработано' : 'В обработке';
+        orderDetails.status = allSellersProcessed ? 'Обработано' : 'Ожидает';
     } else if (sellerIds.size === 1) {
         const sellerId = [...sellerIds][0];
         orderDetails.status = updates[sellerId]?.status || order.status;
+    }
+
+    if (orderDetails.status === 'В обработке') {
+        orderDetails.status = 'Ожидает';
     }
 
     return orderDetails;
@@ -141,7 +145,7 @@ function updateSellerOrder(order, sellerId, changes, catalog) {
     if (sellerIds.size > 1) {
         updatedOrder.status = [...sellerIds].every((id) =>
             sellerUpdates[id]?.status === 'Обработано'
-        ) ? 'Обработано' : 'В обработке';
+        ) ? 'Обработано' : 'Ожидает';
     } else if (changes.status !== undefined) {
         updatedOrder.status = changes.status;
     }

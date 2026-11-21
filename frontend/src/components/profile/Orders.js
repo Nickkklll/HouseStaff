@@ -1,9 +1,11 @@
-import React,{useState, useEffect, useCallback} from 'react';
+import React,{useState, useEffect, useCallback, useContext} from 'react';
 
 import '../../Style/profile/cabinet.scss'
 
 import OrderBlock from './OrderBlock';
 import { apiUrl } from '../../config';
+import LoadingPlaceholder from '../LoadingPlaceholder';
+import { AppContext } from '../../context';
 
 async function getOrders() {
   try {
@@ -24,14 +26,17 @@ async function getOrders() {
 
 
 export default function Orders({role, setSelectOrder,setIsFullItemModalOpen, setMode, setRefreshFunc}) {
- 
+  const { ordersRevision } = useContext(AppContext);
   const [ordersData, setOrdersData] = useState(null); 
+  const [isLoading, setIsLoading] = useState(true);
 const loadOrders= useCallback(async()=>{
-             
+        setIsLoading(true);
+        try {
         const  orders= await getOrders()
-        
-
         setOrdersData(orders);
+        } finally {
+          setIsLoading(false);
+        }
 },[]) 
    useEffect(() => {
       
@@ -40,7 +45,7 @@ const loadOrders= useCallback(async()=>{
         setRefreshFunc(()=>loadOrders)
 
       }
-    }, [loadOrders, setRefreshFunc, setSelectOrder]);
+    }, [loadOrders, ordersRevision, setRefreshFunc, setSelectOrder]);
   return (
     <>
     <h2>История заказов</h2>
@@ -58,14 +63,18 @@ const loadOrders= useCallback(async()=>{
                   </tr>
                 </thead>
                 <tbody>
-                  {ordersData ? (
+                  {isLoading ? (
+                    <tr>
+                      <td colSpan="5"><LoadingPlaceholder variant="rows" count={3} /></td>
+                    </tr>
+                  ) : ordersData?.length ? (
                     ordersData
                       .map((order) => (
                         <OrderBlock key={order.id} order={order} clickable={Boolean(role)} setSelectOrder={setSelectOrder} setIsFullItemModalOpen={setIsFullItemModalOpen} setMode={setMode}/>
                       ))
                   ) : (
                     <tr>
-                      <td>
+                      <td colSpan="5">
                         <p>У вас пока нету заказов</p>
                       </td>
                     </tr>

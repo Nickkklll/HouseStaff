@@ -70,6 +70,29 @@ test('persists updated application state to Supabase', async () => {
     assert.deepEqual(store.get('users'), users);
 });
 
+test('refreshes application state after an external Supabase update', async () => {
+    const mock = createSupabaseMock([
+        { key: 'catalog', value: [] },
+        { key: 'orders', value: [] },
+        { key: 'trash-products', value: [] },
+        { key: 'users', value: [{ id: 'user-1', role: 'user' }] },
+        { key: 'catalog_seed_v1', value: true }
+    ]);
+    const store = new SupabaseAppStateStore({
+        url: 'https://project.supabase.co',
+        serviceRoleKey: 'service-role-key',
+        fetchImpl: mock.fetchImpl
+    });
+    await store.initialize();
+
+    mock.rows.set('users', [{ id: 'user-1', role: 'seller' }]);
+    assert.deepEqual(store.get('users'), [{ id: 'user-1', role: 'user' }]);
+
+    await store.refresh('users');
+
+    assert.deepEqual(store.get('users'), [{ id: 'user-1', role: 'seller' }]);
+});
+
 test('does not expose unpersisted state after a failed write', async () => {
     const store = new SupabaseAppStateStore({
         url: 'https://project.supabase.co',

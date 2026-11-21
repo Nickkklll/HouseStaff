@@ -1,5 +1,6 @@
 import React from "react";
 import { assetUrl } from "../../config";
+import { getOrderStatusClass } from "./orderStatus";
 
 export default function OrderBlock({order,clickable, setSelectOrder, setIsFullItemModalOpen, setMode}) {
  
@@ -33,7 +34,7 @@ export default function OrderBlock({order,clickable, setSelectOrder, setIsFullIt
       </td>
       <td>
         <span
-          className={`status-item ${order.status.includes("Ожидает") ? "status-grey" : order.status === "Обработано" ? "status-green" : ""}`}
+          className={`status-item ${getOrderStatusClass(order.status)}`}
         >
           {order.status}
         </span>

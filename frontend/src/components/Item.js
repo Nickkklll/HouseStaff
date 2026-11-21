@@ -7,7 +7,7 @@ import { assetUrl } from "../config";
 
 export function Item({item,isFav,setIsFullItemModalOpen,setSelectItem,setMode,deleteItem, onAdd, reloadList}) {
   const location = useLocation();
-  const { addToFavorites, delFromFavorites, user} = useContext(AppContext);
+  const { addToFavorites, delFromFavorites, user, loading} = useContext(AppContext);
   const [isItFav, setIsItFav] = useState(isFav);
 
 
@@ -26,6 +26,12 @@ export function Item({item,isFav,setIsFullItemModalOpen,setSelectItem,setMode,de
         className="product-card__image"
         src={assetUrl(item.img)}
         alt=""
+        onError={(event) => {
+          const fallbackUrl = assetUrl("/uploads/img/system/Image-placeholder.jpg");
+          if (event.currentTarget.getAttribute("src") !== fallbackUrl) {
+            event.currentTarget.setAttribute("src", fallbackUrl);
+          }
+        }}
        
       />
       <h2 className="product-card__title">{item.title}</h2>
@@ -46,7 +52,7 @@ export function Item({item,isFav,setIsFullItemModalOpen,setSelectItem,setMode,de
        <p className="product-card__quantity">Количество: {item.quantity} ед.</p>
       )
       :null}
-      {onAdd && (
+      {!loading && user?.role !== "seller" && onAdd && (
         <div
           className="product-card__add"
           onClick={(event) => {
@@ -60,18 +66,17 @@ export function Item({item,isFav,setIsFullItemModalOpen,setSelectItem,setMode,de
       {user?.role !== "seller" && (
         <div
           className="product-card__favorite"
-          onClick={
-            !isItFav
-              ? () => {
-                  setIsItFav(!isItFav);
-                  addToFavorites(item.id);
-                }
-              : () => {
-                  delFromFavorites(item.id);
-                  setIsItFav(!isItFav);
-                  reloadList && reloadList();
-                }
-          }
+          onClick={(event) => {
+            event.stopPropagation();
+            if (!isItFav) {
+              setIsItFav(!isItFav);
+              addToFavorites(item.id);
+            } else {
+              delFromFavorites(item.id);
+              setIsItFav(!isItFav);
+              reloadList && reloadList();
+            }
+          }}
         >
           {!isItFav ? <MdFavoriteBorder /> : <MdFavorite />}
         </div>

@@ -13,6 +13,7 @@ import {
 } from "chart.js";
 
 import { Bar } from "react-chartjs-2";
+import LoadingPlaceholder from "../../LoadingPlaceholder";
 import { assetUrl } from "../../../config";
 
 ChartJS.register(
@@ -216,9 +217,11 @@ export default function DynamicHistorigram({ data, position }) {
   });
 
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
     setError(null);
+    setIsLoading(true);
 
     try {
       // Пример реального запроса к вашему бэкенду:
@@ -285,6 +288,8 @@ export default function DynamicHistorigram({ data, position }) {
       
     } catch (err) {
       setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
   }, [position,data]);
   useEffect(()=>{
@@ -336,15 +341,16 @@ export default function DynamicHistorigram({ data, position }) {
 
   return(
     <div >
+      {isLoading ? <LoadingPlaceholder variant="chart" count={1} /> : null}
       {error && <div style={{ color: 'red',height:'200px', marginBottom: '10px' }}>Ошибка: {error}</div>}
-      <div
+      {!isLoading && !error && <div
         style={{
           position: "relative",
           height: `${Math.max(400, products.length * PRODUCT_ROW_HEIGHT)}px`,
         }}
       >
-  <Bar data={chartData} options={options} plugins={[productImagesPlugin]} />
-</div>
+        <Bar data={chartData} options={options} plugins={[productImagesPlugin]} />
+      </div>}
     </div>
   )
 }

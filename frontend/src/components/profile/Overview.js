@@ -9,6 +9,8 @@ import { AppContext } from "../../context";
 import avatarImage from "../../img/system/man-avatar.png";
 import Order from "../Order";
 import { apiUrl } from "../../config";
+import LoadingPlaceholder from "../LoadingPlaceholder";
+import { getOrderStatusClass } from "./orderStatus";
 
 async function getOrders() {
   try {
@@ -28,18 +30,24 @@ async function getOrders() {
 }
 
 export default function Overview( props) {
-  const {cartItems, onDeleteOrder, onChangeCount, createOrder} = useContext(AppContext);
+  const {cartItems, cartLoading, ordersRevision, onDeleteOrder, onChangeCount, createOrder} = useContext(AppContext);
   // История заказов текущего пользователя.
   const [ordersData, setOrdersData] = useState(null);
+  const [ordersLoading, setOrdersLoading] = useState(true);
   const [isFullCartModalOpen, setIsFullCartModalOpen] = useState(false);
   const { user } = useOutletContext();
   useEffect(() => {
     async function loadOrders() {
-      const orders = await getOrders();
-      setOrdersData(orders);
+      setOrdersLoading(true);
+      try {
+        const orders = await getOrders();
+        setOrdersData(orders);
+      } finally {
+        setOrdersLoading(false);
+      }
     }
     loadOrders();
-  }, []);
+  }, [ordersRevision]);
 
   useEffect(()=>{
     cartItems.length===0&&setIsFullCartModalOpen(false)
@@ -77,7 +85,11 @@ export default function Overview( props) {
                   </tr>
                 </thead>
                 <tbody>
-                  {ordersData ? (
+                  {ordersLoading ? (
+                    <tr>
+                      <td colSpan="4"><LoadingPlaceholder variant="rows" count={3} /></td>
+                    </tr>
+                  ) : ordersData?.length ? (
                     ordersData
                       .map((order) => (
                         <tr key={order.id}>
@@ -91,7 +103,7 @@ export default function Overview( props) {
                           </td>
                           <td>
                             <span
-                              className={`status-item ${order.status === "Ожидает обработки"?"status-grey" : order.status==="Обработано"?"status-green": ""}`}
+                              className={`status-item ${getOrderStatusClass(order.status)}`}
                             >
                               {order.status}
                             </span>
@@ -114,10 +126,10 @@ export default function Overview( props) {
             <h3>Ваша корзина</h3>
             <div className="cart-list">
             <ul>
-
-              {cartItems.map(el=>(
+              {cartLoading ? <li className="loading-list-item"><LoadingPlaceholder variant="rows" count={2} /></li>
+                : cartItems.length ? cartItems.map(el=>(
                   <Order key={el.id} item={el} onDelete={onDeleteOrder} onChangeCount={onChangeCount}/>
-              ))}
+              )) : <li>Корзина пуста</li>}
             </ul>
             </div>
             <div className="button-block">

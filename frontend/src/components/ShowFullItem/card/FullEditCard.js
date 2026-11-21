@@ -7,7 +7,7 @@ import { apiUrl, assetUrl } from '../../../config';
 export default function FullEditCard({item}) {
       const [previewUrl, setPreviewUrl] = useState("");
       const [isSubmitting, setIsSubmitting] = useState(false);
-      const {user: {role}, getCsrfToken} = useContext(AppContext)
+      const {user: {role}, getCsrfToken, notify} = useContext(AppContext)
   const [selectedFile, setSelectedFile] = useState(null);
 
 
@@ -38,7 +38,7 @@ export default function FullEditCard({item}) {
     const description = capitalizeFirstLetter(String(handleFormData.get('desc') || ''));
     const textError = validateProductText(title, description);
     if (textError) {
-      alert(textError);
+      notify(textError, "error");
       const invalidField = textError.startsWith('Название') || !title.trim() ? 'title' : 'desc';
       form.elements.namedItem(invalidField).focus();
       return;
@@ -61,7 +61,10 @@ export default function FullEditCard({item}) {
   normalize(field,saved[field])
 );
 const hasChanges = hasFieldChanges|| Boolean(selectedFile);
-if(!hasChanges) return;
+if(!hasChanges) {
+      notify("Нет изменений");
+      return;
+}
     submissionInProgressRef.current = true;
     setIsSubmitting(true);
     try{
@@ -73,7 +76,12 @@ if(!hasChanges) return;
         credentials:'include',
         body:handleFormData
       })
-      const data = await response.json();
+      let data = {};
+      try {
+        data = await response.json();
+      } catch {
+        if (!response.ok) throw new Error("Не удалось сохранить товар");
+      }
       if(!response.ok){
         throw new Error (data.message||'Проблема при изменении данних товара')
       }
@@ -90,10 +98,10 @@ if(!hasChanges) return;
       setFormData(savedFormData);
       setSelectedFile(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
-      console.log("Данные успешно изменены");
+      notify("Товар изменён");
     }
     catch(error){
-      alert (error.message ||'Ошибка при изменении данных')
+      notify(error.message || "Не удалось изменить товар", "error");
     } finally {
       submissionInProgressRef.current = false;
       setIsSubmitting(false);

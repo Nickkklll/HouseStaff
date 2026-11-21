@@ -1,11 +1,13 @@
 
-import React, { useState,useEffect, useRef } from "react";
+import React, { useState,useEffect, useRef, useContext } from "react";
 
 import { useOutletContext } from "react-router-dom";
 import { apiUrl } from "../../config";
+import { AppContext } from "../../context";
 
 export default function Settings() {
   const { user } = useOutletContext();
+  const { notify } = useContext(AppContext);
 
   const [formData, setFormData] = useState({
     name: user.name || "",
@@ -61,7 +63,7 @@ export default function Settings() {
       setIsPrivateEdit(false);
       setIsEmailEdit(false);
       setIsPhoneEdit(false);
-   
+        notify("Нет изменений");
         return
       }
          
@@ -103,9 +105,9 @@ export default function Settings() {
       setIsPrivateEdit(false);
       setIsEmailEdit(false);
       setIsPhoneEdit(false);
-      console.log("Данные успешно изменены");
+      notify("Данные сохранены");
     } catch (error) {
-      alert(error.message || "Ошибка при изменении данных");
+      notify(error.message || "Не удалось сохранить", "error");
     }
   }
   async function authorizationUser(event, formData) {
@@ -116,26 +118,33 @@ export default function Settings() {
       password: formData.get("oldPassword"),
     };
 
-    const csrfResponse = await fetch(apiUrl("/auth/csrf"), {
-      credentials: "include",
-    });
-    const { csrfToken } = await csrfResponse.json();
+    try {
+      const csrfResponse = await fetch(apiUrl("/auth/csrf"), {
+        credentials: "include",
+      });
+      if (!csrfResponse.ok) throw new Error("Не удалось проверить пароль");
+      const { csrfToken } = await csrfResponse.json();
 
-    const response = await fetch(apiUrl("/auth/login"), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token": csrfToken,
-      },
-      credentials: "include",
-      body: JSON.stringify(loginData),
-    });
+      const response = await fetch(apiUrl("/auth/login"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": csrfToken,
+        },
+        credentials: "include",
+        body: JSON.stringify(loginData),
+      });
 
-    const data = await response.json();
-    if (response.ok) {
+      const data = await response.json();
+      if (!response.ok) {
+        notify(data.message || "Пароль неверный", "error");
+        return false;
+      }
       form.reset();
-    } else {
-      alert(`Ошибка автоизации: ${data.message}`);
+      return true;
+    } catch (error) {
+      notify(error.message || "Не удалось проверить пароль", "error");
+      return false;
     }
   }
   async function changePassword(event) {
@@ -143,10 +152,13 @@ export default function Settings() {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
-    await authorizationUser(event, formData);
+    const isAuthorized = await authorizationUser(event, formData);
+    if (!isAuthorized) return;
+    try {
     const csrfResponse = await fetch(apiUrl("/auth/csrf"), {
       credentials: "include",
     });
+    if (!csrfResponse.ok) throw new Error("Не удалось получить CSRF-токен");
     const { csrfToken } = await csrfResponse.json();
     const newPassResponse = await fetch(apiUrl("/me/password"), {
       method: "PATCH",
@@ -159,10 +171,12 @@ export default function Settings() {
     });
 
     const newPassData = await newPassResponse.json();
-    if (newPassResponse.ok) {
-      alert("Пароль успешно изменен");
-    } else {
-      alert(`Ошибка смены пароля, ${newPassData.message}`);
+      if (!newPassResponse.ok) {
+        throw new Error(newPassData.message || "Не удалось изменить пароль");
+      }
+      notify("Пароль изменён");
+    } catch (error) {
+      notify(error.message || "Не удалось изменить пароль", "error");
     }
   }
   function handleChange(event) {

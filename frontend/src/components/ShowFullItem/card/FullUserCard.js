@@ -16,7 +16,12 @@ export default function FullUserCard({
     rating: "",
     text: "",
   });
- const{getCsrfToken}= useContext(AppContext);
+ const{getCsrfToken, user, loading, notify}= useContext(AppContext);
+  const reviews = item.reviews ?? [];
+  const averageRating = reviews.length
+    ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+    : 0;
+
  async function handleReview (event){
       event.preventDefault();
 
@@ -44,9 +49,10 @@ export default function FullUserCard({
       text: "",
     })
     setIsReviewFormOpen(false)
+    notify("Отзыв отправлен");
     loadCatalog()
   } catch (error){
-     alert(error.message || "Ошибка при публикации отзыва");
+     notify(error.message || "Не удалось отправить отзыв", "error");
   }
 
  
@@ -63,7 +69,16 @@ export default function FullUserCard({
 
   return (
     <div className="user-card">
-      <img src={assetUrl(item.img)} alt="" />
+      <img
+        src={assetUrl(item.img)}
+        alt=""
+        onError={(event) => {
+          const fallbackUrl = assetUrl("/uploads/img/system/Image-placeholder.jpg");
+          if (event.currentTarget.getAttribute("src") !== fallbackUrl) {
+            event.currentTarget.setAttribute("src", fallbackUrl);
+          }
+        }}
+      />
       <h2>{item.title}</h2>
       <p>{item.desc}</p>
       <b>${item.price}</b>
@@ -80,7 +95,7 @@ export default function FullUserCard({
             <div className="review-form__block">
              <h3>Отзывы</h3>
               <div className="head-review-form__block">
-              <span className="review-stars__full">★{item.reviews.reduce((summ,numm)=>summ+numm.rating,0)/ item.reviews.length}/5</span>
+              <span className="review-stars__full">★{averageRating}/5</span>
                 
                 <button className="action-button " type={!isReviewFormOpen?'button':"submit"} form="review-form" onClick={()=>!isReviewFormOpen&&setIsReviewFormOpen(true)}>Оставить отзыв</button>
                 {isReviewFormOpen&&(<button className="action-button white-button" type='button' onClick={()=>setIsReviewFormOpen(false)}>Отмена</button>)}
@@ -132,7 +147,7 @@ export default function FullUserCard({
                 </form>
               ):(
                 <ul>
-              {item.reviews.map((el) => (
+              {reviews.map((el) => (
                     <li className="review-item" key={el.id}>
                       <div className="review-body">
                         <span aria-label={`Оценка: ${el.rating} из 5`}>
@@ -155,7 +170,7 @@ export default function FullUserCard({
               )}
             
           </div>
-          {!isReviewFormOpen&&(<div className="add-to-cart" onClick={() => onAdd(item)}>
+          {!isReviewFormOpen&&!loading&&user?.role !== "seller"&&(<div className="add-to-cart" onClick={() => onAdd(item)}>
            +
           </div>)}
           

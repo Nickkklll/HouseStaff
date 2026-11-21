@@ -531,8 +531,9 @@
 }
 
 .favorites-block {
-    height: 700px;
-    overflow-y: auto;
+    min-height: 240px;
+    align-content: start;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .cabinet_settings {

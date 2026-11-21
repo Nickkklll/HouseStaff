@@ -83,7 +83,7 @@ test('does not treat order-level seller metadata as proof of item ownership', ()
     assert.deepEqual(getSellerOrderItems(order, 'seller-a', []), []);
 });
 
-test('buyer order status stays in processing until every seller is done', () => {
+test('buyer order status stays waiting until every seller is done', () => {
     const order = {
         status: 'В обработке',
         sellerIds: ['seller-a', 'seller-b'],
@@ -95,7 +95,7 @@ test('buyer order status stays in processing until every seller is done', () => 
     };
 
     const partialResponse = buyerOrderResponse(order, []);
-    assert.equal(partialResponse.status, 'В обработке');
+    assert.equal(partialResponse.status, 'Ожидает');
     assert.equal(partialResponse.sellerUpdates, undefined);
     assert.equal(partialResponse.items[0].desc, 'A wooden chair');
 
@@ -107,6 +107,13 @@ test('buyer order status stays in processing until every seller is done', () => 
         }
     }, []);
     assert.equal(completeResponse.status, 'Обработано');
+
+    const legacyResponse = buyerOrderResponse({
+        status: 'В обработке',
+        sellerIds: ['seller-a'],
+        items: []
+    }, []);
+    assert.equal(legacyResponse.status, 'Ожидает');
 });
 
 test('deducts only owned item quantities and rejects insufficient inventory', () => {
@@ -146,7 +153,7 @@ test('marks seller inventory deduction once and completes a mixed order only aft
     const firstSellerUpdate = updateSellerOrder(order, 'seller-a', { status: 'Обработано' }, catalog);
     assert.equal(firstSellerUpdate.catalog[0].quantity, 3);
     assert.equal(firstSellerUpdate.catalog[1].quantity, 4);
-    assert.equal(firstSellerUpdate.order.status, 'В обработке');
+    assert.equal(firstSellerUpdate.order.status, 'Ожидает');
     assert.equal(firstSellerUpdate.inventoryDeducted, true);
 
     const repeatedUpdate = updateSellerOrder(

@@ -12,6 +12,7 @@ import '../Style/profile/cabinet.scss'
 
 
 import Header from '../components/Header';
+import LoadingPlaceholder from '../components/LoadingPlaceholder';
 
 export default function Cabinet(props) {
 
@@ -20,9 +21,7 @@ export default function Cabinet(props) {
 
   if(loading){
     return (
-      <>
-        <p>Loading</p>
-      </>
+      <LoadingPlaceholder variant="panels" count={1} />
     )
   }
 

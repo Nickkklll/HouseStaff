@@ -9,7 +9,7 @@ export default function FullRestockInventoryCard({productList, refreshProductsLi
   const[selectItem,setSelectItem] = useState({})
   const[inputData,setInputData]=useState('')
 
-  const{getCsrfToken} = useContext(AppContext);
+  const{getCsrfToken, notify} = useContext(AppContext);
 
   async function handleSubmit(event){
     event.preventDefault()
@@ -29,12 +29,13 @@ export default function FullRestockInventoryCard({productList, refreshProductsLi
       body:JSON.stringify({quantity: Number(inputData)})
     })
     const data = await response.json()
-    if(!response.ok)throw new Error(data.message||'Ошибка добавления товара')
+    if(!response.ok)throw new Error(data.message||'Ошибка пополнения склада')
+    notify("Склад пополнен");
     refreshProductsList ()
     cancel();
 
     }catch(error){
-       alert (error.message ||'Ошибка при изменении данных')
+       notify(error.message || "Не удалось пополнить склад", "error");
     }
     
   }

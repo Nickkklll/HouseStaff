@@ -15,6 +15,7 @@ import SellerOveriew from "./profile/seller/SellerOveriew";
 
 import { useContext } from "react";
 import { AppContext } from "../context";
+import LoadingPlaceholder from "./LoadingPlaceholder";
 
 function homeForRole(role){
     if(role==='seller'){
@@ -28,7 +29,7 @@ function homeForRole(role){
 function RequireRole({allowRoles,children}){
     const {user,loading} = useContext(AppContext);
     if(loading){
-        return(<p>Загрузка</p>)
+        return <LoadingPlaceholder variant="panels" count={1} />;
     }
 
     if(!user){

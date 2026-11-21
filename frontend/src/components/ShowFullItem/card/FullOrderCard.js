@@ -2,6 +2,7 @@ import { useContext } from 'react'
 import Item from '../../Item'
 import { AppContext } from '../../../context'
 import { apiUrl } from '../../../config'
+import { getOrderStatusClass } from '../../profile/orderStatus'
 
 
 export default function FullOrderCard({order,setSelectItem, setIsFullItemSecondModalOpen, onClose,refreshOrderList, onOrderUpdated}) {
@@ -38,7 +39,7 @@ export default function FullOrderCard({order,setSelectItem, setIsFullItemSecondM
           year: "numeric",
         })}</span>
         <span
-          className={`status-item ${order.status.includes("Ожидает") ? "status-grey" : order.status === "Обработано" ? "status-green" : ""}`}
+          className={`status-item ${getOrderStatusClass(order.status)}`}
         >
           {order.status}
         </span>

@@ -8,8 +8,9 @@ export default function FullNewCard({onClose, refreshProductsList }) {
     const [selectedFile, setSelectedFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [categories, setCategories] = useState(null);
+  const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
   const [categoriesError, setCategoriesError] = useState('');
-  const{getCsrfToken} = useContext(AppContext);
+  const{getCsrfToken, notify} = useContext(AppContext);
   const [formData, setFormData] = useState({
     img: "",
     title: "",
@@ -35,6 +36,9 @@ export default function FullNewCard({onClose, refreshProductsList }) {
       })
       .catch((error) => {
         if (isMounted) setCategoriesError(error.message);
+      })
+      .finally(() => {
+        if (isMounted) setIsCategoriesLoading(false);
       });
 
     return () => {
@@ -51,7 +55,7 @@ async function handleSubmit(event){
   const description = capitalizeFirstLetter(String(handleFormData.get('desc') || ''));
   const textError = validateProductText(title, description);
   if (textError) {
-    alert(textError);
+    notify(textError, "error");
     const invalidField = textError.startsWith('Название') || !title.trim() ? 'title' : 'desc';
     form.elements.namedItem(invalidField).focus();
     return;
@@ -59,11 +63,11 @@ async function handleSubmit(event){
   if (!String(handleFormData.get('price') || '').trim() ||
       !String(handleFormData.get('quantity') || '').trim() ||
       !selectedFile) {
-    alert('Заполните все поля и загрузите фотографию товара');
+    notify("Заполните поля", "error");
     return;
   }
   if (!categories || !categories.includes(String(handleFormData.get('category') || '').trim())) {
-    alert(categoriesError || 'Выберите категорию из списка');
+    notify(categoriesError || "Выберите категорию", "error");
     return;
   }
   handleFormData.set('title', title);
@@ -84,12 +88,12 @@ async function handleSubmit(event){
 
     const data= await response.json();
     if(!response.ok)throw new Error(data.message||"Ошибка отправки данных о товаре на сервер")
-    console.log("Данные успешно сохранены")
+    notify("Товар добавлен");
     refreshProductsList();
     onClose();
 
   } catch(error){
-    alert(error.message||'Ошибка при записи данных')
+    notify(error.message || "Не удалось добавить товар", "error");
   } finally {
     submissionInProgressRef.current = false;
     setIsSubmitting(false);
@@ -162,8 +166,8 @@ async function handleSubmit(event){
               </div>
               <div className="form-row">
                 <label htmlFor="category">Категория</label>
-                <select name="category" value={formData.category} onChange={handleChange} required disabled={!categories || Boolean(categoriesError)}>
-                  <option value="">Выберите категорию</option>
+                <select name="category" value={formData.category} onChange={handleChange} required disabled={isCategoriesLoading || !categories || Boolean(categoriesError)}>
+                  <option value="">{isCategoriesLoading ? "Загрузка категорий..." : "Выберите категорию"}</option>
                   {categories?.map((category) => (
                     <option key={category} value={category}>
                       {({

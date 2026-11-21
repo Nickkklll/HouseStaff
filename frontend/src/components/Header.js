@@ -5,6 +5,7 @@ import Order from './Order';
 import { useContext } from 'react';
 import { AppContext } from '../context';
 import { IoExit } from "react-icons/io5";
+import LoadingPlaceholder from './LoadingPlaceholder';
 
 const showOrders=(props)=>{
   let summa=0
@@ -30,7 +31,7 @@ const showNothing=()=>{
 
 export default function Header({ orders = [], onDelete, onChangeCount, createOrder }) {
   const navigate = useNavigate();
-  const { user, logout } = useContext(AppContext);
+  const { user, logout, cartLoading } = useContext(AppContext);
   // Видимость выпадающей корзины в шапке.
   const [cartOpen, setCartOpen] = useState(false);
   const location = useLocation();
@@ -59,7 +60,8 @@ export default function Header({ orders = [], onDelete, onChangeCount, createOrd
         {!location.pathname.startsWith('/cabinet')?(<><FaShoppingCart className={`shop-cart-button ${cartOpen&&'active'}`} onClick={()=>setCartOpen(!cartOpen)} />
        {cartOpen&&(
         <div className='shop-cart'>
-            {orders.length > 0
+            {cartLoading ? <LoadingPlaceholder variant="rows" count={2} />
+              : orders.length > 0
               ? showOrders({ orders, onDelete, onChangeCount, createOrder })
               : showNothing()}
         </div>

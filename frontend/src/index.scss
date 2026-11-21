@@ -252,6 +252,11 @@ main {
     width: 100%;
    
 }
+.catalog-load-more {
+    display: block;
+    width: fit-content;
+    margin: 24px auto;
+}
 .cabinet-block{
     background:#fff ;
 padding: 10px;
@@ -386,6 +391,13 @@ padding: 10px;
             transform: scale(1.5) translateY(-5px);
         }
 
+    }
+
+    .user-card > .add-to-cart {
+        position: static;
+        align-self: flex-end;
+        margin-top: 5px;
+        flex-shrink: 0;
     }
 
     & .close-show-full {

@@ -4,15 +4,17 @@ import { useContext } from "react";
 import Item from "../../Item";
 import ShowFullItem from "../../ShowFullItem/ShowFullItem";
 import { apiUrl } from "../../../config";
+import LoadingPlaceholder from "../../LoadingPlaceholder";
 
 export default function MyProducts() {
    
-  const { user,getCsrfToken } = useContext(AppContext);
+  const { user,getCsrfToken, notify } = useContext(AppContext);
   const [mode,setMode] = useState('')
   const[isFullItemModalOpen,setIsFullItemModalOpen]=useState(false)
   const [selectItem,setSelectItem]=useState({})
   const [productList, setProductList] = useState([]);
   const [visibleProductList,setVisibleProductList]= useState([])
+  const [isLoading, setIsLoading] = useState(true);
   
   const productData = useCallback(async () => {
     const id = user.id;
@@ -29,17 +31,22 @@ export default function MyProducts() {
   }, [user]);
 
  async function deleteProduct(id) {
-    const csrfToken= await getCsrfToken();
-    const response = await fetch(apiUrl(`/products/${id}`),{
-      method:'DELETE',
-      headers:{
-
-        "X-CSRF-Token": csrfToken,
-      },
-      credentials:"include"
-    })
-    if(!response.ok) throw new Error('Ошибка удаления товара')
-    loadproducts();
+    try {
+        const csrfToken= await getCsrfToken();
+        const response = await fetch(apiUrl(`/products/${id}`),{
+          method:'DELETE',
+          headers:{
+            "X-CSRF-Token": csrfToken,
+          },
+          credentials:"include"
+        })
+        const data = await response.json().catch(() => ({}));
+        if(!response.ok) throw new Error(data.message || 'Не удалось удалить товар');
+        await loadproducts();
+        notify("Товар удалён");
+    } catch(error) {
+        notify(error.message || "Не удалось удалить товар", "error");
+    }
   }
   function search(value){
   
@@ -51,9 +58,14 @@ export default function MyProducts() {
     setVisibleProductList(productList.filter(el=>el.title.toLocaleLowerCase('ru').includes(query) ))
   }
    const loadproducts= useCallback(async ()=>{
+      setIsLoading(true);
+      try {
       const data = await productData();
       setProductList(data);
       setVisibleProductList(data);
+      } finally {
+        setIsLoading(false);
+      }
     },[productData])
   useEffect(() => {
    
@@ -70,7 +82,11 @@ export default function MyProducts() {
           <li className="option action-button " onClick={()=>{ setMode('new'); setIsFullItemModalOpen(true)}}>Новый товар</li>
           <li className="option action-button white-button" onClick={()=>{ setMode('restockInventory'); setIsFullItemModalOpen(true)}}>Пополнить склад</li>
         </ul>
-        {visibleProductList.length!==0?(
+        {isLoading ? (
+          <div className="product-grid">
+            <LoadingPlaceholder variant="cards" count={3} />
+          </div>
+        ) : visibleProductList.length!==0?(
             <div className=" product-grid">
           {visibleProductList.map((product) => (
             <Item key={product.id} item={product}  setMode={setMode} deleteItem={deleteProduct} setIsFullItemModalOpen={setIsFullItemModalOpen} setSelectItem={setSelectItem}/>

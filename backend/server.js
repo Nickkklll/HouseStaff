@@ -46,6 +46,9 @@ const BACKEND_ORIGIN = (
     `http://localhost:${PORT}`
 ).replace(/\/+$/, '');
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'https://nickkklll.github.io';
+const SUPABASE_STORAGE_BUCKET = process.env.SUPABASE_STORAGE_BUCKET || 'product-images';
+const SUPABASE_URL = (process.env.SUPABASE_URL || '').replace(/\/+$/, '');
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 const ordersPath = path.join(__dirname, 'orders.json');
 const catalogPath = path.join(__dirname, 'catalog.json');
 const uploadsPath = path.join(__dirname, 'uploads');
@@ -202,6 +205,30 @@ function getProductImageUrl(filename) {
     return `${BACKEND_ORIGIN}/uploads/img/product/${encodeURIComponent(filename)}`;
 }
 
+async function persistProductImage(reqFile) {
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) return getProductImageUrl(reqFile.filename);
+
+    const objectPath = encodeURIComponent(reqFile.filename);
+    const response = await fetch(
+        `${SUPABASE_URL}/storage/v1/object/${encodeURIComponent(SUPABASE_STORAGE_BUCKET)}/${objectPath}`,
+        {
+            method: 'POST',
+            headers: {
+                apikey: SUPABASE_SERVICE_ROLE_KEY,
+                Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+                'Content-Type': 'image/webp',
+                'x-upsert': 'true'
+            },
+            body: fs.readFileSync(reqFile.path)
+        }
+    );
+    if (!response.ok) {
+        throw new Error(`Не удалось сохранить изображение в Supabase (${response.status})`);
+    }
+
+    return `${SUPABASE_URL}/storage/v1/object/public/${encodeURIComponent(SUPABASE_STORAGE_BUCKET)}/${objectPath}`;
+}
+
 function getLocalUploadedImagePath(imageUrl) {
     if (typeof imageUrl !== 'string' || !imageUrl) return null;
 
@@ -234,6 +261,21 @@ function getLocalUploadedImagePath(imageUrl) {
     return imagePath;
 }
 
+async function unlinkUploadFile(filePath) {
+    const retryableCodes = new Set(['EPERM', 'EBUSY', 'EACCES']);
+
+    for (let attempt = 0; attempt < 4; attempt += 1) {
+        try {
+            await fs.promises.unlink(filePath);
+            return;
+        } catch (error) {
+            if (error.code === 'ENOENT') return;
+            if (!retryableCodes.has(error.code) || attempt === 3) throw error;
+            await new Promise((resolve) => setTimeout(resolve, 50 * (attempt + 1)));
+        }
+    }
+}
+
 function uploadProductImage(req, res, next) {
     productImageUpload.single('photo')(req, res, (error) => {
         if (error) {
@@ -258,7 +300,9 @@ function uploadProductImage(req, res, next) {
                     'image/webp': isWebp
                 }[req.file.mimetype];
                 if (!validImageType) {
-                    fs.unlinkSync(temporaryPath);
+                    await unlinkUploadFile(temporaryPath).catch((cleanupError) => {
+                        console.error('Не удалось удалить временный файл изображения:', cleanupError);
+                    });
                     return res.status(400).json({ message: 'Файл не является допустимым изображением' });
                 }
 
@@ -267,27 +311,26 @@ function uploadProductImage(req, res, next) {
                     .rotate()
                     .webp({ quality: 80 })
                     .toFile(destination);
-                fs.unlinkSync(temporaryPath);
                 req.file.path = destination;
                 req.file.filename = path.basename(destination);
                 req.file.mimetype = 'image/webp';
                 req.file.size = output.size;
+                await unlinkUploadFile(temporaryPath).catch((cleanupError) => {
+                    console.error('Не удалось удалить временный файл изображения:', cleanupError);
+                });
                 return next();
             } catch (imageError) {
                 const cleanupErrors = [];
                 for (const filePath of [temporaryPath, destination]) {
                     if (!filePath || !fs.existsSync(filePath)) continue;
                     try {
-                        fs.unlinkSync(filePath);
+                        await unlinkUploadFile(filePath);
                     } catch (cleanupError) {
                         cleanupErrors.push(cleanupError);
                     }
                 }
                 if (cleanupErrors.length) {
-                    return next(new AggregateError(
-                        [imageError, ...cleanupErrors],
-                        'Ошибка обработки изображения и очистки временных файлов'
-                    ));
+                    console.error('Не удалось очистить файлы после ошибки обработки изображения:', cleanupErrors);
                 }
                 return next(imageError);
             }
@@ -788,6 +831,13 @@ app.post('/products', authenticate, requirePermission('products:create'), upload
         });
     }
 
+    let imageUrl;
+    try {
+        imageUrl = await persistProductImage(req.file);
+    } catch (error) {
+        fs.unlinkSync(req.file.path);
+        return res.status(502).json({ message: error.message });
+    }
     const product = {
         id: crypto.randomUUID(),
         sellerId: req.user.id,
@@ -796,7 +846,7 @@ app.post('/products', authenticate, requirePermission('products:create'), upload
         category: req.body.category.trim(),
         price: Number(req.body.price),
         quantity: Number(req.body.quantity),
-        img: getProductImageUrl(req.file.filename),
+        img: imageUrl,
         favoritesCount: 0,
         reviews: [],
         hidden: false,
@@ -867,7 +917,14 @@ app.patch('/products/:id', authenticate, uploadProductImage, async (req, res) =>
             changes[field] = value;
         }
     }
-    if (req.file) changes.img = getProductImageUrl(req.file.filename);
+    if (req.file) {
+        try {
+            changes.img = await persistProductImage(req.file);
+        } catch (error) {
+            fs.unlinkSync(req.file.path);
+            return res.status(502).json({ message: error.message });
+        }
+    }
     if (isAdmin(req.user)) {
         for (const field of ['hidden', 'favoritesCount']) {
             if (req.body[field] !== undefined) changes[field] = req.body[field];
@@ -884,7 +941,11 @@ app.patch('/products/:id', authenticate, uploadProductImage, async (req, res) =>
         await writeJson(catalogPath, catalog);
     } catch (error) {
         if (req.file) fs.unlinkSync(req.file.path);
-        throw error;
+        if (error.code === 'SUPABASE_APP_STATE_ERROR') {
+            return res.status(503).json({ message: 'Сохранение товара временно недоступно' });
+        }
+        console.error('Не удалось сохранить редактирование товара:', error);
+        return res.status(500).json({ message: 'Не удалось сохранить товар' });
     }
     res.json(catalog[index]);
 });
@@ -1300,6 +1361,15 @@ app.post('/auth/logout', (req, res) => {
     clearAuthCookie(res);
     clearCsrfCookie(res);
     res.status(204).end();
+});
+
+app.use((error, req, res, next) => {
+    console.error(`Ошибка ${req.method} ${req.path}:`, error);
+    if (res.headersSent) return next(error);
+    if (error.code === 'SUPABASE_APP_STATE_ERROR') {
+        return res.status(503).json({ message: 'Сервис временно недоступен' });
+    }
+    return res.status(500).json({ message: 'Не удалось обработать запрос' });
 });
 
 async function startServer() {

@@ -4,6 +4,7 @@ import { useContext, useState,useCallback } from "react";
 import { AppContext } from "../../context";
 import AddressBlock from "./AddressBlock";
 import { apiUrl } from "../../config";
+import LoadingPlaceholder from "../LoadingPlaceholder";
 
 
 
@@ -11,6 +12,7 @@ export default function Location() {
   const [isOpenCreateWindow, setIsOpenCreaeteWindow] = useState(false);
   const {getCsrfToken}= useContext(AppContext);
   const [addressList,setAddressList]= useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -39,17 +41,11 @@ export default function Location() {
       return;
     }
 
-    async  function setAddress(){
-    const address=await getAddressList();
-    setAddressList(address);
-
-    }
-    setAddress();
+    await loadAddresses();
     setIsOpenCreaeteWindow(false)
   }
 
   const getAddressList = useCallback(async ()=>{
-  
     const adressResponse= await fetch(apiUrl('/addresses'),{
       method:"GET",
       headers:{
@@ -57,8 +53,21 @@ export default function Location() {
       },
      credentials: 'include',
     })
+    if (!adressResponse.ok) {
+      throw new Error("Не удалось загрузить адреса");
+    }
     return await adressResponse.json();
 },[] );
+
+  const loadAddresses = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const addresses = await getAddressList();
+      setAddressList(addresses);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [getAddressList]);
  
 async function deleteAddress(id){
 
@@ -75,29 +84,21 @@ async function deleteAddress(id){
       console.error('Не удалось удалить адрес');
       return;
     }
-     async  function setAddress(){
-    const address=await getAddressList();
-    setAddressList(address);
-
-  }
-   setAddress();
+    await loadAddresses();
 }
 useEffect(()=>{
-  async  function setAddress(){
-    const address=await getAddressList();
-    setAddressList(address);
-
-  }
-   setAddress();
+   loadAddresses().catch(console.error);
   
-},[ getAddressList])
+},[loadAddresses])
  
   return (
     <div className="location-block">
       <h2>Мои адреса</h2>
       
         <div className="address-block">
-          {addressList&&addressList.map(el=>(
+          {isLoading ? (
+            <LoadingPlaceholder variant="rows" count={3} />
+          ) : addressList&&addressList.map(el=>(
             <AddressBlock  key={el.id} address={el} addressIndex={addressList.indexOf(el)+ 1} deleteAddress={() => deleteAddress(el.id)}/>
       ))}
         {isOpenCreateWindow ?( <div className=" create-address-block cabinet-block">
