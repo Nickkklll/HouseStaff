@@ -1,21 +1,29 @@
+import { lazy, Suspense, useContext } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import App from '../App';
-import Login from '../Pages/login';
-import Registration from '../Pages/Registration'
-import Cabinet from "../Pages/cabinet";
-import Overview from "./profile/Overview";
-import Orders from "./profile/Orders";
-import Location from "./profile/Location";
-import Favorites from "./profile/Favorites";
-import Settings from "./profile/Settings";
-import MyProduct from "./profile/seller/MyProducts";
-import Reviews from "./profile/seller/Reviews";
-import SellerOrders from "./profile/seller/SellerOrders";
-import SellerOveriew from "./profile/seller/SellerOveriew";
-
-import { useContext } from "react";
 import { AppContext } from "../context";
 import LoadingPlaceholder from "./LoadingPlaceholder";
+
+const App = lazy(() => import("../App"));
+const Login = lazy(() => import("../Pages/login"));
+const Registration = lazy(() => import("../Pages/Registration"));
+const Cabinet = lazy(() => import("../Pages/cabinet"));
+const Overview = lazy(() => import("./profile/Overview"));
+const Orders = lazy(() => import("./profile/Orders"));
+const Location = lazy(() => import("./profile/Location"));
+const Favorites = lazy(() => import("./profile/Favorites"));
+const Settings = lazy(() => import("./profile/Settings"));
+const MyProduct = lazy(() => import("./profile/seller/MyProducts"));
+const Reviews = lazy(() => import("./profile/seller/Reviews"));
+const SellerOrders = lazy(() => import("./profile/seller/SellerOrders"));
+const SellerOveriew = lazy(() => import("./profile/seller/SellerOveriew"));
+
+function LazyRoute({ children }) {
+    return (
+        <Suspense fallback={<LoadingPlaceholder variant="panels" count={1} />}>
+            {children}
+        </Suspense>
+    );
+}
 
 function homeForRole(role){
     if(role==='seller'){
@@ -45,21 +53,21 @@ function RequireRole({allowRoles,children}){
 export const router = createBrowserRouter([
     {
         path:'/',
-        element:<App/>
+        element:<LazyRoute><App/></LazyRoute>
     },
     {
         path:'/login',
-        element:<Login/>
+        element:<LazyRoute><Login/></LazyRoute>
     },
     {
         path:'/register',
-        element:<Registration/>
+        element:<LazyRoute><Registration/></LazyRoute>
     },
     {
         path:'/cabinet',
         element:
         <RequireRole allowRoles={["user", "admin",'seller']}>
-                        <Cabinet/>
+                        <LazyRoute><Cabinet/></LazyRoute>
                     </RequireRole>,
         children:[
             {

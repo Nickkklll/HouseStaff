@@ -15,6 +15,7 @@ function setAuthCookie(res, token, maxAge) {
         httpOnly: true,
         secure: isProduction,
         sameSite: cookieSameSite,
+        partitioned: isProduction,
         path: '/',
         maxAge
     }));
@@ -25,6 +26,7 @@ function clearAuthCookie(res) {
         httpOnly: true,
         secure: isProduction,
         sameSite: cookieSameSite,
+        partitioned: isProduction,
         path: '/',
         expires: new Date(0)
     }));
@@ -35,6 +37,7 @@ function clearCsrfCookie(res) {
         httpOnly: false,
         secure: isProduction,
         sameSite: cookieSameSite,
+        partitioned: isProduction,
         path: '/',
         expires: new Date(0)
     }));
@@ -45,6 +48,7 @@ function setCsrfCookie(res, token = crypto.randomBytes(32).toString('hex')) {
         httpOnly: false,
         secure: isProduction,
         sameSite: cookieSameSite,
+        partitioned: isProduction,
         path: '/',
         maxAge: 86400
     }));

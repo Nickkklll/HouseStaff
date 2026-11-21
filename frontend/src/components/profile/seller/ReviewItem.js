@@ -5,7 +5,7 @@ export default function ReviewItem({ product }) {
   return (
     <>
      
-        <img src={assetUrl(product.productImage)} alt={product.productTitle} />
+        <img src={assetUrl(product.productImage)} alt={product.productTitle} loading="lazy" decoding="async" />
      
       <div className="review-body">
         <h4>{product.productTitle}</h4>

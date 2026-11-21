@@ -19,7 +19,7 @@ export default function OrderBlock({order,clickable, setSelectOrder, setIsFullIt
       <td><div className=" order-pictures">
             {order.items.map(el=>(
               <div  key={el.productId} className="picture-block">
-                <img src={assetUrl(el.img)} alt="" />
+                <img src={assetUrl(el.img)} alt="" loading="lazy" decoding="async" />
                 <span>{el.quantity} шт</span>
               </div>
               

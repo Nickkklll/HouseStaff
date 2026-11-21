@@ -26,6 +26,8 @@ export function Item({item,isFav,setIsFullItemModalOpen,setSelectItem,setMode,de
         className="product-card__image"
         src={assetUrl(item.img)}
         alt=""
+        loading="lazy"
+        decoding="async"
         onError={(event) => {
           const fallbackUrl = assetUrl("/uploads/img/system/Image-placeholder.jpg");
           if (event.currentTarget.getAttribute("src") !== fallbackUrl) {

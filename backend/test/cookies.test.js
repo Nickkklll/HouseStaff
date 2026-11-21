@@ -28,5 +28,6 @@ test('uses secure cross-site cookies in production', () => {
     for (const value of cookies) {
         assert.match(value, /SameSite=None/i);
         assert.match(value, /;\s*Secure(?:;|$)/i);
+        assert.match(value, /;\s*Partitioned(?:;|$)/i);
     }
 });

@@ -63,7 +63,7 @@ export default function Overview( props) {
               <h3>Добро пожаловать, {user.name} </h3>
               <div className="user-block-columns">
                 <div className="user-block-row">
-                  <img src={avatarImage} className="avatar" alt="avatar" />
+                  <img src={avatarImage} className="avatar" alt="avatar" loading="lazy" decoding="async" />
                 </div>
                 <div className="user-block-row">
                   <h4>{user.name}</h4>

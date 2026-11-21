@@ -111,7 +111,10 @@ app.use((req, res, next) => {
 
 app.use(cors({ origin: FRONTEND_ORIGIN, credentials: true }));
 app.use(express.json());
-app.use('/uploads', express.static(uploadsPath));
+app.use('/uploads', express.static(uploadsPath, {
+    maxAge: '1y',
+    immutable: true
+}));
 
 function originProtection(req, res, next) {
     if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) return next();

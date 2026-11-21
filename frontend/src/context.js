@@ -3,13 +3,17 @@ import { apiUrl } from "./config";
 
 export const AppContext = createContext(null);
 
-async function authentication() {
+export async function authentication() {
     try{
         const response = await fetch(apiUrl('/me'),{
             credentials:'include'
         });
+        if (response.status === 401) {
+            return null;
+        }
         if(!response.ok){
-            throw new Error('Ошибка при загрузке данных о пользователе');
+            console.error('Ошибка загрузки профиля:', response.status);
+            return null;
         }
 
         const data = await response.json();
